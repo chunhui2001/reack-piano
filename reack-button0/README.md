@@ -12,12 +12,14 @@ $ cd rock-reack && npm start
 # 新建一个 Button 组件
 index.js Button.js
 
+# 启动
+npm start
 
-# 打包
+# 打包(生成 dist 文件夹)
 npm run dist
+
+# 优化(生成 build 文件夹)
+npm run build
 
 # 发布
 npm publish
-
-# 优化
-npm run build

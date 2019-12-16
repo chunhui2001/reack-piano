@@ -14,6 +14,7 @@ const ButtonWrapper = styled.button`
 	border: none;
 	outline: none;
 	border-radius: 0;
+	cursor: pointer;
 `;
 
 // Components are functions, and they must start with a capital letter
