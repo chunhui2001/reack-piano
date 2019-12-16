@@ -19,8 +19,7 @@ echo ".$_hash."
 ### rename
 # find ./build/static -type f | grep -E "\.[0-9a-z]{8}\." | rename "s/.[a-z0-9]{8}././g"                      # linux but mac not work
 # brew install rename
-find ./build/static -type f  | grep -E "\.[0-9a-z]{8,32}\." | awk '{system("rename s/.[a-z0-9]{8}././g "$0)}'     # compatible linux and mac 
-tree ./build/
+find ./build/static -type f  | grep -E "\.[0-9a-z]{8,32}\." | awk '{system("rename s/.[a-z0-9]{8}././g "$0)}'     # compatible linux and mac
 
 # 挪过去待替换, 在挪回原位
 cat ./build/service-worker.js > ./build/static/service-worker.js
@@ -39,6 +38,8 @@ mv ./build/static/service-worker.js ./build
 mv ./build/static/index.html ./build 
 mv ./build/static/precache-manifest.js ./build 2>/dev/null
 mv ./build/static/asset-manifest.json ./build 
+
+tree ./build/
 
 declare _app_config_file=`pwd`/build
 
