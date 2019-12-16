@@ -42,7 +42,7 @@ mv ./build/static/asset-manifest.json ./build
 
 declare _app_config_file=`pwd`/build
 
-echo "[DONE] >>>现在你可以将\""$_app_config_file"\"路径下的所有内容复制到你的项目中<<<"
+echo "[DONE] >>> 现在你可以将 $_app_config_file/* 路径下的所有内容复制到你的项目中 <<<"
 
 
 # replace all 'test' with 'text' in each line
