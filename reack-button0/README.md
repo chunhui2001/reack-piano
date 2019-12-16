@@ -23,3 +23,10 @@ npm run build
 
 # 发布
 npm publish
+
+
+# ENOSPC: System limit for number of file watchers reached
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+# 查看最新版本
+npm info reack-button version
