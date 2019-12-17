@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-// import logo _form './logo.svg';
-import './App.css';
 
 import Login0 from './_components/login0/Login0';
 
@@ -13,15 +11,19 @@ class App extends Component {
 
   }
 
+  onLoginClick(result) {
+    if (result) {
+      debugger;
+    }
 
-  fileUpload(f) {
-    // debugger;
+    debugger;
   }
+
 
   render() {
     return (
       <div className="App">
-        <Login0>login0</Login0>
+        <Login0 onLoginClick={this.onLoginClick.bind(this)}>login0</Login0>
       </div>
     );
   }

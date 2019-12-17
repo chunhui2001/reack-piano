@@ -1,33 +1,30 @@
-import React from 'react';
-// Styled components 💅 is library that allows you create components easily and
-// style them, css-in-js style. It's totally optional, but I prefer to use it
-// to build things quickly and have them look great every step of the way.
-import styled from 'styled-components';
+import React, { Component } from "react";
+
 import {Button} from "reack-button0";
 
-// Style components take CSS in a template string. Even Sass functions with work!
-// Each element is a property of styled, like h3, p, div, etc...
-const Login0Wrapper = styled.button`
-	border-radius: 8px;
-	color: #fff;
-	background: green;
-	padding: 8px 15px;
-	border: none;
-	outline: none;
-	border-radius: 0;
-	cursor: pointer;
-`;
+class Login0 extends Component {
 
-// Components are functions, and they must start with a capital letter
-function Login0(props) {
-	// {...props} uses the the ES6 spread operator to send any props you may pass
-	// along without changing any of the contents. This is basically just creating
-	// a copy to pass along
-	return <div>
-	<Login0Wrapper {...props}>{props.children}</Login0Wrapper>
-	<Button>Button-Login-Built-in</Button>
-	</div>;
+	onLogin() {
+		
+		const { onLoginClick } = this.props;
+
+		onLoginClick(true);
+
+	}
+
+	render() {
+		return (
+			<div style={{ display: "inline-block", maxWidth: "650px", backgroundColor: "red", padding: "1em" }}>
+				<div>
+					<span>用户名： </span><input type="text" name="username" id="username" />
+				</div>
+				<div>
+					<span>密码： </span><input type="password" name="passwd" id="passwd" />
+				</div>
+				<Button onClick={this.onLogin.bind(this)}>登入</Button>
+			</div>
+		);
+	}
 }
 
-// This export will be picked up in ./index.js
 export default Login0;
