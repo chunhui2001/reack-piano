@@ -1,6 +1,6 @@
 {
   "name": "reack-button0",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": false,
   "scripts": {
     "start": "react-scripts start",
@@ -129,7 +129,7 @@
   },
   "main": "dist/reack_button0.js",
   "__main": "index.js",
-  "author": "Chunhui.zhang <zhangchunhui@shouqiev.com>",
+  "author": "Chunhui.zhang <chunhui2001@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "@storybook/addon-actions": "^5.2.8",

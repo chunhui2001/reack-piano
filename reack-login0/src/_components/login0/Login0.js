@@ -8,7 +8,10 @@ class Login0 extends Component {
 		
 		const { onLoginClick } = this.props;
 
-		onLoginClick(true);
+        const username = this.usernameInput.value;
+        const password = this.passwordInput.value;
+
+		onLoginClick({ username: username, password: password });
 
 	}
 
@@ -16,12 +19,12 @@ class Login0 extends Component {
 		return (
 			<div style={{ display: "inline-block", maxWidth: "650px", backgroundColor: "red", padding: "1em" }}>
 				<div>
-					<span>用户名： </span><input type="text" name="username" id="username" />
+					<span>用户名： </span><input ref={input => (this.usernameInput = input)} type={'text'} />
 				</div>
 				<div>
-					<span>密码： </span><input type="password" name="passwd" id="passwd" />
+					<span>密码： </span><input ref={input => (this.passwordInput = input)} type={'password'} />
 				</div>
-				<Button onClick={this.onLogin.bind(this)}>登入</Button>
+				<Button onClick={this.onLogin.bind(this)} style={{ fontSize:'1em' }}>登入</Button>
 			</div>
 		);
 	}

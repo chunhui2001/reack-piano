@@ -12,8 +12,8 @@ class App extends Component {
   }
 
   onLoginClick(result) {
-    if (result) {
-      debugger;
+    if (!result) {
+      return;
     }
 
     debugger;
