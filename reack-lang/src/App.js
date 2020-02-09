@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 // import logo _form './logo.svg';
 import './App.css';
 
-import A0 from './_components/a0/A0';
 
 class App extends Component {
 
@@ -21,7 +20,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <A0>a0</A0>
+        <Lang>Lang</Lang>
       </div>
     );
   }
