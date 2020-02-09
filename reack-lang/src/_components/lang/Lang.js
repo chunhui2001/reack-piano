@@ -42,5 +42,18 @@ Lang.prototype.arrayPop = function (arr) {
     return arr;
 }
 
+// 替换字符串中可能出现的换行符
+Lang.prototype.getInlineString = function (strContent) {
+    let inlineString = strContent.replace(/\r\n/g, ' '); //IE9、FF、chrome
+    inlineString = inlineString.replace(/\n/g, ' '); //IE7-8
+    return inlineString;
+}
+
+// 替换字符串中可能出现的换行符
+Lang.prototype.getJsonify = function (jsonString) {
+    let jsonify = this.getInlineString(jsonString);
+    return JSON.parse(jsonify)
+}
+
 export default new Lang();
 
