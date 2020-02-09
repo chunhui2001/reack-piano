@@ -6,7 +6,7 @@ import styled from 'styled-components';
 
 // Style components take CSS in a template string. Even Sass functions with work!
 // Each element is a property of styled, like h3, p, div, etc...
-const ButtonWrapper = styled.button`
+const A0Wrapper = styled.button`
 	border-radius: 8px;
 	color: #fff;
 	background: green;
@@ -18,12 +18,12 @@ const ButtonWrapper = styled.button`
 `;
 
 // Components are functions, and they must start with a capital letter
-function Button(props) {
+function A0(props) {
 	// {...props} uses the the ES6 spread operator to send any props you may pass
 	// along without changing any of the contents. This is basically just creating
 	// a copy to pass along
-	return <ButtonWrapper {...props}>{props.children}</ButtonWrapper>;
+	return <A0Wrapper {...props}>{props.children}</A0Wrapper>;
 }
 
 // This export will be picked up in ./index.js
-export default Button;
+export default A0;

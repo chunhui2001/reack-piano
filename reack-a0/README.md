@@ -21,8 +21,8 @@ $ sudo npm install -g create-react-app
 $ npx create-react-app rock-reack
 $ cd rock-reack && npm start 
 
-# 新建一个 Button 组件
-index.js Button.js
+# 新建一个 A0 组件
+index.js A0.js
 
 # 启动
 npm start
@@ -36,9 +36,17 @@ npm publish
 # 发布到 npm 私服 (发布前自增 package.json 里的版本号)
 ....
 
+# 项目引用 
+import { A0 } from 'reack-a0';
 
-# 优化(生成 build 文件夹)
-npm run build
+# 使用
+<A0>a0</A0>
+
+# 启动本地服务
+$ npm run start
+
+# 本地构建(生成 build 文件夹)
+$ npm run build
 
 # ENOSPC: System limit for number of file watchers reached
 echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p

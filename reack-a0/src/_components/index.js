@@ -3,5 +3,7 @@
 // allows for simpler scaling when your library grows in size, and even adds
 // different tech like TypeScript
 
-// button
-export { default as Button } from './button';
+// a0
+export { default as A0 } from './a0';
+// a1
+export { default as A1 } from './a1';
