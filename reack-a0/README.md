@@ -33,6 +33,9 @@ $ npm install && npm run dist
 # 发布 npmjs.org (发布前自增 package.json 里的版本号)
 npm publish
 
+# 撤销发布
+$ npm unpublish test@1.1.0
+
 # 发布到 npm 私服 (发布前自增 package.json 里的版本号)
 ....
 
@@ -53,3 +56,7 @@ echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo s
 
 # 查看最新版本
 npm info reack-a0 version
+
+# 淘宝 npmjs 代理
+$ npm install -g cnpm --registry=https://registry.npm.taobao.org
+

@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-// import logo _form './logo.svg';
-import './App.css';
 
 import A0 from './_components/a0/A0';
 
