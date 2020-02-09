@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import A0 from './_components/a0/A0';
 
 class App extends Component {
@@ -9,11 +8,6 @@ class App extends Component {
     super(props);
     this.state = {};
 
-  }
-
-
-  fileUpload(f) {
-    // debugger;
   }
 
   render() {

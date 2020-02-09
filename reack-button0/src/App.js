@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-// import logo _form './logo.svg';
-import './App.css';
-
 import Button from './_components/button/Button';
 
 class App extends Component {
@@ -11,11 +8,6 @@ class App extends Component {
     super(props);
     this.state = {};
 
-  }
-
-
-  fileUpload(f) {
-    // debugger;
   }
 
   render() {
