@@ -21,9 +21,8 @@ npm run dist
 # 优化(生成 build 文件夹)
 npm run build
 
-# 发布
+# 发布到 npmjs.org (发布前先执行 $ npm run dist)
 npm publish
-
 
 # ENOSPC: System limit for number of file watchers reached
 echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
