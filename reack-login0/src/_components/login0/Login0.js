@@ -5,14 +5,10 @@ import {Button} from "reack-button0";
 class Login0 extends Component {
 
 	onLogin() {
-		
 		const { onLoginClick } = this.props;
-
         const username = this.usernameInput.value;
         const password = this.passwordInput.value;
-
 		onLoginClick({ username: username, password: password });
-
 	}
 
 	render() {

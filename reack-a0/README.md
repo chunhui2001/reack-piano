@@ -60,3 +60,11 @@ npm info reack-a0 version
 # 淘宝 npmjs 代理
 $ npm install -g cnpm --registry=https://registry.npm.taobao.org
 
+### Analyzing the Bundle Size
+npm install --save source-map-explorer
+yarn add source-map-explorer
+
+npm run build
+npm run analyze
+
+
