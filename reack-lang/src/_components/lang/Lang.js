@@ -55,5 +55,30 @@ Lang.prototype.getJsonify = function (jsonString) {
     return JSON.parse(jsonify)
 }
 
+// 如果属性值是空字符串则设置为空
+Lang.prototype.setEmptyValueToNull = function (obj) {
+  if (obj == null) {
+    return null;
+  }
+  if (typeof obj !== 'object') {
+    if (obj === '') {
+      return null;
+    }
+    return obj;
+  }
+  for (const [key, value] of Object.entries(obj)) {
+    if (value === '') {
+      obj[key] = null;
+    } else if (Object.prototype.toString.call(value) === '[object Array]') {
+      obj[key] = value.map(it => this.setEmptyValueToNull(it)).filter(f => f);
+    } else if (typeof value === 'object') {
+      obj[key] = this.setEmptyValueToNull(value);
+    } else {
+      obj[key] = value;
+    }
+  }
+  return obj;
+}
+
 export default new Lang();
 

@@ -1,5 +1,5 @@
 {
-  "name": "reack-a0",
+  "name": "reack-bootstrap0",
   "version": "0.0.3",
   "private": false,
   "scripts": {
@@ -129,7 +129,7 @@
       "react-app"
     ]
   },
-  "main": "dist/reack_a0.js",
+  "main": "dist/reack_bootstrap0.js",
   "__main": "index.js",
   "author": "Chunhui.zhang <chunhui2001@gmail.com>",
   "license": "MIT",
