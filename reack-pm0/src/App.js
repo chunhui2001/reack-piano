@@ -10,9 +10,9 @@ class App extends Component {
 
   render() {
     return (
-      <div className='root'>
+      <div className='pm-app'>
           <PM0 />
-        </div>
+      </div>
     );
   }
 }
