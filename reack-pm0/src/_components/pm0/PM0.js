@@ -41,7 +41,7 @@ render() {
 	        <input type="button" value="Send" />
 	        <input style={{marginRight: 0}} type="button" value="ping" />
       	</div>
-        <div className={'pm-body'}>
+        <div className={'pm-m'}>
         	<div className={'pm-tab'}>
         		<span className={'active'}>Params</span>
         		<span>Authorization</span>
@@ -49,7 +49,7 @@ render() {
         		<span>Body</span>
         	</div>
         	<div className={'tab-panel'}>
-        		<div style={{color:'gray', padding: '0.425em .625em', fontStyle: 'italic'}}>Query Params</div>
+        		<div style={{color:'gray', padding: '0.425em .625em', fontStyle: 'italic', backgroundColor: 'mintcream'}}>Query Params</div>
         		<table className={'query-params-table'}>
         			<tbody>
         				<tr>
@@ -86,13 +86,16 @@ let mixin = css`&{
 		padding:.225em .325em;
 		margin-right:.325em;
 	}
+	.pm-m {
+		border-top: solid 1px gainsboro;
+	}
 	.pm-tab {
 		background-color:aliceblue;
-    	border-bottom:solid 1px darkolivegreen;
+    	border-bottom:solid 1px darkgray;
 	}
     .pm-tab span {
     	display:inline-block;
-    	padding:.325em 1em;
+    	padding:.625em 1em;
     	cursor:pointer;
     }
     .pm-tab span:hover{
