@@ -1,6 +1,6 @@
 {
   "name": "reack-fa0",
-  "version": "0.0.3",
+  "version": "0.0.1",
   "private": false,
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
