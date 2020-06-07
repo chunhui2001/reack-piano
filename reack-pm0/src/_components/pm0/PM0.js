@@ -33,27 +33,31 @@ handleInputTextChange (e) {
   }
 }
 
+handPmTabClick() {
+  alert(1);
+}
+
 render() {
   return (
       <div className={`${this.props.className} PM0`}>
       	<div className={'pm-body'}>
-			<input style={{width:'465px'}} type="text" />
-	        <input type="button" value="Send" />
-	        <input style={{marginRight: 0}} type="button" value="ping" />
+          <input style={{width:'465px'}} type="text" />
+          <input type="button" value="Send" />
+          <input style={{marginRight: 0}} type="button" value="ping" />
       	</div>
         <div className={'pm-m'}>
         	<div className={'pm-tab'}>
-        		<span className={'active'}>Params</span>
-        		<span>Authorization</span>
-        		<span>Headers(1)</span>
-        		<span>Body</span>
+        		<span className={'active'} onClick={this.handPmTabClick.bind(this)}>Params</span>
+        		<span onClick={this.handPmTabClick.bind(this)}>Authorization</span>
+        		<span onClick={this.handPmTabClick.bind(this)}>Headers(1)</span>
+        		<span onClick={this.handPmTabClick.bind(this)}>Body</span>
         	</div>
-        	<div className={'tab-panel'}>
+        	<div className={'tab-panel tab-params'}>
         		<div style={{color:'gray', padding: '0.425em .625em', fontStyle: 'italic', backgroundColor: 'mintcream'}}>Query Params</div>
         		<table className={'query-params-table'}>
         			<tbody>
         				<tr>
-        					<th>&nbsp;</th>
+        					<th style={{width:'25px'}}>&nbsp;</th>
         					<th>KEY</th>
         					<th>VALUE</th>
         					<th>DESCRIPTION</th>
@@ -67,6 +71,60 @@ render() {
         			</tbody>
         		</table>
         	</div>
+          <div className={'tab-panel tab-auth'} style={{display:'none'}}>
+            <div className={'left'} style={{width:'30%', backgroundColor:'azure'}}>
+              <div>
+                1
+              </div>
+            </div>
+            <div className={'right'} style={{width:'70%', backgroundColor:'ghostwhite'}}>
+              <div>
+                3
+              </div>
+            </div>
+            <div className={'clear'}></div>
+          </div>
+          <div className={'tab-panel tab-headers'} style={{display:'none'}}>
+            <div style={{color:'gray', padding: '0.425em .625em', fontStyle: 'italic', backgroundColor: 'lavender'}}>Headers</div>
+            <table className={'query-params-table'}>
+              <tbody>
+                <tr>
+                  <th style={{width:'25px'}}>&nbsp;</th>
+                  <th>KEY</th>
+                  <th>VALUE</th>
+                  <th>DESCRIPTION</th>
+                </tr>
+                <tr>
+                  <td style={{textAlign:'right'}}><input type="checkbox" /></td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className={'tab-panel tab-bodys'} style={{display:'none'}}>
+            <div style={{color:'gray', padding: '0.425em .625em', backgroundColor: 'lavender'}}>
+              <span><input name="g" id="r-none" type="radio" /><label htmlFor="r-none">NONE</label></span>
+              <span><input name="g" id="r-form-data" type="radio" /><label htmlFor="r-form-data">form-data</label></span>
+              <span><input name="g" id="r-form-urlencoded" type="radio" /><label htmlFor="r-form-urlencoded">x-www-form-urlencoded</label></span>
+              <span><input name="g" id="r-form-raw" type="radio" /><label htmlFor="r-form-raw">raw</label></span>
+              <span><input name="g" id="r-form-binary" type="radio" /><label htmlFor="r-form-binary">binary</label></span>
+              <div className={'clear'}></div>
+            </div>
+            <div style={{padding:'1em'}}>
+              1 <br />
+              1 <br />
+              1 <br />
+              1 <br />
+            </div>
+          </div>
+          <div className={'pm-response'}>
+            <h4 style={{padding:'.525em .625em',margin:0, backgroundColor:'aliceblue', color:'gray', borderBottom:'solid 1px gainsboro'}}>Response</h4>
+            <div style={{padding:'1em', backgroundColor: 'darkslateblue', color:'white',minHeight:'300px'}}>
+              66
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -76,8 +134,11 @@ render() {
 
 
 let mixin = css`&{
-	max-width: 600px;
-    margin: auto;
+  margin: auto;
+  .clear {
+    float: none;
+    clear: both;
+  }
 	.pm-body {
 		margin: .5em 0;
 	}
@@ -107,6 +168,7 @@ let mixin = css`&{
     .pm-tab span.active {
     	border-bottom:solid 3px red;
     	margin-bottom: -1px;
+      font-weight:bold;
     }
     .tab-panel {
     	background-color: floralwhite;
@@ -125,6 +187,30 @@ let mixin = css`&{
 
     .query-params-table tr td:nth-last-child(1), .query-params-table tr th:nth-last-child(1){
     	border-right: none;
+    }
+
+    /* auth */
+    .tab-panel.tab-auth {
+
+    }
+
+    .tab-panel.tab-auth .left, 
+    .tab-panel.tab-auth .right {
+      float:left;
+      height:100%;
+      min-height:200px;
+    }
+
+    .tab-panel.tab-auth .left > div, 
+    .tab-panel.tab-auth .right > div {
+      height:100%;
+      padding:1em;
+    }
+
+    .tab-panel.tab-bodys span {
+      display:inline-block;
+      float:left;
+      margin-right:1em;
     }
 }`;
 
