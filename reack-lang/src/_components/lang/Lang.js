@@ -42,6 +42,15 @@ Lang.prototype.arrayPop = function (arr) {
     return arr;
 }
 
+// 生成uuid
+Lang.prototype.genUuid = function (obj) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                          var r = Math.random() * 16 | 0;
+                          var v = c === 'x' ? r : (r & 0x3 | 0x8);
+                          return v.toString(16);
+                        });
+}
+
 // 替换字符串中可能出现的换行符
 Lang.prototype.getInlineString = function (strContent) {
     let inlineString = strContent.replace(/\r\n/g, ' '); //IE9、FF、chrome
@@ -49,7 +58,7 @@ Lang.prototype.getInlineString = function (strContent) {
     return inlineString;
 }
 
-// 替换字符串中可能出现的换行符
+// 对象 转json
 Lang.prototype.getJsonify = function (jsonString) {
     let jsonify = this.getInlineString(jsonString);
     return JSON.parse(jsonify)
@@ -79,6 +88,7 @@ Lang.prototype.setEmptyValueToNull = function (obj) {
   }
   return obj;
 }
+
 
 export default new Lang();
 
