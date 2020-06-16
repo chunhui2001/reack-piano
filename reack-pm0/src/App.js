@@ -35,10 +35,11 @@ class App extends Component {
   }
 
   render() {
+    let s = { inputGroupText: "aaa" };
     return (
       <div className='pm-app'>
           <input type="button" onClick={this.put.bind(this)} value="Test" />
-          <PM0 ref="pm0" onButtonClickHand={this.onButtonClickHand.bind(this)} />
+          <PM0 ref="pm0" schema={ s } onSchemaStateChange={ (changedSchema) => console.log(changedSchema) } onButtonClickHand={this.onButtonClickHand.bind(this)} />
       </div>
     );
   }

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import styled, { css } from "styled-components";
 
+import PMSchema from "../schema/PMSchema";
+
 export class _PM0 extends Component {
 
   responseComponent = null;
@@ -9,20 +11,32 @@ export class _PM0 extends Component {
     super(props);
     this.state = {
       tabName: 'params',
-      pmForm: {
-        inputTextValue: ''
-      }
+      theSchema: PMSchema('')
     };
   }
 
+  UNSAFE_componentWillMount() {
+    const { schema } = this.props;
+    let theSchema = schema ? schema : {};
+    this.setState({
+      ...this.state,
+      theSchema
+    });
+  }
+
   handleInputTextChange (e) {
+    const { onSchemaStateChange } = this.props;
     let keyArr = e.target.name.split('.');
     if (keyArr.length === 1) {
       this.setState({ 
         ...this.state,
-        pmForm: {
-          ...this.state.pmForm,
+        theSchema: {
+          ...this.state.theSchema,
           [keyArr[0]]: e.target.value
+        }
+      }, () => {
+        if (onSchemaStateChange) {
+          onSchemaStateChange(this.state.theSchema);
         }
       });
     } else if (keyArr.length === 2) {
@@ -35,15 +49,21 @@ export class _PM0 extends Component {
             [keyArr[1]]: e.target.value
           }
         }
+      }, () => {
+        if (onSchemaStateChange) {
+          onSchemaStateChange(this.state.theSchema);
+        }
       });
     }
+
+    
   }
 
   handPmTabClick(tabName, e) {
     this.setState({
       ...this.state,
       tabName: tabName
-    }) 
+    }) ;
   }
 
   onSendClick() {
@@ -52,14 +72,14 @@ export class _PM0 extends Component {
 
   onButtonClick(type, e) {
     const { onButtonClickHand } = this.props;
-    let _inputTextValue = this.state.pmForm.inputTextValue;
-    if (!_inputTextValue || !_inputTextValue.trim()) {
+    let _inputGroupText = this.state.theSchema.inputGroupText;
+    if (!_inputGroupText || !_inputGroupText.trim()) {
       return;
     }
     if (!onButtonClickHand) {
       return;
     }
-    onButtonClickHand(this, type, _inputTextValue);
+    onButtonClickHand(this, type, _inputGroupText);
   }
 
   getResponseComponent() {
@@ -79,16 +99,16 @@ export class _PM0 extends Component {
   render() {
 
     const { 
-      pmForm
+      theSchema
     } = this.state;
 
     return (
         <div className={`${this.props.className} PM0`}>
         	<div className={'pm-body'}>
-            <input style={{width:'465px'}} type="text" name='inputTextValue' 
-                  onChange={(e) => {this.handleInputTextChange(e)}} value={pmForm.inputTextValue || ''} />
-            <input onClick={this.onButtonClick.bind(this, 'send')} disabled={!pmForm.inputTextValue.trim()} type="button" value="Send" />
-            <input onClick={this.onButtonClick.bind(this, 'ping')} disabled={!pmForm.inputTextValue.trim()} style={{marginRight: 0}} type="button" value="ping" />
+            <input style={{width:'465px'}} type="text" name='inputGroupText' 
+                  onChange={(e) => {this.handleInputTextChange(e)}} value={theSchema.inputGroupText || ''} />
+            <input onClick={this.onButtonClick.bind(this, 'send')} disabled={!theSchema.inputGroupText.trim()} type="button" value="Send" />
+            <input onClick={this.onButtonClick.bind(this, 'ping')} disabled={!theSchema.inputGroupText.trim()} style={{marginRight: 0}} type="button" value="ping" />
         	</div>
           <div className={'pm-m'}>
           	<div className={'pm-tab'}>

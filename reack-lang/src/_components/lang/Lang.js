@@ -89,6 +89,21 @@ Lang.prototype.setEmptyValueToNull = function (obj) {
   return obj;
 }
 
+// 解析url
+Lang.prototype.parseUrl = function (url) {
+    // http://example.com:3000/pathname/?search=test#hash
+    var match = url.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
+    return match && {
+        href: url,
+        protocol: match[1],  // http:
+        host: match[2], // example.com:3000
+        hostname: match[3], // example.com
+        port: match[4], // 3000
+        pathname: match[5], // /pathname/
+        search: match[6], // ?search=test
+        hash: match[7] // #hash
+    }
+}
 
 export default new Lang();
 
