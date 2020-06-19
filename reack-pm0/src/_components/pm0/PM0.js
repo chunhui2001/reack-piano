@@ -104,12 +104,16 @@ export class _PM0 extends Component {
 
     return (
         <div className={`${this.props.className} PM0`}>
-        	<div className={'pm-body'}>
-            <input style={{width:'465px'}} type="text" name='inputGroupText' 
+        	<div className={'pm-body container'}>
+            <div className={'content'}>
+              <input style={{width:'100%'}} type="text" name='inputGroupText' 
                   onChange={(e) => {this.handleInputTextChange(e)}} value={theSchema.inputGroupText || ''} />
-            <input onClick={this.onButtonClick.bind(this, 'send')} disabled={!theSchema.inputGroupText.trim()} type="button" value="Send" />
-            <input onClick={this.onButtonClick.bind(this, 'ping')} disabled={!theSchema.inputGroupText.trim()} style={{marginRight: 0}} type="button" value="ping" />
-        	</div>
+            </div>
+            <div className={'sidebar'}>
+              <input onClick={this.onButtonClick.bind(this, 'send')} disabled={!theSchema.inputGroupText.trim()} type="button" value="Send" />
+              <input onClick={this.onButtonClick.bind(this, 'ping')} disabled={!theSchema.inputGroupText.trim()} style={{marginRight: 0}} type="button" value="ping" />
+        	  </div>
+          </div>
           <div className={'pm-m'}>
           	<div className={'pm-tab'}>
           		<span className={this.state.tabName === 'params' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'params')}>Params</span>
@@ -235,8 +239,16 @@ let mixin = css`&{
 	.pm-body input {
 		font-size:1.125em;
 		padding:.225em .325em;
-		margin-right:.325em;
+    border-radius: 0;
+    border-width: 1px;
+    margin:0;
+    margin-right: -1px;
+    border-style:double;
+    border-color:gray;
 	}
+  .pm-body input[type="button"] {
+    background-color:antiquewhite;
+  }
 	.pm-m {
 		border-top: solid 1px gainsboro;
 	}
@@ -273,33 +285,40 @@ let mixin = css`&{
     	padding: .325em .625em;
     	font-size: .925em;
     }
-
     .query-params-table tr td:nth-last-child(1), .query-params-table tr th:nth-last-child(1){
     	border-right: none;
     }
-
     /* auth */
     .tab-panel.tab-auth {
 
     }
-
     .tab-panel.tab-auth .left, 
     .tab-panel.tab-auth .right {
       float:left;
       height:100%;
       min-height:200px;
     }
-
     .tab-panel.tab-auth .left > div, 
     .tab-panel.tab-auth .right > div {
       height:100%;
       padding:1em;
     }
-
     .tab-panel.tab-bodys span {
       display:inline-block;
       float:left;
       margin-right:1em;
+    }
+    .container {
+       height: auto;
+       overflow: hidden;
+    }
+    .sidebar {
+        float: right;
+        text-align:right;
+    }
+    .content {
+        width: calc(100% - 114px);
+        float:left;
     }
 }`;
 
