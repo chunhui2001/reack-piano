@@ -1,7 +1,8 @@
 
-const PMSchema = (inputGroupText) =>{
+const PMSchema = (inputGroupText, selectRequestMethod) =>{
     return {
-        inputGroupText: inputGroupText
+        inputGroupText: inputGroupText,
+        selectRequestMethod: selectRequestMethod
     };
 }
 

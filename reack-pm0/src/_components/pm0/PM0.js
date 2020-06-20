@@ -27,12 +27,13 @@ export class _PM0 extends Component {
   handleInputTextChange (e) {
     const { onSchemaStateChange } = this.props;
     let keyArr = e.target.name.split('.');
+    let currentVal = e.target.value;
     if (keyArr.length === 1) {
       this.setState({ 
         ...this.state,
         theSchema: {
           ...this.state.theSchema,
-          [keyArr[0]]: e.target.value
+          [keyArr[0]]: currentVal
         }
       }, () => {
         if (onSchemaStateChange) {
@@ -46,7 +47,7 @@ export class _PM0 extends Component {
           ...this.state.task,
           taskDef: {
             ...this.state.task.taskDef,
-            [keyArr[1]]: e.target.value
+            [keyArr[1]]: currentVal
           }
         }
       }, () => {
@@ -55,8 +56,6 @@ export class _PM0 extends Component {
         }
       });
     }
-
-    
   }
 
   handPmTabClick(tabName, e) {
@@ -106,12 +105,24 @@ export class _PM0 extends Component {
         <div className={`${this.props.className} PM0`}>
         	<div className={'pm-body container'}>
             <div className={'content'}>
-              <input style={{width:'100%'}} type="text" name='inputGroupText' 
-                  onChange={(e) => {this.handleInputTextChange(e)}} value={theSchema.inputGroupText || ''} />
+              <div className={'div1'}>
+                <select name='selectRequestMethod' value={theSchema.selectRequestMethod || 'get'}  onChange={(e) => {this.handleInputTextChange(e)}}>
+                  <option value="get">GET</option>
+                  <option value="post">POST</option>
+                  <option value="put">PUT</option>
+                  <option value="delete">DELETE</option>
+                </select>
+              </div>
+              <div className={'div2'}>
+                <input type="text" name='inputGroupText' 
+                    onChange={(e) => {this.handleInputTextChange(e)}} value={theSchema.inputGroupText || ''} />
+              </div>
+              <div className={'clear'}></div>
             </div>
             <div className={'sidebar'}>
               <input onClick={this.onButtonClick.bind(this, 'send')} disabled={!theSchema.inputGroupText.trim()} type="button" value="Send" />
-              <input onClick={this.onButtonClick.bind(this, 'ping')} disabled={!theSchema.inputGroupText.trim()} style={{marginRight: 0}} type="button" value="ping" />
+              <input onClick={this.onButtonClick.bind(this, 'ping')} disabled={!theSchema.inputGroupText.trim()} type="button" value="Ping" />
+              <input onClick={this.onButtonClick.bind(this, 'save')} disabled={!theSchema.inputGroupText.trim()} type="button" value="Save" />
         	  </div>
           </div>
           <div className={'pm-m'}>
@@ -247,6 +258,24 @@ let mixin = css`&{
     border-color:gray;
 	}
   .pm-body input[type="button"] {
+    cursor:pointer;
+  }
+  .content select {
+    font-size:1em;
+    padding:.3em .325em;
+    border-radius: 0;
+    border-width: 1px;
+    margin:0;
+    margin-right: -1px;
+    border-style:double;
+    border-color:gray;
+    background-color: greenyellow;
+    height:auto;
+  }
+  .pm-body input:nth-last-child(1) {
+    margin-right: 0;
+  }
+  .pm-body input[type="button"] {
     background-color:antiquewhite;
   }
 	.pm-m {
@@ -256,70 +285,89 @@ let mixin = css`&{
 		background-color:aliceblue;
     	border-bottom:solid 1px darkgray;
 	}
-    .pm-tab span {
-    	display:inline-block;
-    	padding:.625em 1em;
-    	cursor:pointer;
-    }
-    .pm-tab span:hover{
-		background-color:burlywood;
-    	border-bottom:solid 3px blue;
-    	margin-bottom: -1px;
+  .pm-tab span {
+  	display:inline-block;
+  	padding:.625em 1em;
+  	cursor:pointer;
+  }
+  .pm-tab span:hover{
+	background-color:burlywood;
+  	border-bottom:solid 3px blue;
+  	margin-bottom: -1px;
 
-    }
-    .pm-tab span.active {
-    	border-bottom:solid 3px red;
-    	margin-bottom: -1px;
-    }
-    .tab-panel {
-    	background-color: floralwhite;
-    }
-    .query-params-table {
-    	border-spacing: 0;
-    	width: 100%;
-    	border-top: solid 1px gainsboro;
-    }
-    .query-params-table td, .query-params-table th {
-    	border-right: solid 1px gainsboro;
-    	border-bottom: solid 1px gainsboro;
-    	padding: .325em .625em;
-    	font-size: .925em;
-    }
-    .query-params-table tr td:nth-last-child(1), .query-params-table tr th:nth-last-child(1){
-    	border-right: none;
-    }
-    /* auth */
-    .tab-panel.tab-auth {
+  }
+  .pm-tab span.active {
+  	border-bottom:solid 3px red;
+  	margin-bottom: -1px;
+  }
+  .tab-panel {
+  	background-color: floralwhite;
+  }
+  .query-params-table {
+  	border-spacing: 0;
+  	width: 100%;
+  	border-top: solid 1px gainsboro;
+  }
+  .query-params-table td, .query-params-table th {
+  	border-right: solid 1px gainsboro;
+  	border-bottom: solid 1px gainsboro;
+  	padding: .325em .625em;
+  	font-size: .925em;
+  }
+  .query-params-table tr td:nth-last-child(1), .query-params-table tr th:nth-last-child(1){
+  	border-right: none;
+  }
+  /* auth */
+  .tab-panel.tab-auth {
 
-    }
-    .tab-panel.tab-auth .left, 
-    .tab-panel.tab-auth .right {
-      float:left;
-      height:100%;
-      min-height:200px;
-    }
-    .tab-panel.tab-auth .left > div, 
-    .tab-panel.tab-auth .right > div {
-      height:100%;
-      padding:1em;
-    }
-    .tab-panel.tab-bodys span {
-      display:inline-block;
-      float:left;
-      margin-right:1em;
-    }
-    .container {
-       height: auto;
-       overflow: hidden;
-    }
-    .sidebar {
-        float: right;
-        text-align:right;
-    }
-    .content {
-        width: calc(100% - 114px);
-        float:left;
-    }
+  }
+  .tab-panel.tab-auth .left, 
+  .tab-panel.tab-auth .right {
+    float:left;
+    height:100%;
+    min-height:200px;
+  }
+  .tab-panel.tab-auth .left > div, 
+  .tab-panel.tab-auth .right > div {
+    height:100%;
+    padding:1em;
+  }
+  .tab-panel.tab-bodys span {
+    display:inline-block;
+    float:left;
+    margin-right:1em;
+  }
+  .container {
+     height: auto;
+     overflow: hidden;
+  }
+  .sidebar {
+    float: right;
+    text-align:right;
+  }
+  .content {
+    width: calc(100% - 171px);
+    float:left;
+    height:31.9px;
+  }
+  .content input[type="text"] {
+    width: 100%;
+  }
+  .content > div {
+    float:left;
+    height:100%;
+  }
+  .content > .div2 {
+    width: calc(100% - 94px);
+    margin-right: -1px;
+  }
+  /** customer: BUTTON; **/
+  .pm-body input[type="button"], input[type="button"]:hover, input[type="button"]:focus {
+    outline:0 !important;
+  }
+  .pm-body .button,.pm-body input[type="button"]:active {
+    background-color: darkkhaki;
+  }
 }`;
 
 const PM0 = styled(_PM0)`
