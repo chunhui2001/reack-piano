@@ -246,10 +246,11 @@ let mixin = css`&{
   }
 	.pm-body {
 		margin: .5em 0;
+    margin-bottom:1em;
 	}
 	.pm-body input {
-		font-size:1.125em;
-		padding:.225em .325em;
+		font-size:1.225em;
+		padding:.325em.625em;
     border-radius: 0;
     border-width: 1px;
     margin:0;
@@ -261,8 +262,8 @@ let mixin = css`&{
     cursor:pointer;
   }
   .content select {
-    font-size:1em;
-    padding:.3em .325em;
+    font-size:1.1em;
+    padding:.4em .325em;
     border-radius: 0;
     border-width: 1px;
     margin:0;
@@ -270,7 +271,6 @@ let mixin = css`&{
     border-style:double;
     border-color:gray;
     background-color: greenyellow;
-    height:auto;
   }
   .pm-body input:nth-last-child(1) {
     margin-right: 0;
@@ -346,7 +346,7 @@ let mixin = css`&{
     text-align:right;
   }
   .content {
-    width: calc(100% - 171px);
+    width: calc(100% - 215px);
     float:left;
     height:31.9px;
   }
@@ -358,7 +358,7 @@ let mixin = css`&{
     height:100%;
   }
   .content > .div2 {
-    width: calc(100% - 94px);
+    width: calc(100% - 119px);
     margin-right: -1px;
   }
   /** customer: BUTTON; **/
