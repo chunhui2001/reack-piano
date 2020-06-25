@@ -65,10 +65,6 @@ export class _PM0 extends Component {
     }) ;
   }
 
-  onSendClick() {
-
-  }
-
   onButtonClick(type, e) {
     const { onButtonClickHand } = this.props;
     let _inputGroupText = this.state.theSchema.inputGroupText;
@@ -88,11 +84,19 @@ export class _PM0 extends Component {
       return <h1>888</h1>;
   }
 
+
   refresh() {
     this.setState({
       ...this.state,
       timestamp: new Date().getTime()
     });
+  }
+
+  getSaveButton() {
+    if (this.props.saveButton) {
+      return this.props.saveButton;
+    }
+    return <input onClick={this.onButtonClick.bind(this, 'save')} disabled={!theSchema.inputGroupText.trim()} type="button" value="Save" />;
   }
 
   render() {
@@ -103,51 +107,56 @@ export class _PM0 extends Component {
 
     return (
         <div className={`${this.props.className} PM0`}>
-        	<div className={'pm-body container'}>
-            <div className={'content'}>
-              <div className={'div1'}>
-                <select name='selectRequestMethod' value={theSchema.selectRequestMethod || 'get'}  onChange={(e) => {this.handleInputTextChange(e)}}>
-                  <option value="get">GET</option>
-                  <option value="post">POST</option>
-                  <option value="put">PUT</option>
-                  <option value="delete">DELETE</option>
-                </select>
+          <div className={'panel-left'}>
+          	<div className={'pm-body container'}>
+              <div className={'content'}>
+                <div className={'div1'}>
+                  <select name='selectRequestMethod' value={theSchema.selectRequestMethod || 'get'}  onChange={(e) => {this.handleInputTextChange(e)}}>
+                    <option value="get">GET</option>
+                    <option value="post">POST</option>
+                    <option value="put">PUT</option>
+                    <option value="delete">DELETE</option>
+                  </select>
+                </div>
+                <div className={'div2'}>
+                  <input type="text" name='inputGroupText' 
+                      onChange={(e) => {this.handleInputTextChange(e)}} value={theSchema.inputGroupText || ''} />
+                </div>
+                <div className={'clear'}></div>
               </div>
-              <div className={'div2'}>
-                <input type="text" name='inputGroupText' 
-                    onChange={(e) => {this.handleInputTextChange(e)}} value={theSchema.inputGroupText || ''} />
-              </div>
-              <div className={'clear'}></div>
+              <div className={'sidebar'}>
+                <input onClick={this.onButtonClick.bind(this, 'send')} disabled={!theSchema.inputGroupText.trim()} type="button" value="Send" />
+                <input onClick={this.onButtonClick.bind(this, 'ping')} disabled={!theSchema.inputGroupText.trim()} type="button" value="Ping" />
+                { this.getSaveButton() }
+          	  </div>
             </div>
-            <div className={'sidebar'}>
-              <input onClick={this.onButtonClick.bind(this, 'send')} disabled={!theSchema.inputGroupText.trim()} type="button" value="Send" />
-              <input onClick={this.onButtonClick.bind(this, 'ping')} disabled={!theSchema.inputGroupText.trim()} type="button" value="Ping" />
-              <input onClick={this.onButtonClick.bind(this, 'save')} disabled={!theSchema.inputGroupText.trim()} type="button" value="Save" />
-        	  </div>
-          </div>
-          <div className={'pm-m'}>
-          	<div className={'pm-tab'}>
-          		<span className={this.state.tabName === 'params' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'params')}>Params</span>
-          		<span className={this.state.tabName === 'auth' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'auth')}>Authorization</span>
-          		<span className={this.state.tabName === 'headers' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'headers')}>Headers(1)</span>
-          		<span className={this.state.tabName === 'body' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'body')}>Body</span>
-          	</div>
-          	{ this.state.tabName === 'params' && this.paramsTabSection() }
-            { this.state.tabName === 'auth' && this.authTabSection() }
-            { this.state.tabName === 'headers' && this.headersTabSection() }
-            { this.state.tabName === 'body' && this.bodyTabsSection() }
-            <div className={'pm-response'}>
-              <h4 style={{padding:'.525em .625em',margin:0, backgroundColor:'aliceblue', color:'gray', borderBottom:'solid 1px gainsboro'}}>Response</h4>
-              <div style={{ backgroundColor: 'darkslateblue', color:'white', minHeight:'300px' }}>
-                { this.getResponseComponent() }
+            <div className={'pm-m'}>
+            	<div className={'pm-tab'}>
+            		<span className={this.state.tabName === 'params' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'params')}>Params</span>
+            		<span className={this.state.tabName === 'auth' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'auth')}>Authorization</span>
+            		<span className={this.state.tabName === 'headers' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'headers')}>Headers(1)</span>
+            		<span className={this.state.tabName === 'body' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'body')}>Body</span>
+            	</div>
+            	{ this.state.tabName === 'params' && this.paramsTabSection() }
+              { this.state.tabName === 'auth' && this.authTabSection() }
+              { this.state.tabName === 'headers' && this.headersTabSection() }
+              { this.state.tabName === 'body' && this.bodyTabsSection() }
+              <div className={'pm-response'}>
+                <h4 style={{padding:'.525em .625em',margin:0, backgroundColor:'aliceblue', color:'gray', borderBottom:'solid 1px gainsboro'}}>Response</h4>
+                <div style={{ backgroundColor: 'darkslateblue', color:'white', minHeight:'300px' }}>
+                  { this.getResponseComponent() }
+                </div>
               </div>
             </div>
+            <div style={{display:'none'}}>{this.state.timestamp}</div>
           </div>
-          <div style={{display:'none'}}>{this.state.timestamp}</div>
+          <div className={'panel-right'}>
+            1
+          </div>
+          <div className={'clear'}></div>
         </div>
     );
   }
-
 
   paramsTabSection() {
     return <div className={'tab-panel tab-params'}>
@@ -229,13 +238,20 @@ export class _PM0 extends Component {
   }
 }
 
-
-
 let mixin = css`&{
   margin: auto;
   .clear {
     float: none;
     clear: both;
+  }
+  .panel-left {
+    width: calc(100% - 265px);
+    float:left;
+  }
+  .panel-right {
+    width:265px;
+    background-color:green;
+    float:left;
   }
   .pm-tab > span {
       -webkit-user-select: none;
@@ -247,19 +263,22 @@ let mixin = css`&{
 	.pm-body {
 		margin: .5em 0;
     margin-bottom:1em;
+    margin-top: 0;
 	}
-	.pm-body input {
+	.pm-body input,.pm-body .link-button {
 		font-size:1.225em;
 		padding:.325em.625em;
     border-radius: 0;
     border-width: 1px;
     margin:0;
-    margin-right: -1px;
+    margin-left: -1px;
     border-style:double;
     border-color:gray;
 	}
-  .pm-body input[type="button"] {
+  .pm-body input[type="button"],.pm-body .link-button {
     cursor:pointer;
+    background-color:antiquewhite;
+    color:black;
   }
   .content select {
     font-size:1.1em;
@@ -275,9 +294,7 @@ let mixin = css`&{
   .pm-body input:nth-last-child(1) {
     margin-right: 0;
   }
-  .pm-body input[type="button"] {
-    background-color:antiquewhite;
-  }
+  .pm
 	.pm-m {
 		border-top: solid 1px gainsboro;
 	}
@@ -348,7 +365,7 @@ let mixin = css`&{
   .content {
     width: calc(100% - 215px);
     float:left;
-    height:31.9px;
+    /*height:31.9px; */
   }
   .content input[type="text"] {
     width: 100%;
@@ -358,7 +375,7 @@ let mixin = css`&{
     height:100%;
   }
   .content > .div2 {
-    width: calc(100% - 119px);
+    width: calc(100% - 118px);
     margin-right: -1px;
   }
   /** customer: BUTTON; **/

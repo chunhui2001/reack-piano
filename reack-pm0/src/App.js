@@ -12,6 +12,7 @@ class App extends Component {
 
   onButtonClickHand(pm, type, inputTextValue) {
     this.getList(pm);
+    console.log(type, inputTextValue);
     pm.refresh();
   }
 
@@ -34,12 +35,14 @@ class App extends Component {
     </div>;
   }
 
+
   render() {
     let s = { inputGroupText: "aaa", selectRequestMethod:'post' };
     return (
       <div className='pm-app'>
           <input type="button" onClick={this.put.bind(this)} value="Test" />
-          <PM0 ref="pm0" schema={ s } onSchemaStateChange={ (changedSchema) => console.log(changedSchema) } onButtonClickHand={this.onButtonClickHand.bind(this)} />
+          <PM0 ref="pm0" schema={ s } 
+                 onSchemaStateChange={ (changedSchema) => console.log(changedSchema) } onButtonClickHand={this.onButtonClickHand.bind(this)} />
       </div>
     );
   }
