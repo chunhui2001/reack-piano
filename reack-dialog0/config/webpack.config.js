@@ -276,8 +276,16 @@ module.exports = function(webpackEnv) {
         // please link the files into your node_modules/ and let module-resolution kick in.
         // Make sure your source files are compiled, as they will not be processed in any way.
         new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.ProvidePlugin({
+           $: "jquery",
+           jQuery: "jquery"
+        })
       ],
     },
+    externals: [
+      'jquery': 'jquery'
+    ]
     resolveLoader: {
       plugins: [
         // Also related to Plug'n'Play, but this time it tells Webpack to load its loaders

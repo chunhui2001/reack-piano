@@ -240,6 +240,7 @@ export class _PM0 extends Component {
 
 let mixin = css`&{
   margin: auto;
+  position: relative;
   .clear {
     float: none;
     clear: both;
@@ -251,7 +252,9 @@ let mixin = css`&{
   .panel-right {
     width:265px;
     background-color:green;
-    float:left;
+    height: 100%;
+    position: absolute;
+    right: 0;
   }
   .pm-tab > span {
       -webkit-user-select: none;

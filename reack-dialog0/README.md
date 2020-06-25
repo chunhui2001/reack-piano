@@ -1,3 +1,6 @@
+#### dependencys
+# jquery-3.5.1.min.js
+
 
 # windows 下需执行 npm run dist2
 # npm install -g win-node-env
