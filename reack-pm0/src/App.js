@@ -37,7 +37,12 @@ class App extends Component {
 
 
   render() {
-    let s = { inputGroupText: "aaa", selectRequestMethod:'post' };
+    let s = { 
+              inputGroupText: "aaa", 
+              selectRequestMethod:'post', 
+              bodyRadioSelected:'none',
+              bodyRequestData: '{ "a": 1, "b": 2 }',
+            };
     return (
       <div className='pm-app'>
           <input type="button" onClick={this.put.bind(this)} value="Test" />

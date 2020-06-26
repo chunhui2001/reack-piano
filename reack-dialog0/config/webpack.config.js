@@ -283,9 +283,9 @@ module.exports = function(webpackEnv) {
         })
       ],
     },
-    externals: [
-      'jquery': 'jquery'
-    ]
+    externals: {
+        'jquery': 'jQuery'
+    },
     resolveLoader: {
       plugins: [
         // Also related to Plug'n'Play, but this time it tells Webpack to load its loaders

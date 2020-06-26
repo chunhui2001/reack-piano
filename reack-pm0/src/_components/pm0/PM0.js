@@ -11,7 +11,7 @@ export class _PM0 extends Component {
     super(props);
     this.state = {
       tabName: 'params',
-      theSchema: PMSchema('')
+      theSchema: PMSchema('https://www.google.com', 'get', 'none')
     };
   }
 
@@ -93,6 +93,9 @@ export class _PM0 extends Component {
   }
 
   getSaveButton() {
+    const { 
+      theSchema
+    } = this.state;
     if (this.props.saveButton) {
       return this.props.saveButton;
     }
@@ -111,7 +114,7 @@ export class _PM0 extends Component {
           	<div className={'pm-body container'}>
               <div className={'content'}>
                 <div className={'div1'}>
-                  <select name='selectRequestMethod' value={theSchema.selectRequestMethod || 'get'}  onChange={(e) => {this.handleInputTextChange(e)}}>
+                  <select name='selectRequestMethod' value={theSchema.selectRequestMethod || 'get'} onChange={(e) => {this.handleInputTextChange(e)}} >
                     <option value="get">GET</option>
                     <option value="post">POST</option>
                     <option value="put">PUT</option>
@@ -161,23 +164,57 @@ export class _PM0 extends Component {
   paramsTabSection() {
     return <div className={'tab-panel tab-params'}>
               <div style={{color:'gray', padding: '0.425em .625em', fontStyle: 'italic', backgroundColor: 'mintcream'}}>Query Params</div>
-              <table className={'query-params-table'}>
-                <tbody>
-                  <tr>
-                    <th style={{width:'25px'}}>&nbsp;</th>
-                    <th>KEY</th>
-                    <th>VALUE</th>
-                    <th>DESCRIPTION</th>
-                  </tr>
-                  <tr>
-                    <td style={{textAlign:'right'}}><input type="checkbox" /></td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                  </tr>
-                </tbody>
-              </table>
+              { this.getEditerTable() }
             </div>;
+  }
+
+  getEditerTable() {
+    return <table className={'query-params-table'}>
+            <tbody>
+              <tr>
+                <th style={{width:'25px'}}>&nbsp;</th>
+                <th>KEY</th>
+                <th>VALUE</th>
+                <th>DESCRIPTION</th>
+              </tr>
+              <tr>
+                <td style={{textAlign:'right'}}><input type="checkbox" /></td>
+                <td className={'inputCell'}>
+                  <div><input type="text" /></div>
+                </td>
+                <td className={'inputCell'}>
+                  <div><input type="text" /></div>
+                </td>
+                <td className={'inputCell'}>
+                  <div><input type="text" /></div>
+                </td>
+              </tr>
+              <tr>
+                <td style={{textAlign:'right'}}><input type="checkbox" /></td>
+                <td className={'inputCell'}>
+                  <div><input type="text" /></div>
+                </td>
+                <td className={'inputCell'}>
+                  <div><input type="text" /></div>
+                </td>
+                <td className={'inputCell'}>
+                  <div><input type="text" /></div>
+                </td>
+              </tr>
+              <tr>
+                <td style={{textAlign:'right'}}><input type="checkbox" /></td>
+                <td className={'inputCell'}>
+                  <div><input type="text" /></div>
+                </td>
+                <td className={'inputCell'}>
+                  <div><input type="text" /></div>
+                </td>
+                <td className={'inputCell'}>
+                  <div><input type="text" /></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>;
   }
 
   authTabSection() {
@@ -196,22 +233,66 @@ export class _PM0 extends Component {
             </div>;
   }
 
+  bodyRadioClick(type) {
+    this.setState({
+      ...this.state,
+      theSchema: {
+        ...this.state.theSchema,
+        bodyRadioSelected: type
+      }
+    });
+  }
+
+  getBodyRadioSection() {
+    if (!this.state.theSchema.bodyRadioSelected || this.state.theSchema.bodyRadioSelected === 'none') {
+      return <div style={{padding:'1em'}}>
+              <h2 style={{ textAlign:'center' }}>This request does not have body</h2>
+             </div>;
+    } else if (this.state.theSchema.bodyRadioSelected === 'form-data') {
+      return <div>
+              { this.getEditerTable() }
+             </div>;
+    } else if (this.state.theSchema.bodyRadioSelected === 'www-form-urlencoded') {
+      return <div>
+              { this.getEditerTable() }
+             </div>;
+    } else if (this.state.theSchema.bodyRadioSelected === 'appliction/json') {
+      return <div style={{ position:'relative' }}>
+               <div className={'jsonTextArea'}>
+                <textarea name='bodyRequestData' 
+                          onChange={(e) => {this.handleInputTextChange(e)}}
+                          value={ this.state.theSchema.bodyRequestData }></textarea>
+               </div>
+               <div style={{ cursor: 'pointer', position: 'absolute', top: 0, right: 0, padding: '1.5em 1.3em', backgroundColor: 'aquamarine', color: 'brown', borderRadius: '40px' }}>美化</div>
+               <div style={{ textAlign:'center', display:'none' }}>加高</div>
+             </div>;
+    } else if (this.state.theSchema.bodyRadioSelected === 'binary') {
+      return <div style={{padding:'1em'}}>
+              <h2 style={{ textAlign:'center' }}>暂不支持</h2>
+             </div>;
+    } else {
+      return <div style={{padding:'1em'}}>
+              <h2 style={{ textAlign:'center' }}>The wrong bodyRadioSelected</h2>
+             </div>;
+    }
+  }
+
   bodyTabsSection() {
     return <div className={'tab-panel tab-bodys'}>
               <div style={{color:'gray', padding: '0.425em .625em', backgroundColor: 'lavender'}}>
-                <span><input name="g" id="r-none" type="radio" /><label htmlFor="r-none">NONE</label></span>
-                <span><input name="g" id="r-form-data" type="radio" /><label htmlFor="r-form-data">form-data</label></span>
-                <span><input name="g" id="r-form-urlencoded" type="radio" /><label htmlFor="r-form-urlencoded">x-www-form-urlencoded</label></span>
-                <span><input name="g" id="r-form-raw" type="radio" /><label htmlFor="r-form-raw">raw</label></span>
-                <span><input name="g" id="r-form-binary" type="radio" /><label htmlFor="r-form-binary">binary</label></span>
+                <span><input name="g" id="r-none" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'none' }  
+                             onChange={ this.bodyRadioClick.bind(this, 'none') } /><label htmlFor="r-none">NONE</label></span>
+                <span><input name="g" id="r-form-data" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'form-data' }
+                             onChange={ this.bodyRadioClick.bind(this, 'form-data') } /><label htmlFor="r-form-data">form-data</label></span>
+                <span><input name="g" id="r-form-urlencoded" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'www-form-urlencoded' }
+                             onChange={ this.bodyRadioClick.bind(this, 'www-form-urlencoded') } /><label htmlFor="r-form-urlencoded">x-www-form-urlencoded</label></span>
+                <span><input name="g" id="r-form-raw" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'appliction/json' }
+                             onChange={ this.bodyRadioClick.bind(this, 'appliction/json') } /><label htmlFor="r-form-raw">appliction/json</label></span>
+                <span><input name="g" id="r-form-binary" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'binary' }
+                             onChange={ this.bodyRadioClick.bind(this, 'binary') } /><label htmlFor="r-form-binary">binary</label></span>
                 <div className={'clear'}></div>
               </div>
-              <div style={{padding:'1em'}}>
-                1 <br />
-                1 <br />
-                1 <br />
-                1 <br />
-              </div>
+              { this.getBodyRadioSection() }
             </div>;
   }
 
@@ -387,6 +468,35 @@ let mixin = css`&{
   }
   .pm-body .button,.pm-body input[type="button"]:active {
     background-color: darkkhaki;
+  }
+  .inputCell {
+    padding: 0 !important;
+  }
+  .inputCell > div {
+    background-color:darkkhaki;
+    padding: .325em;
+  }
+  .inputCell input {
+    background-color:darkkhaki;
+    border:none;
+    height:100%;
+    font-size:1.325em;
+    width:100%;
+    padding:0;
+  }
+  .jsonTextArea {
+    padding: 1em;
+    background-color: darkolivegreen;
+  }
+  .jsonTextArea textarea {
+    border: none;
+    border-radius: 0;
+    width: 100%;
+    background-color: darkolivegreen;
+    min-height:230px;
+    font-size: 1.45em;
+    color: gold;
+    resize:none;
   }
 }`;
 

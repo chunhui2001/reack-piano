@@ -1,8 +1,15 @@
 
-const PMSchema = (inputGroupText, selectRequestMethod) =>{
+const PMSchema = (
+	inputGroupText, 
+	selectRequestMethod, 
+	bodyRadioSelected, 
+	bodyRequestData
+) =>{
     return {
         inputGroupText: inputGroupText,
-        selectRequestMethod: selectRequestMethod
+        selectRequestMethod: selectRequestMethod,
+        bodyRadioSelected: bodyRadioSelected,
+        bodyRequestData: bodyRequestData
     };
 }
 
