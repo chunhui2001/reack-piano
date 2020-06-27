@@ -132,6 +132,7 @@ export class _PM0 extends Component {
                 <input onClick={this.onButtonClick.bind(this, 'ping')} disabled={!theSchema.inputGroupText.trim()} type="button" value="Ping" />
                 { this.getSaveButton() }
           	  </div>
+              <div className={'clear'}></div>
             </div>
             <div className={'pm-m'}>
             	<div className={'pm-tab'}>
@@ -318,7 +319,7 @@ export class _PM0 extends Component {
 
   bodyTabsSection() {
     return <div className={'tab-panel tab-bodys'}>
-              <div style={{color:'gray', padding: '0.425em .625em', backgroundColor: 'lavender'}}>
+              <div style={{color:'gray', padding: '0.625em 0.625em', backgroundColor: 'lavender'}}>
                 <span><input name="g" id="r-none" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'none' }  
                              onChange={ (e) => this.bodyRadioClick(e, 'none') } /><label htmlFor="r-none">NONE</label></span>
                 <span><input name="g" id="r-form-data" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'form-data' }
@@ -481,7 +482,6 @@ let mixin = css`&{
   }
   .container {
      height: auto;
-     overflow: hidden;
   }
   .sidebar {
     float: right;
