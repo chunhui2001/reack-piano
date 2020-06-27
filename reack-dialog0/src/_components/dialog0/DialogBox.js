@@ -26,20 +26,26 @@ export class _DialogBox extends React.Component {
         const { onClick, param } = this.props;
         this.setState({ isDialogOpen: true });
         this.scrollTop = $(document).scrollTop();
+        //this.bodyMargin(true);
         disableBodyScroll(this.bodyElement);
-        //this.bodyMargin();
+        //this.bodyMargin(false);
         if (onClick) {
         	onClick(this, param);
         }
     }
 
-    bodyMargin() {
-       $('body').css("width", $('body').width() + 'px');
+    bodyMargin(b) {
+        if (b) {
+            $('body').css("width", ($('body').width() - 32) + 'px');
+        } else {
+            $('body').css("width", ($('body').width() + 32) + 'px');
+        }
     }
 
     handleClose = () => {
         this.setState({ isDialogOpen: false });
         enableBodyScroll(this.bodyElement);
+        //this.bodyMargin(false);
     }
 
     componentWillUnmount() {

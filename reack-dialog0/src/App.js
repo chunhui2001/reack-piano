@@ -13,29 +13,31 @@ class App extends Component {
   render() {
     return (
       <div className="Dialog0">
-        <DialogBox>Dialog0</DialogBox>
-        <h1>1</h1>
-        <h1>1</h1>
-        <h1>1</h1>
-        <h1>1</h1>
-        <h1>1</h1>
-        <h1>1</h1>
-        <h1>1</h1>
-        <h1>1</h1>
-        <h1>1</h1>
-        <h1>1</h1>
-        <h1>1</h1>
-        <h1>1</h1>
-        <h1>1</h1>
-        <h1>1</h1>
-        <h1>1</h1>
-        <h1>1</h1>
-        <h1>1</h1>
-        <h1>1</h1>
-        <h1>1</h1>
-        <h1>1</h1>
-        <h1>1</h1>
-        <DialogBox>Dialog0</DialogBox>
+        <div style={{backgroundColor:'red'}}>
+            <DialogBox>Dialog0</DialogBox>
+            <h1 style={{textAlign:'right'}}>1</h1>
+            <h1 style={{textAlign:'right'}}>1</h1>
+            <h1 style={{textAlign:'right'}}>1</h1>
+            <h1 style={{textAlign:'right'}}>1</h1>
+            <h1 style={{textAlign:'right'}}>1</h1>
+            <h1 style={{textAlign:'right'}}>1</h1>
+            <h1 style={{textAlign:'right'}}>1</h1>
+            <h1 style={{textAlign:'right'}}>1</h1>
+            <h1 style={{textAlign:'right'}}>1</h1>
+            <h1 style={{textAlign:'right'}}>1</h1>
+            <h1 style={{textAlign:'right'}}>1</h1>
+            <h1 style={{textAlign:'right'}}>1</h1>
+            <h1 style={{textAlign:'right'}}>1</h1>
+            <h1 style={{textAlign:'right'}}>1</h1>
+            <h1 style={{textAlign:'right'}}>1</h1>
+            <h1 style={{textAlign:'right'}}>1</h1>
+            <h1 style={{textAlign:'right'}}>1</h1>
+            <h1 style={{textAlign:'right'}}>1</h1>
+            <h1 style={{textAlign:'right'}}>1</h1>
+            <h1 style={{textAlign:'right'}}>1</h1>
+            <h1 style={{textAlign:'right'}}>1</h1>
+            <DialogBox>Dialog0</DialogBox>
+        </div>
       </div>
     );
   }
