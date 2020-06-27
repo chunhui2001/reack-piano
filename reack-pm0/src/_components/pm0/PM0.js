@@ -233,7 +233,10 @@ export class _PM0 extends Component {
             </div>;
   }
 
-  bodyRadioClick(type) {
+  bodyRadioClick(e, type) {
+    if (type === 'otherInput') {
+      type = e.target.value;
+    }
     this.setState({
       ...this.state,
       theSchema: {
@@ -256,40 +259,77 @@ export class _PM0 extends Component {
       return <div>
               { this.getEditerTable() }
              </div>;
-    } else if (this.state.theSchema.bodyRadioSelected === 'appliction/json') {
+    } else if (this.state.theSchema.bodyRadioSelected === 'application/json') {
       return <div style={{ position:'relative' }}>
                <div className={'jsonTextArea'}>
                 <textarea name='bodyRequestData' 
                           onChange={(e) => {this.handleInputTextChange(e)}}
                           value={ this.state.theSchema.bodyRequestData }></textarea>
                </div>
-               <div style={{ cursor: 'pointer', position: 'absolute', top: 0, right: 0, padding: '1.5em 1.3em', backgroundColor: 'aquamarine', color: 'brown', borderRadius: '40px' }}>美化</div>
+               <div className={'beautifulJson'} onClick={ this.beautifulJsonClick.bind(this) }>美化</div>
                <div style={{ textAlign:'center', display:'none' }}>加高</div>
              </div>;
-    } else if (this.state.theSchema.bodyRadioSelected === 'binary') {
-      return <div style={{padding:'1em'}}>
-              <h2 style={{ textAlign:'center' }}>暂不支持</h2>
+    } 
+    // others
+    return <div style={{ position:'relative' }}>
+               <div className={'jsonTextArea'} style={{ backgroundColor: 'darkblue' }}>
+                <textarea name='bodyRequestData' style={{ backgroundColor: 'darkblue' }}
+                          onChange={(e) => {this.handleInputTextChange(e)}}
+                          value={ this.state.theSchema.bodyRequestData }></textarea>
+               </div>
              </div>;
-    } else {
-      return <div style={{padding:'1em'}}>
-              <h2 style={{ textAlign:'center' }}>The wrong bodyRadioSelected</h2>
-             </div>;
+  }
+
+  beautifulJsonClick() {
+    this.setState({
+      ...this.state,
+      theSchema: {
+        ...this.state.theSchema,
+        bodyRequestData: JSON.stringify(JSON.parse(this.state.theSchema.bodyRequestData), null, 2)
+      }
+    });
+  }
+
+
+  getBodyRadioSelectedChecked() {
+    if (this.state.theSchema.bodyRadioSelected === 'none') {
+      return false;
     }
+    if (this.state.theSchema.bodyRadioSelected === 'www-form-urlencoded') {
+      return false;
+    }
+    if (this.state.theSchema.bodyRadioSelected === 'form-data') {
+      return false;
+    }
+    if (this.state.theSchema.bodyRadioSelected === 'application/json') {
+      return false;
+    }
+    return true;
+  }
+
+  getBodyRadioOtherSelectedInput() {
+    if (this.getBodyRadioSelectedChecked()) {
+      return <input style={{ borderRadius: 0, padding: '.225em .625em', borderWidth: '1px', borderColor: 'black', fontSize: '.8em', color: 'blue', backgroundColor: 'bisque', borderStyle: 'dashed' }} 
+                    onChange={ (e) => this.bodyRadioClick(e, 'otherInput') }
+                    type="text" value={ this.state.theSchema.bodyRadioSelected } />;
+    }
+    return null;
   }
 
   bodyTabsSection() {
     return <div className={'tab-panel tab-bodys'}>
               <div style={{color:'gray', padding: '0.425em .625em', backgroundColor: 'lavender'}}>
                 <span><input name="g" id="r-none" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'none' }  
-                             onChange={ this.bodyRadioClick.bind(this, 'none') } /><label htmlFor="r-none">NONE</label></span>
+                             onChange={ (e) => this.bodyRadioClick(e, 'none') } /><label htmlFor="r-none">NONE</label></span>
                 <span><input name="g" id="r-form-data" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'form-data' }
-                             onChange={ this.bodyRadioClick.bind(this, 'form-data') } /><label htmlFor="r-form-data">form-data</label></span>
+                             onChange={ (e) => this.bodyRadioClick(e, 'form-data') } /><label htmlFor="r-form-data">form-data</label></span>
                 <span><input name="g" id="r-form-urlencoded" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'www-form-urlencoded' }
-                             onChange={ this.bodyRadioClick.bind(this, 'www-form-urlencoded') } /><label htmlFor="r-form-urlencoded">x-www-form-urlencoded</label></span>
-                <span><input name="g" id="r-form-raw" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'appliction/json' }
-                             onChange={ this.bodyRadioClick.bind(this, 'appliction/json') } /><label htmlFor="r-form-raw">appliction/json</label></span>
-                <span><input name="g" id="r-form-binary" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'binary' }
-                             onChange={ this.bodyRadioClick.bind(this, 'binary') } /><label htmlFor="r-form-binary">binary</label></span>
+                             onChange={ (e) => this.bodyRadioClick(e, 'www-form-urlencoded') } /><label htmlFor="r-form-urlencoded">x-www-form-urlencoded</label></span>
+                <span><input name="g" id="r-form-raw" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'application/json' }
+                             onChange={ (e) => this.bodyRadioClick(e, 'application/json') } /><label htmlFor="r-form-raw">application/json</label></span>
+                <span><input name="g" id="r-form-other" type="radio" checked={ this.getBodyRadioSelectedChecked() }
+                             onChange={ (e) => this.bodyRadioClick(e, 'other') } /><label htmlFor="r-form-other">other</label></span>
+                { this.getBodyRadioOtherSelectedInput() }
                 <div className={'clear'}></div>
               </div>
               { this.getBodyRadioSection() }
@@ -437,6 +477,7 @@ let mixin = css`&{
     display:inline-block;
     float:left;
     margin-right:1em;
+    padding-top: .15em;
   }
   .container {
      height: auto;
@@ -497,6 +538,17 @@ let mixin = css`&{
     font-size: 1.45em;
     color: gold;
     resize:none;
+  }
+  .beautifulJson {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 1.5em 1.3em;
+    background-color: aquamarine;
+    color: brown;
+    border-radius: 40px;
+    user-select: none;
   }
 }`;
 
