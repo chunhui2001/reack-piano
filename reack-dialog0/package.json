@@ -1,6 +1,6 @@
 {
   "name": "reack-dialog0",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "private": false,
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",

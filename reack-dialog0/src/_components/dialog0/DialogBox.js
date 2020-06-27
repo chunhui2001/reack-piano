@@ -12,7 +12,8 @@ export class _DialogBox extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isDialogOpen: false
+            isDialogOpen: false,
+            timestamp: new Date().getTime()
         }
     }
 
@@ -40,6 +41,13 @@ export class _DialogBox extends React.Component {
         } else {
             $('body').css("width", ($('body').width() + 32) + 'px');
         }
+    }
+
+    refresh() {
+        this.setState({
+            ...this.state,
+            timestamp: new Date().getTime()
+        }); 
     }
 
     handleClose = () => {
@@ -94,6 +102,7 @@ export class _DialogBox extends React.Component {
                     { this.props.text || "Open Dialog"}
                 </button>
                 { this.getBoxContent() }
+                <div style={{display:'none'}}>{this.state.timestamp}</div>
             </div>
         );
     }
