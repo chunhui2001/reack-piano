@@ -81,7 +81,7 @@ export class _PM0 extends Component {
       if (this.responseComponent) {
           return this.responseComponent;
       }
-      return <h1>888</h1>;
+      return <h1>Current does not have response.</h1>;
   }
 
 
