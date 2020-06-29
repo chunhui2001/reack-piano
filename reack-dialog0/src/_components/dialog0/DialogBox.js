@@ -35,6 +35,10 @@ export class _DialogBox extends React.Component {
         }
     }
 
+    close = () => {
+        this.handleClose();
+    }
+
     bodyMargin(b) {
         if (b) {
             $('body').css("width", ($('body').width() - 32) + 'px');
