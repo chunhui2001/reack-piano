@@ -25,6 +25,8 @@ class App extends Component {
     this.table.columns = tableColumn;
     this.table.operator = ['modal','delete'];
     this.table.data = [{id:1, name: 'n1'}, {id:2, name: 'n2'}];
+    this.table.pc = 10;
+    this.table.pi = 0;
     this.state = {
       datasource: this.table,
       loading: false
@@ -40,11 +42,24 @@ class App extends Component {
     });
   }
 
+  onPageChange(pi) {
+    this.setState({
+      ...this.state,
+      datasource: {
+        ...this.state.datasource,
+        pi: pi
+      }
+    });
+
+  }
+
   render() {
     return (
       <div className="App" style={{width:'600px'}}>
         <input type="button" value={`click (${this.state.loading})`} onClick={ (e) => { this.bthClick(e) } } />
-        <Table schema={this.state.datasource} loading = { this.state.loading }>Table</Table>
+        <Table schema={this.state.datasource} 
+               onPageChange={this.onPageChange.bind(this)}
+               loading = { this.state.loading }>Table</Table>
       </div>
     );
   }

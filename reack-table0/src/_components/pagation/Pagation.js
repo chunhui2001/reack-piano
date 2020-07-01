@@ -1,6 +1,9 @@
 /* eslint-disable */
 import React, { Component } from 'react';
 
+
+
+
 export class Pagation extends Component {
 
     pageGroupSize = 8;
@@ -10,12 +13,10 @@ export class Pagation extends Component {
         this.state = {};
     }
 
-    UNSAFE_componentWillMount () {
-
-        let pageGroupCount = this.calculatePageGroupCount(this.props.pc);
-        let pageGroupIndex = this.calculatePageGroupIndex(this.props.pc, pageGroupCount, this.props.pi);
-        let pageGroupRange = this.calculateGroupRangeByGroupIndex(this.props.pc, pageGroupCount, pageGroupIndex);
-
+    componentDidMount () {
+        let pageGroupCount = Math.ceil(this.props.pc / 8); // 计算页组数量
+        let pageGroupIndex = Pagation.calculatePageGroupIndex(this.props.pc, pageGroupCount, this.props.pi);
+        let pageGroupRange = Pagation.calculateGroupRangeByGroupIndex(this.props.pc, pageGroupCount, pageGroupIndex);
         this.setState({
             pc: this.props.pc,
             pi: this.props.pi,
@@ -25,28 +26,23 @@ export class Pagation extends Component {
         });
     }
 
-    UNSAFE_componentWillReceiveProps (nextProps) {
-        let pageGroupCount = this.calculatePageGroupCount(nextProps.pc);
-        let pageGroupIndex = this.calculatePageGroupIndex(nextProps.pc, pageGroupCount, nextProps.pi);
-        let pageGroupRange = this.calculateGroupRangeByGroupIndex(nextProps.pc, pageGroupCount, pageGroupIndex);
-        this.setState({
-            pc: nextProps.pc,
-            pi: nextProps.pi,
+    static getDerivedStateFromProps(props, state) {
+        let pageGroupCount = Math.ceil(props.pc / 8); // 计算页组数量
+        let pageGroupIndex = Pagation.calculatePageGroupIndex(props.pc, pageGroupCount, props.pi);
+        let pageGroupRange = Pagation.calculateGroupRangeByGroupIndex(props.pc, pageGroupCount, pageGroupIndex);
+        return {
+            pc: props.pc,
+            pi: props.pi,
             gc: pageGroupCount,               // 总页组数量
             gi: pageGroupIndex,   // 当前是第几个页组
             gr: pageGroupRange   // 当前组范围
-        });
-    }
-
-    // 计算页组数量
-    calculatePageGroupCount(pageCount) {
-        return Math.ceil(pageCount / this.pageGroupSize);
+        };
     }
 
     // 计算页组下标
-    calculatePageGroupIndex(pageCount, pageGroupCount, pageIndex) {
+    static calculatePageGroupIndex(pageCount, pageGroupCount, pageIndex) {
         for (let groupIndex=0; groupIndex<pageGroupCount; groupIndex++) {
-            let groupRange = this.calculateGroupRangeByGroupIndex(pageCount, pageGroupCount, groupIndex);
+            let groupRange = Pagation.calculateGroupRangeByGroupIndex(pageCount, pageGroupCount, groupIndex);
             if (pageIndex >= groupRange.left && pageIndex <= groupRange.right) {
                 return groupIndex;
             }
@@ -55,11 +51,11 @@ export class Pagation extends Component {
     }
 
     // 当前页组范围
-    calculateGroupRangeByGroupIndex(pageCount, pageGroupCount, groupIndex) {
+    static calculateGroupRangeByGroupIndex(pageCount, pageGroupCount, groupIndex) {
         for (let i=0; i<pageGroupCount; i++) {
             if (i === groupIndex) {
-                let groupRangeLeft = i * this.pageGroupSize;
-                let groupRangeRight = groupRangeLeft + this.pageGroupSize - 1;
+                let groupRangeLeft = i * 8;
+                let groupRangeRight = groupRangeLeft + 8 - 1;
                 if (groupRangeRight > pageCount-1) {
                     groupRangeRight = pageCount-1;
                 }

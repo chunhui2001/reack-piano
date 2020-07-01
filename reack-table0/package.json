@@ -1,6 +1,6 @@
 {
   "name": "reack-table0",
-  "version": "0.0.4",
+  "version": "0.0.7",
   "private": false,
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
