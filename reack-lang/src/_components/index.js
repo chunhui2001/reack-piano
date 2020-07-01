@@ -3,5 +3,6 @@
 // allows for simpler scaling when your library grows in size, and even adds
 // different tech like TypeScript
 
-export { default as Lang } from './Lang';
-export { default as Cookie } from './Cookie';
+export { default as Lang } from './lang';
+export { default as Cookie } from './cookie';
+export { default as HttpWrapper } from './http';
