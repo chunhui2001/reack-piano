@@ -190,6 +190,34 @@ export class _Liquidity extends Component {
 		}
 	}
 
+	// const date = new Date('2010-08-05')
+	// const dateTimeFormat = new Intl.DateTimeFormat('cn', { year: 'numeric', month: 'short', day: '2-digit' }) // en
+	// const [{ value: month },,{ value: day },,{ value: year }] = dateTimeFormat.formatToParts(date ) 
+	// console.log(`${day}-${month}-${year }`)
+
+	// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/formatToParts
+	// day:
+	// 	The representation of the day.
+	// 	Possible values are "numeric", "2-digit".
+	// weekday:
+	// 	The representation of the weekday.
+	// 	Possible values are "narrow", "short", "long".
+	// year:
+	// 	The representation of the year.
+	// 	Possible values are "numeric", "2-digit".
+	// month:
+	// 	The representation of the month.
+	// 	Possible values are "numeric", "2-digit", "narrow", "short", "long".
+	// hour:
+	// 	The representation of the hour.
+	// 	Possible values are "numeric", "2-digit".
+	// minute: 
+	// 	The representation of the minute.
+	// 	Possible values are "numeric", "2-digit".
+	// second:
+	// 	The representation of the second.
+	// 	Possible values are "numeric", 2-digit".
+
 	render() {
 		return (
 			<div className={`${this.props.className}`}>
