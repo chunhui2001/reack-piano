@@ -97,12 +97,15 @@ export class _Liquidity extends Component {
 					<div className={'clear'}></div>
 				</div>
 				<hr style={{margin:'10px -11px 0 -11px', padding:0}} />
-				<div style={{padding: '5px 0'}}>
+				<div style={{padding: '5px 0 2px'}}>
 					<span style={{ display:'inline-block', float:'left', color: 'darkgoldenrod' }}>Order type</span>
 					<div style={{display:'inline-block', float:'right'}}>
-						<Select></Select>
+						<Select onChange={(val) => this.onSelectChanged(val, c)}></Select>
 					</div>
+					<div className={'clear'}></div>
 				</div>
+				{ this.state[c] && this.state[c].couter && this.state[c].couter.otype === 'fok' && <hr style={{margin:'7px -11px 0 -11px', padding:0}} /> }
+				{ this.getOTypeSection(c) }
 			</div>;
 		});
 		return <div>
@@ -117,6 +120,38 @@ export class _Liquidity extends Component {
 			currentInstrument: instrument,
 			tickers: TICKETS[instrument]
 		});
+	}
+
+	onSelectChanged(val, ticket) {
+		let theTicket = this.state[ticket];
+		if (!theTicket) {
+			theTicket = {};
+		}
+		if (!theTicket.couter) {
+			theTicket.couter = {};
+		}
+		theTicket.couter.otype = val;
+		this.setState({
+			...this.state,
+			[ticket]: theTicket
+		});
+		console.log(theTicket.couter, ticket);
+	}
+
+	getOTypeSection(ticket) {
+		if (this.state[ticket] && this.state[ticket].couter && this.state[ticket].couter.otype === 'fok') {
+			return <div style={{padding: '5px 0px 0px', textAlign: 'left'}}>
+				<span style={{ color: 'darkgrey' }}>Allowed slippage (bps)</span>
+				<input style={{border:'dashed 1px gray', textAlign:'center', padding:'2px', fontSize: '14px', width: '40px', float:'right' }} type="text" 
+						   value={ 1 }
+					       onChange={(e) => this.onInputFokQuantityChange(e, ticket)} />
+			</div>
+		}
+		return null;
+	}
+
+	onInputFokQuantityChange = (e, ticket) => {
+
 	}
 
 	onInputChange = (e, ticket) => {
@@ -162,12 +197,13 @@ export class _Liquidity extends Component {
 			if (!theTicket) {
 				theTicket = {};
 			}
-			theTicket.couter = {
-				ts: this.formatDate(new Date()),
-				ask: Math.floor((Math.random()*10000)+1),
-				bid: Math.floor((Math.random()*10000)+1),
-				quantity: Math.floor((Math.random()*10000)+1)
+			if (!theTicket.couter) {
+				theTicket.couter = {};
 			}
+			theTicket.couter.ts = this.formatDate(new Date());
+			theTicket.couter.ask = Math.floor((Math.random()*10000)+1);
+			theTicket.couter.bid = Math.floor((Math.random()*10000)+1);
+			theTicket.couter.quantity = Math.floor((Math.random()*10000)+1);
 			this.setState({
 				...this.state,
 				[ticket]: theTicket
