@@ -108,7 +108,7 @@ export class _Liquidity extends Component {
 				{ this.getOTypeSection(c) }
 			</div>;
 		});
-		return <div>
+		return <div style={{display: 'flex', flexFlow: 'wrap'}}>
 			{ _tickers }
 			<div className={"clear"}></div>
 		</div>
@@ -237,7 +237,7 @@ export class _Liquidity extends Component {
 					<span onClick={ (e) => this.onInstrumentClick('JPY') } className={ this.state.currentInstrument === 'JPY' ? 'active' : ''}>JPY</span>
 					<span onClick={ (e) => this.onInstrumentClick('UST') } className={ this.state.currentInstrument === 'UST' ? 'active' : ''}>UST</span>
 				</div>
-				<div>
+				<div >
 					{ this.getTickers() }
 				</div>
 			</div>
