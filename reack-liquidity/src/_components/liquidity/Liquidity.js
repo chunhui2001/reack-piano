@@ -1,28 +1,13 @@
 import React, { Component } from 'react';
 import styled, { css } from "styled-components";
 
+
+import Select from "../select/Select";
+
 const TICKETS = {
 	"JPY": ['BTC/JPY','ETH/JPY','XRP/JPY','LTC/JPY','BCH/JPY','USD/JPY','GBP/JPY','EUR/JPY','AUD/JPY','CAD/JPY','CHF/JPY'],
 	"UST": ['BTC/UST','ETH/UST','XRP/UST'],
 };
-
-Date.prototype.Format = function(fmt) { 
-  var o = {   
-    "M+" : this.getMonth()+1,                 //月份   
-    "d+" : this.getDate(),                    //日   
-    "h+" : this.getHours(),                   //小时   
-    "m+" : this.getMinutes(),                 //分   
-    "s+" : this.getSeconds(),                 //秒   
-    "q+" : Math.floor((this.getMonth()+3)/3), //季度   
-    "S"  : this.getMilliseconds()             //毫秒   
-  };   
-  if(/(y+)/.test(fmt))   
-    fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));   
-  for(var k in o)   
-    if(new RegExp("("+ k +")").test(fmt))   
-  fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));   
-  return fmt;   
-} 
 
 export class _Liquidity extends Component {
 
@@ -54,7 +39,7 @@ export class _Liquidity extends Component {
 				<div className={'tick-header'} style={{ textAlign:'left', marginBottom: '0.30em'}}>
 					<span className={`crypto-icons ${c.split('/')[0].toLowerCase()} x18`} style={{marginRight:'6px'}}></span>
 					<span style={{fontSize:'18px'}}>{c}</span>
-					<span style={{marginLeft: '25%',fontSize: '14px', color: 'brown', fontWeight: 'bold'}}>
+					<span style={{marginLeft: '20%',fontSize: '14px', color: 'brown', fontWeight: 'bold'}}>
 						{ this.state[c] && this.state[c].couter && this.state[c].couter.ts }
 					</span>
 					<span className={'crypto-icons star x18'} style={{padding:0,color:'brown',float:'right'}}>&#9734;</span>
@@ -115,7 +100,7 @@ export class _Liquidity extends Component {
 				<div style={{padding: '5px 0'}}>
 					<span style={{ display:'inline-block', float:'left', color: 'darkgoldenrod' }}>Order type</span>
 					<div style={{display:'inline-block', float:'right'}}>
-						888
+						<Select></Select>
 					</div>
 				</div>
 			</div>;
@@ -178,7 +163,7 @@ export class _Liquidity extends Component {
 				theTicket = {};
 			}
 			theTicket.couter = {
-				ts: this.formatDate(new Date(), "HH:mm:ss"),
+				ts: this.formatDate(new Date()),
 				ask: Math.floor((Math.random()*10000)+1),
 				bid: Math.floor((Math.random()*10000)+1),
 				quantity: Math.floor((Math.random()*10000)+1)
@@ -190,33 +175,9 @@ export class _Liquidity extends Component {
 		}
 	}
 
-	// const date = new Date('2010-08-05')
-	// const dateTimeFormat = new Intl.DateTimeFormat('cn', { year: 'numeric', month: 'short', day: '2-digit' }) // en
-	// const [{ value: month },,{ value: day },,{ value: year }] = dateTimeFormat.formatToParts(date ) 
-	// console.log(`${day}-${month}-${year }`)
-
-	// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/formatToParts
-	// day:
-	// 	The representation of the day.
-	// 	Possible values are "numeric", "2-digit".
-	// weekday:
-	// 	The representation of the weekday.
-	// 	Possible values are "narrow", "short", "long".
-	// year:
-	// 	The representation of the year.
-	// 	Possible values are "numeric", "2-digit".
-	// month:
-	// 	The representation of the month.
-	// 	Possible values are "numeric", "2-digit", "narrow", "short", "long".
-	// hour:
-	// 	The representation of the hour.
-	// 	Possible values are "numeric", "2-digit".
-	// minute: 
-	// 	The representation of the minute.
-	// 	Possible values are "numeric", "2-digit".
-	// second:
-	// 	The representation of the second.
-	// 	Possible values are "numeric", 2-digit".
+	formatDate = (date) => {
+		return new Intl.DateTimeFormat('cn', { hour: 'numeric', minute: 'numeric', second: 'numeric' }).format(date);
+	}
 
 	render() {
 		return (
