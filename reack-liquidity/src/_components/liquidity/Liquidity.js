@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled, { css } from "styled-components";
+import { Select0 } from 'reack-select0';
 
 
 import Select from "../select/Select";
@@ -218,6 +219,7 @@ export class _Liquidity extends Component {
 	render() {
 		return (
 			<div className={`${this.props.className}`}>
+				<Select0></Select0>
 				<div style={{textAlign:'center'}}>
 					<span className={'crypto-icons star x90'}>&#9733;</span>
 					<span className={'crypto-icons star x90'}>&#9734;</span>
@@ -247,7 +249,7 @@ export class _Liquidity extends Component {
 }
 
 
-let mixin = css`&{
+let mixinLiquidity = css`&{
 	max-width: 1136px;
     margin: auto;
 	.clear {
@@ -341,7 +343,7 @@ let mixin = css`&{
 }`;
 
 const Liquidity = styled(_Liquidity)`
-    ${mixin}
+    ${mixinLiquidity}
 `;
 
 

@@ -1,6 +1,6 @@
 {
-  "name": "reack-liquidity",
-  "version": "0.0.8",
+  "name": "reack-select0",
+  "version": "0.0.7",
   "private": false,
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
@@ -53,7 +53,6 @@
     "postcss-preset-env": "6.5.0",
     "postcss-safe-parser": "4.0.1",
     "rc-bmap": "^0.2.4",
-    "reack-select0": "0.0.7",
     "react": "^16.12.0",
     "react-addons-css-transition-group": "^15.6.2",
     "react-app-polyfill": "^0.2.2",
@@ -130,7 +129,7 @@
       "react-app"
     ]
   },
-  "main": "dist/reack_liquidity.js",
+  "main": "dist/reack_select0.js",
   "__main": "index.js",
   "author": "Chunhui.zhang <chunhui2001@gmail.com>",
   "license": "MIT",
