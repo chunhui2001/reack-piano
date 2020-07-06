@@ -10,6 +10,12 @@ export class _Select0 extends Component {
 				<li>GET</li>
 				<li>POST</li>
 				<li>DELTE</li>
+                <li>DELTE</li>
+                <li>DELTE</li>
+                <li>DELTE</li>
+                <li>DELTE</li>
+                <li>DELTE</li>
+                <li>DELTE</li>
 			</ul>
 		</div>;
 	}
@@ -17,24 +23,36 @@ export class _Select0 extends Component {
 }
 
 let mixinSelect0 = css`&{
-    background-color: aqua;
+    background-color: green;
     display: inline-block;
     position: relative;
-    overflow: hidden;
-    >span:hover {
-    	background-color: blue;
+    :hover {
+        background-color: red;
+    }
+    :hover > ul {
+        display: inline;
     }
     > ul {
-    	margin: 0;
-    	padding: 0;
-    	list-style: none;
-    	position: absolute;
-    	left: 0;
-    	margin-top: 22px;
-    	min-width: 100%;
+	    margin: 0;
+        padding: 0;
+        list-style: none;
+        position: absolute;
+        left: 0;
+        top:100%;
+        margin-top: 0%;
+        min-width: 100%;
+        display: none;
+    }
+    > ul > li {
+        background-color: red;
+        background-color: blue;
+    }
+    > ul > li:hover {
+        background-color: red;
     }
     .sel {
-    	background-color: green;
+        padding: 0 .625em;
+        display: inline-block;
     }
 }`;
 

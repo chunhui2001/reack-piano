@@ -13,8 +13,11 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div>
+        <div style={{height:'auto', backgroundColor:'red'}}>
           <Select0>Select0</Select0>
+          <Select0>Select1</Select0>
+          <Select0>Select2</Select0>
+          <Select0>Select3</Select0>
         </div>
       </div>
     );
