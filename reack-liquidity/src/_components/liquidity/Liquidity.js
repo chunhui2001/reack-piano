@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import styled, { css } from "styled-components";
 import { Select0 } from 'reack-select0';
 
-
-import Select from "../select/Select";
-
 const TICKETS = {
 	"JPY": ['BTC/JPY','ETH/JPY','XRP/JPY','LTC/JPY','BCH/JPY','USD/JPY','GBP/JPY','EUR/JPY','AUD/JPY','CAD/JPY','CHF/JPY'],
 	"UST": ['BTC/UST','ETH/UST','XRP/UST'],
@@ -97,15 +94,15 @@ export class _Liquidity extends Component {
 					</div>
 					<div className={'clear'}></div>
 				</div>
-				<hr style={{margin:'10px -11px 0 -11px', padding:0}} />
+				<hr style={{margin:'10px -8px 0 -8px', padding:0}} />
 				<div style={{padding: '5px 0 2px'}}>
 					<span style={{ display:'inline-block', float:'left', color: 'darkgoldenrod' }}>Order type</span>
 					<div style={{display:'inline-block', float:'right'}}>
-						<Select onChange={(val) => this.onSelectChanged(val, c)}></Select>
+						<Select0 onChange={(val) => this.onSelectChanged(val, c)}></Select0>
 					</div>
 					<div className={'clear'}></div>
 				</div>
-				{ this.state[c] && this.state[c].couter && this.state[c].couter.otype === 'fok' && <hr style={{margin:'7px -11px 0 -11px', padding:0}} /> }
+				{ this.state[c] && this.state[c].couter && this.state[c].couter.otype === 'fok' && <hr style={{margin:'7px -8px 0 -8px', padding:0}} /> }
 				{ this.getOTypeSection(c) }
 			</div>;
 		});
@@ -219,7 +216,6 @@ export class _Liquidity extends Component {
 	render() {
 		return (
 			<div className={`${this.props.className}`}>
-				<Select0></Select0>
 				<div style={{textAlign:'center'}}>
 					<span className={'crypto-icons star x90'}>&#9733;</span>
 					<span className={'crypto-icons star x90'}>&#9734;</span>
@@ -248,7 +244,6 @@ export class _Liquidity extends Component {
 
 }
 
-
 let mixinLiquidity = css`&{
 	max-width: 1136px;
     margin: auto;
@@ -268,7 +263,6 @@ let mixinLiquidity = css`&{
 		margin-bottom:.625em;
 		padding:.525em;
 		text-align:center;
-		overflow: hidden;
 	}
 	.tick-header {
 		height:24px
