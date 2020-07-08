@@ -26,11 +26,13 @@ export class _Drop0 extends Component {
 
 let mixinDrop0 = css`&{
     background-color: green;
-    display: inline-block;
+    display: table;
     position: relative;
     height:100%
+    float:left;
+    z-index: 999;
     :hover {
-        background-color: red;
+        background-color: darkgoldenrod;
     }
     :hover > ul {
         display: inline;

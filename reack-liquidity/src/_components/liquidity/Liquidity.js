@@ -95,10 +95,11 @@ export class _Liquidity extends Component {
 					<div className={'clear'}></div>
 				</div>
 				<hr style={{margin:'10px -8px 0 -8px', padding:0}} />
-				<div style={{padding: '5px 0 2px'}}>
+				<div style={{padding: '10px 0 2px'}}>
 					<span style={{ display:'inline-block', float:'left', color: 'darkgoldenrod' }}>Order type</span>
 					<div style={{display:'inline-block', float:'right'}}>
-						<Select0 onChange={(val) => this.onSelectChanged(val, c)}></Select0>
+          				<Select0 options={[{text: 'Market order', value:'mkt', selected: true}, {text: 'Fill or kill', value:'fok'}]} 
+          						 onSelectChanged={ (selectedValue) => this.onSelectChanged(selectedValue, c) }>Select3</Select0>
 					</div>
 					<div className={'clear'}></div>
 				</div>
@@ -133,7 +134,6 @@ export class _Liquidity extends Component {
 			...this.state,
 			[ticket]: theTicket
 		});
-		console.log(theTicket.couter, ticket);
 	}
 
 	getOTypeSection(ticket) {

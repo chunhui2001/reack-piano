@@ -6,13 +6,14 @@ export class _Select0 extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            options: [{text: 'GET', value:'get'}, {text: 'POST', value:'post', selected: true}]
+            options: null
         };
     }
 
     componentDidMount() {
         this.setState({
             ...this.state,
+            options: this.props.options,
             open: false
         });
     }
@@ -27,9 +28,27 @@ export class _Select0 extends Component {
 
     onSelectChanged = (value) => {
         let currentSelected = this.getSelected();
-        if (!currentSelected || currentSelected.value !== value) {
-            this.setSelected(value);
+        if (!this.state.options || this.state.options.length === 0) {
+            return null;
         }
+        let _options = this.state.options.map(m => {
+            return {
+                ...m,
+                selected: m.value === value
+            }
+        });
+        this.setState({
+            ...this.state,
+            options: _options,
+            open: false
+        });
+        if (currentSelected.value === value) {
+            return;
+        }
+        const { onSelectChanged } = this.props;
+        if (onSelectChanged) {
+            onSelectChanged(value);
+        } 
     }
 
     getOptionsSection() {
@@ -54,23 +73,6 @@ export class _Select0 extends Component {
         return this.state.options[0];
     }
 
-    setSelected(value) {
-        if (!this.state.options || this.state.options.length === 0) {
-            return null;
-        }
-        let _options = this.state.options.map(m => {
-            return {
-                ...m,
-                selected: m.value === value
-            }
-        });
-        this.setState({
-            ...this.state,
-            options: _options,
-            open: false
-        });
-    }
-
 	render() {
 		return <div className={`${this.props.className} Select0`}>
             <div style={{display:'table', height:'100%'}} onClick={this.onOpenClick.bind(this)}>
@@ -85,11 +87,11 @@ export class _Select0 extends Component {
 
 let mixinSelect0 = css`&{
     background-color: burlywood;
-    display: inline-block;
+    display: table;
     position: relative;
     height:100%
     :hover {
-        background-color: red;
+        background-color: darkgoldenrod;
     }
     > ul {
         margin: 0;
