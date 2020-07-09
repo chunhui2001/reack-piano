@@ -425,7 +425,7 @@ let mixin = css`&{
 	}
 	.pm-tab {
 		background-color:aliceblue;
-    	border-bottom:solid 1px darkgray;
+    border-bottom:solid 1px darkgray;
 	}
   .pm-tab span {
   	display:inline-block;
@@ -433,10 +433,9 @@ let mixin = css`&{
   	cursor:pointer;
   }
   .pm-tab span:hover{
-	background-color:burlywood;
-  	border-bottom:solid 3px blue;
+	  background-color:burlywood;
+   	border-bottom:solid 3px blue;
   	margin-bottom: -1px;
-
   }
   .pm-tab span.active {
   	border-bottom:solid 3px red;

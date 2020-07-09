@@ -74,8 +74,8 @@ export class _Select0 extends Component {
     }
 
 	render() {
-		return <div className={`${this.props.className} Select0`}>
-            <div style={{display:'table', height:'100%'}} onClick={this.onOpenClick.bind(this)}>
+		return <div className={`${this.props.className} Select0`} style={ this.props.style }>
+            <div style={{display:'table', height:'100%', width: '100%'}} onClick={this.onOpenClick.bind(this)}>
                  { !this.getSelected() && <span className={'sel'}>--请选择--</span> }
                  { this.getSelected() && <span className={'sel'}>{this.getSelected().text}</span> }
             </div>
@@ -86,6 +86,7 @@ export class _Select0 extends Component {
 }
 
 let mixinSelect0 = css`&{
+    user-select: none;
     background-color: burlywood;
     display: table;
     position: relative;
