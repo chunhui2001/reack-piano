@@ -15,12 +15,19 @@ export class _PM0 extends Component {
     };
   }
 
-  UNSAFE_componentWillMount() {
+  componentDidMount() {
     const { schema } = this.props;
     let theSchema = schema ? schema : {};
     this.setState({
       ...this.state,
       theSchema
+    });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      ...this.state,
+      theSchema: nextProps.schema
     });
   }
 
@@ -99,7 +106,7 @@ export class _PM0 extends Component {
     if (this.props.saveButton) {
       return this.props.saveButton;
     }
-    return <input onClick={this.onButtonClick.bind(this, 'save')} disabled={!theSchema.inputGroupText.trim()} type="button" value="Save" />;
+    return <input onClick={this.onButtonClick.bind(this, 'save')} disabled={!theSchema.inputGroupText || !theSchema.inputGroupText.trim()} type="button" value="Save" />;
   }
 
   render() {
@@ -128,8 +135,8 @@ export class _PM0 extends Component {
                 <div className={'clear'}></div>
               </div>
               <div className={'sidebar'}>
-                <input onClick={this.onButtonClick.bind(this, 'send')} disabled={!theSchema.inputGroupText.trim()} type="button" value="Send" />
-                <input onClick={this.onButtonClick.bind(this, 'ping')} disabled={!theSchema.inputGroupText.trim()} type="button" value="Ping" />
+                <input onClick={this.onButtonClick.bind(this, 'send')} disabled={!theSchema.inputGroupText || !theSchema.inputGroupText.trim()} type="button" value="Send" />
+                <input onClick={this.onButtonClick.bind(this, 'ping')} disabled={!theSchema.inputGroupText || !theSchema.inputGroupText.trim()} type="button" value="Ping" />
                 { this.getSaveButton() }
           	  </div>
               <div className={'clear'}></div>

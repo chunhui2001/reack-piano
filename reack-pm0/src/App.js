@@ -1,12 +1,19 @@
 import React, { Component } from 'react';
 import PM0 from './_components/pm0/PM0';
+import PMSchema from './_components/schema/PMSchema';
 
 class App extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      items: []
+      items: [],
+      pmSchema: PMSchema(
+        "https://www.baidu.com", 
+        "get", 
+        'application/json',
+        JSON.stringify({"a": 1, "b": 2}, null, 2)
+      )
     };
   }
 
@@ -16,14 +23,16 @@ class App extends Component {
     pm.refresh();
   }
 
-  put() {
-    let _items = this.state.items;
-    _items.push(new Date().getTime());
+  onTestClick() {
     this.setState({
-      ...this.state.items,
-      items: _items
+      ...this.state,
+      pmSchema: PMSchema(
+        "https://www.163.com", 
+        "get", 
+        'application/json',
+        JSON.stringify({"a": 1, "b": 2}, null, 2)
+      )
     });
-    this.getList(this.refs.pm0);
     this.refs.pm0.refresh();
   }
 
@@ -37,16 +46,10 @@ class App extends Component {
 
 
   render() {
-    let s = { 
-              inputGroupText: "aaa", 
-              selectRequestMethod:'post', 
-              bodyRadioSelected:'none',
-              bodyRequestData: '{ "a": 1, "b": 2 }',
-            };
     return (
       <div className='pm-app'>
-          <input type="button" onClick={this.put.bind(this)} value="Test" />
-          <PM0 ref="pm0" schema={ s } 
+          <input type="button" onClick={this.onTestClick.bind(this)} value="Test" />
+          <PM0 ref="pm0" schema={ this.state.pmSchema } 
                  onSchemaStateChange={ (changedSchema) => console.log(changedSchema) } onButtonClickHand={this.onButtonClickHand.bind(this)} />
       </div>
     );
