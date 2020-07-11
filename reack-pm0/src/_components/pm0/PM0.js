@@ -227,21 +227,22 @@ export class _PM0 extends Component {
 
   authTabSection() {
     return <div className={'tab-panel tab-auth'}>
-              <div className={'left'} style={{width:'30%', backgroundColor:'azure'}}>
-                <div>
-                  1
-                </div>
+            <div className={'left'} style={{width:'30%', backgroundColor:'azure'}}>
+              <div>
+                1
               </div>
-              <div className={'right'} style={{width:'70%', backgroundColor:'ghostwhite'}}>
-                <div>
-                  3
-                </div>
+            </div>
+            <div className={'right'} style={{width:'70%', backgroundColor:'ghostwhite'}}>
+              <div>
+                3
               </div>
-              <div className={'clear'}></div>
-            </div>;
+            </div>
+            <div className={'clear'}></div>
+          </div>;
   }
 
   bodyRadioClick(e, type) {
+    const { onSchemaStateChange } = this.props;
     if (type === 'otherInput') {
       type = e.target.value;
     }
@@ -251,6 +252,17 @@ export class _PM0 extends Component {
         ...this.state.theSchema,
         bodyRadioSelected: type
       }
+    }, () => {
+      if (onSchemaStateChange) {
+        onSchemaStateChange(this.state.theSchema);
+      }
+    });
+  }
+
+  bodyRadioOtherChange = (e, type) => {
+    this.setState({
+      ...this.state,
+      bodyRadioOtherValue: e.target.value
     });
   }
 
@@ -298,7 +310,6 @@ export class _PM0 extends Component {
     });
   }
 
-
   getBodyRadioSelectedChecked() {
     if (this.state.theSchema.bodyRadioSelected === 'none') {
       return false;
@@ -318,8 +329,11 @@ export class _PM0 extends Component {
   getBodyRadioOtherSelectedInput() {
     if (this.getBodyRadioSelectedChecked()) {
       return <input style={{ borderRadius: 0, padding: '.225em .625em', borderWidth: '1px', borderColor: 'black', fontSize: '.8em', color: 'blue', backgroundColor: 'bisque', borderStyle: 'dashed' }} 
-                    onChange={ (e) => this.bodyRadioClick(e, 'otherInput') }
-                    type="text" value={ this.state.theSchema.bodyRadioSelected } />;
+                    onChange={ (e) => this.bodyRadioOtherChange(e, 'otherInput') }
+                    onBlur={ (e) =>  this.bodyRadioClick(e, 'otherInput') }
+                    onFocus={ (e) => e.target.select() }
+                    placeholder={'请输入...'}
+                    type="text" value={ this.state.bodyRadioOtherValue || '' } />;
     }
     return null;
   }

@@ -205,11 +205,6 @@ class _Table extends Component {
         return <tr ><td colSpan={len} className={'empty'}>无数据..</td></tr>;
     }
 
-    // componentWillReceiveProps(nextProps) {
-    //     this.setState({ schema: nextProps.schema,
-    //         loading: nextProps.loading ?  true : false
-    //     });
-    // }
     static getDerivedStateFromProps(props, state) {
        return { 
             schema: props.schema,
