@@ -52,27 +52,21 @@ export class DigitClock extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            time: FackMoment.moment()
+            
         }
     }
-    
-    componentDidMount = () => {
-        this.interval = setInterval(this.updateTime, 1000);
-    }
-    
-    componentWillUnmount = () => {
-        clearInterval(this.interval);
-        delete(this.interval);
-    }
-    
-    updateTime = () => {
-        this.setState({
-            time: FackMoment.moment()
-        });
+
+    static getDerivedStateFromProps(props, state) {
+        return {
+            time: props.serverTime
+        };
     }
     
     render = () => {
-        const time = this.state.time.format('HH:mm:ss').split('');
+        if (!this.props.serverTime) {
+            return null;
+        }
+        const time = FackMoment.moment(this.state.time).format('HH:mm:ss').split('');
         return (
             <div className="clock">
                 {time.map((digit, i) => <Digit key={i} data={digits.get(digit)} />)}

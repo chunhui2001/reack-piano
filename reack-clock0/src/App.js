@@ -8,10 +8,22 @@ class App extends Component {
     this.state = {};
   }
 
+  componentDidMount = () => {
+    if (this.props.serverTime) {
+        return;
+    }
+    let _this = this;
+    _this.interval = setInterval(() => {
+        _this.setState({
+          serverTime: new Date().getTime()
+        });
+    }, 1000);
+}
+
   render() {
     return (
       <div className="App">
-        <DigitClock />
+        <DigitClock serverTime={ this.state.serverTime } />
       </div>
     );
   }
