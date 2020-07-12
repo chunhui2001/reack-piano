@@ -1,4 +1,7 @@
-const digits = Immutable.fromJS({
+import React, { Component } from 'react';
+import { FackMoment, FackImmutable, FackLodash, FackRandomColor } from 'reack-fack';
+
+const digits = FackImmutable.fromJS({
     '0': [1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1],
     '1': [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
     '2': [1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1],
@@ -21,16 +24,15 @@ function Segment(props) {
     return (<div className="segment" style={style} />);
 }
 
-const Digit = React.createClass({
-    
-    shouldComponentUpdate: function (nextProps) {
-        return nextProps.data !== this.props.data;
-    },
+class Digit extends Component {
 
-    render: function() {
-        
-        const colors = randomColor({count: 15});
-        const segments = _.zipWith(this.props.data.toArray(), colors, (active, color) => {
+    shouldComponentUpdate = (nextProps) => {
+        return nextProps.data !== this.props.data;
+    }
+
+    render = () => {
+        const colors = FackRandomColor.randomColor({count: 15});
+        const segments = FackLodash.zipWith(this.props.data.toArray(), colors, (active, color) => {
             return {
                 active: active,
                 color: color
@@ -39,44 +41,44 @@ const Digit = React.createClass({
         
         return (
             <div className="digit">
-                {segments.map((segment) => <Segment {...segment} />)}
+                {segments.map((segment, i) => <Segment key={i} {...segment} />)}
             </div>
         );
     }
-});
+}
 
-const DigitClock = React.createClass({
+export class DigitClock extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            time: FackMoment.moment()
+        }
+    }
     
-    getInitialState: function() {
-        return {
-            time: moment()
-        };
-    },
-    
-    componentDidMount: function() {
+    componentDidMount = () => {
         this.interval = setInterval(this.updateTime, 1000);
-    },
+    }
     
-    componentWillUnmount: function() {
+    componentWillUnmount = () => {
         clearInterval(this.interval);
         delete(this.interval);
-    },
+    }
     
-    updateTime: function() {
+    updateTime = () => {
         this.setState({
-            time: moment()
+            time: FackMoment.moment()
         });
-    },
+    }
     
-    render: function() {
+    render = () => {
         const time = this.state.time.format('HH:mm:ss').split('');
-        
         return (
             <div className="clock">
-                {time.map((digit) => <Digit data={digits.get(digit)} />)}
+                {time.map((digit, i) => <Digit key={i} data={digits.get(digit)} />)}
             </div>
         );
     }
-});
+}
 
 export default DigitClock;

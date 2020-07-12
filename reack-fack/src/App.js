@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
-import DigitClock from './_components/digit-clock/DigitClock';
+import Fack from './_components/fack/Fack';
 
 class App extends Component {
 
   constructor(props) {
+
     super(props);
     this.state = {};
+
   }
 
   render() {
     return (
       <div className="App">
-        <DigitClock />
+        <Fack>Fack</Fack>
       </div>
     );
   }

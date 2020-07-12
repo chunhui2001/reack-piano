@@ -1,6 +1,6 @@
 {
-  "name": "reack-clock0",
-  "version": "0.0.2",
+  "name": "reack-fack",
+  "version": "0.0.8",
   "private": false,
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@babel/core": "7.2.2",
-    "@babel/plugin-proposal-decorators": "^7.10.4",
     "@svgr/webpack": "4.1.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "9.0.0",
@@ -54,7 +53,6 @@
     "postcss-preset-env": "6.5.0",
     "postcss-safe-parser": "4.0.1",
     "rc-bmap": "^0.2.4",
-    "reack-fack": "0.0.8",
     "react": "^16.12.0",
     "react-addons-css-transition-group": "^15.6.2",
     "react-app-polyfill": "^0.2.2",
@@ -127,19 +125,11 @@
     "watchPlugins": []
   },
   "babel": {
-    "plugins": [
-      [
-        "@babel/plugin-proposal-decorators",
-        {
-          "legacy": true
-        }
-      ]
-    ],
     "presets": [
       "react-app"
     ]
   },
-  "main": "dist/reack_clock0.js",
+  "main": "dist/reack_fack.js",
   "__main": "index.js",
   "author": "Chunhui.zhang <chunhui2001@gmail.com>",
   "license": "MIT",
