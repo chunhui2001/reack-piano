@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { Component } from 'react';
 import styled, { css } from 'styled-components';
-import _ from 'lodash';
+import { FackLodash } from 'reack-fack';
 
 import TableSchema from '../schema/TableSchema';
 import { DialogBox } from 'reack-dialog0';
@@ -34,8 +34,8 @@ class _Table extends Component {
 
     // 设置隐藏主键列
     getHeaderColumns() {
-        let columns = _.orderBy(this.props.schema.columns, ['fieldIndex'],['asc']);
-        const index = _.findIndex(columns, ['_pk', true]);
+        let columns = FackLodash.orderBy(this.props.schema.columns, ['fieldIndex'],['asc']);
+        const index = FackLodash.findIndex(columns, ['_pk', true]);
         columns[index]['hidden'] = true;
         return columns;
     }
@@ -45,7 +45,7 @@ class _Table extends Component {
         if (inputColumns === null || inputColumns.length === 0) {
             throw new Error('数据列为空');
         }
-        const index = _.findIndex(inputColumns, ['_pk', true]);
+        const index = FackLodash.findIndex(inputColumns, ['_pk', true]);
         return inputColumns[index].fieldName;
     }
 
@@ -69,7 +69,7 @@ class _Table extends Component {
 
     getColumnDefineByFieldName(field) {
         let columns = this.state.schema.columns;
-        const index = _.findIndex(columns, ['fieldName', field]);
+        const index = FackLodash.findIndex(columns, ['fieldName', field]);
         return columns[index];
     }
 
@@ -80,7 +80,7 @@ class _Table extends Component {
         let fieldArr = columns.map(col => {
            return col.fieldName;
         });
-        let tds = _.map(fieldArr, (fieldName,index) => {
+        let tds = FackLodash.map(fieldArr, (fieldName,index) => {
             let colDefine = _this.getColumnDefineByFieldName(fieldName);
             if (typeof rowNew['_action'] !== 'undefined') {
                 return <td style={_this.getThStyle(colDefine)} key={index}>_action</td>;
@@ -112,7 +112,7 @@ class _Table extends Component {
     getRowObjectAsSortedAttr(row) {
         const columns = this.state.schema.columns;
         let result = {};
-        _.each(columns, (value, key) => {
+        FackLodash.each(columns, (value, key) => {
             result[value.fieldName] = row[value.fieldName];
         });
         return result;
