@@ -88,7 +88,7 @@ export class _PM0 extends Component {
       if (this.responseComponent) {
           return this.responseComponent;
       }
-      return <h1>Current does not have response.</h1>;
+      return <h1 style={{textAlign: 'center', padding: '1em', color: 'gray'}}>Current does not have response.</h1>;
   }
 
 
@@ -268,7 +268,7 @@ export class _PM0 extends Component {
 
   getBodyRadioSection() {
     if (!this.state.theSchema.bodyRadioSelected || this.state.theSchema.bodyRadioSelected === 'none') {
-      return <div style={{padding:'1em'}}>
+      return <div style={{padding:'4em'}}>
               <h2 style={{ textAlign:'center' }}>This request does not have body</h2>
              </div>;
     } else if (this.state.theSchema.bodyRadioSelected === 'form-data') {
@@ -284,7 +284,7 @@ export class _PM0 extends Component {
                <div className={'jsonTextArea'}>
                 <textarea name='bodyRequestData' 
                           onChange={(e) => {this.handleInputTextChange(e)}}
-                          value={ this.state.theSchema.bodyRequestData }></textarea>
+                          value={ this.state.theSchema.bodyRequestData || '{}' }></textarea>
                </div>
                <div className={'beautifulJson'} onClick={ this.beautifulJsonClick.bind(this) }>美化</div>
                <div style={{ textAlign:'center', display:'none' }}>加高</div>
