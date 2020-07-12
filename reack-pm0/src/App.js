@@ -49,8 +49,9 @@ class App extends Component {
     return (
       <div className='pm-app'>
           <input type="button" onClick={this.onTestClick.bind(this)} value="Test" />
-          <PM0 ref="pm0" schema={ this.state.pmSchema } 
-                 onSchemaStateChange={ (changedSchema) => console.log(changedSchema) } onButtonClickHand={this.onButtonClickHand.bind(this)} />
+          <PM0 ref="pm0" 
+               activeTab={ 'body' } schema={ this.state.pmSchema } 
+               onSchemaStateChange={ (changedSchema) => console.log(changedSchema) } onButtonClickHand={this.onButtonClickHand.bind(this)} />
       </div>
     );
   }

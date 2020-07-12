@@ -48,7 +48,7 @@ class Digit extends Component {
 }
 
 export class DigitClock extends Component {
-
+    
     constructor(props) {
         super(props);
         this.state = {
@@ -61,7 +61,11 @@ export class DigitClock extends Component {
             time: props.serverTime
         };
     }
-    
+
+    shouldComponentUpdate = (nextProps) => {
+        return nextProps.serverTime !== this.props.serverTime;
+    }
+
     render = () => {
         if (!this.props.serverTime) {
             return null;

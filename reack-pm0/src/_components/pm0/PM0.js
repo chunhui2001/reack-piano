@@ -10,26 +10,40 @@ export class _PM0 extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tabName: 'params',
+      tabName: null,
       theSchema: PMSchema('https://www.google.com', 'get', 'none')
     };
   }
 
+  // shouldComponentUpdate = (nextProps) => {
+  //   return nextProps.schema !== this.props.schema;
+  // }
+
   componentDidMount() {
-    const { schema } = this.props;
+    const { schema, activeTab } = this.props;
     let theSchema = schema ? schema : {};
     this.setState({
       ...this.state,
+      tabName: this.state.tabName || activeTab || 'params',
       theSchema
-    });
+    }, () => this.handPmTabClick(this.state.tabName));
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
       ...this.state,
+      tabName: this.state.tabName || nextProps.activeTab,
       theSchema: nextProps.schema
     });
   }
+
+  // static getDerivedStateFromProps(props, state) {
+  //     return {
+  //       ...state,
+  //       tabName: state.tabName || props.activeTab,
+  //       theSchema: props.schema
+  //     };
+  // }
 
   handleInputTextChange (e) {
     const { onSchemaStateChange } = this.props;
@@ -46,6 +60,7 @@ export class _PM0 extends Component {
         if (onSchemaStateChange) {
           onSchemaStateChange(this.state.theSchema);
         }
+        this.refresh();
       });
     } else if (keyArr.length === 2) {
       this.setState({ 
@@ -65,11 +80,20 @@ export class _PM0 extends Component {
     }
   }
 
-  handPmTabClick(tabName, e) {
+  handPmTabClick(tabName) {
+    if (tabName === 'params') {
+      this.pubQueryParamsItems(() => {
+        this.setState({
+          ...this.state,
+          tabName: tabName
+        }) ;
+      });
+      return;
+    }
     this.setState({
       ...this.state,
       tabName: tabName
-    }) ;
+    }, () => this.refresh()) ;
   }
 
   onButtonClick(type, e) {
@@ -91,7 +115,6 @@ export class _PM0 extends Component {
       return <h1 style={{textAlign: 'center', padding: '1em', color: 'gray'}}>Current does not have response.</h1>;
   }
 
-
   refresh() {
     this.setState({
       ...this.state,
@@ -106,7 +129,8 @@ export class _PM0 extends Component {
     if (this.props.saveButton) {
       return this.props.saveButton;
     }
-    return <input onClick={this.onButtonClick.bind(this, 'save')} disabled={!theSchema.inputGroupText || !theSchema.inputGroupText.trim()} type="button" value="Save" />;
+    return <input onClick={this.onButtonClick.bind(this, 'save')} 
+                  disabled={theSchema && (!theSchema.inputGroupText || !theSchema.inputGroupText.trim()) } type="button" value="Save" />;
   }
 
   render() {
@@ -114,7 +138,6 @@ export class _PM0 extends Component {
     const { 
       theSchema
     } = this.state;
-
     return (
         <div className={`${this.props.className} PM0`}>
           <div className={'panel-left'}>
@@ -172,8 +195,69 @@ export class _PM0 extends Component {
   paramsTabSection() {
     return <div className={'tab-panel tab-params'}>
               <div style={{color:'gray', padding: '0.425em .625em', fontStyle: 'italic', backgroundColor: 'mintcream'}}>Query Params</div>
-              { this.getEditerTable() }
+              <table className={'query-params-table'}>
+                <tbody>
+                  <tr>
+                    <th style={{width:'25px'}}>&nbsp;</th>
+                    <th>KEY</th>
+                    <th>VALUE</th>
+                    <th>DESCRIPTION</th>
+                  </tr>
+                  { this.getQueryParamsItems() }
+                </tbody>
+              </table>
             </div>;
+  }
+
+  pubQueryParamsItems = (done) => {
+    let queryParamsItems = [
+      {
+        key: 'a',
+        val: 1,
+        desc: 'desc1'
+      },
+      {
+        key: 'b',
+        val: '2',
+        desc: 'desc2'
+      }
+    ];
+    this.setState({
+      ...this.state,
+      queryParamsItems: queryParamsItems
+    }, () => { done(); });
+  }
+
+  getQueryParamsItems = () => {
+    return this.state.queryParamsItems && this.state.queryParamsItems.map((item, i) => {
+      return <tr key={i}>
+        <td style={{textAlign:'right'}}><input type="checkbox" /></td>
+        <td className={'inputCell'}>
+          <div><input type="text" value={item.key} onChange={ (e) => this.onQueryParamsItemChange(e, i) } name='key' /></div>
+        </td>
+        <td className={'inputCell'}>
+          <div><input type="text" value={item.val} onChange={ (e) => this.onQueryParamsItemChange(e, i) } name='val' /></div>
+        </td>
+        <td className={'inputCell'}>
+          <div><input type="text" value={item.desc} onChange={ (e) => this.onQueryParamsItemChange(e, i) } name='desc' /></div>
+        </td>
+      </tr>;
+    }) ;
+  }
+
+  onQueryParamsItemChange = (e, index) => {
+    let currentValue = e.target.value;
+    let currentField = e.target.name;
+    let queryParamsItemsUpdated = this.state.queryParamsItems;
+    queryParamsItemsUpdated[index][currentField] = currentValue;
+    this.setState({
+      ...this.state,
+      queryParamsItems: queryParamsItemsUpdated,
+      theSchema: {
+        ...this.state.theSchema,
+        inputGroupText: "2222"
+      }
+    });
   }
 
   getEditerTable() {
