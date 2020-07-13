@@ -1,0 +1,26 @@
+{
+  "rules": {
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".js",
+          ".jsx"
+        ]
+      }
+    ],
+    "react/forbid-prop-types": 0,
+    "react/no-array-index-key": 0,
+    "react/jsx-wrap-multilines": 0,
+    "react/prop-types": 1,
+    "jsx-a11y/no-static-element-interactions": 0,
+    "no-underscore-dangle": 0,
+    "no-script-url": 0,
+    "class-methods-use-this": 0,
+    "no-constant-condition": 0,
+    "max-len": 0,
+    "no-nested-ternary": 0,
+    "semi": 1,
+    "space-before-function-paren": 1
+  }
+}

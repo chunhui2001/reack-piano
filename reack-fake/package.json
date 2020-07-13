@@ -1,0 +1,35 @@
+{
+  "name": "reack-fake",
+  "version": "0.0.4",
+  "private": false,
+  "scripts": {
+    "dist": "export NODE_ENV=production && webpack --mode production",
+    "dist_win": "cross-env NODE_ENV=production && webpack --mode production"
+  },
+  "dependencies": {
+    "case-sensitive-paths-webpack-plugin": "2.2.0",
+    "cross-env": "^5.2.0",
+    "webpack": "4.28.3",
+    "workbox-webpack-plugin": "3.6.3"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
+  },
+  "main": "dist/reack_fake.js",
+  "author": "Chunhui.zhang <chunhui2001@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "webpack-cli": "^3.3.12"
+  }
+}

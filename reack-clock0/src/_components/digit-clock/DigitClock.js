@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
-import { FackMoment, FackImmutable, FackLodash, FackRandomColor } from 'reack-fack';
+import { Fake } from 'reack-fake';
 
-const digits = FackImmutable.fromJS({
+const moment = Fake('moment');
+const Immutable = Fake('Immutable');
+const _lodash = Fake('_');
+const randomColor = Fake('randomColor');
+
+const digits = Immutable.fromJS({
     '0': [1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1],
     '1': [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
     '2': [1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1],
@@ -31,8 +36,8 @@ class Digit extends Component {
     }
 
     render = () => {
-        const colors = FackRandomColor.randomColor({count: 15});
-        const segments = FackLodash.zipWith(this.props.data.toArray(), colors, (active, color) => {
+        const colors = randomColor({count: 15});
+        const segments = _lodash.zipWith(this.props.data.toArray(), colors, (active, color) => {
             return {
                 active: active,
                 color: color
@@ -70,7 +75,7 @@ export class DigitClock extends Component {
         if (!this.props.serverTime) {
             return null;
         }
-        const time = FackMoment.moment(this.state.time).format('HH:mm:ss').split('');
+        const time = moment(this.state.time).format('HH:mm:ss').split('');
         return (
             <div className="clock">
                 {time.map((digit, i) => <Digit key={i} data={digits.get(digit)} />)}
