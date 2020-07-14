@@ -1,8 +1,10 @@
 /* eslint-disable */
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import { Fake } from 'reack-fake';
 import styled, { css } from "styled-components";
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
+
+const ReactDOM = Fake('ReactDOM');
 
 export class _DialogBox extends React.Component {
 

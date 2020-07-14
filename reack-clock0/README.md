@@ -41,6 +41,7 @@ npm info reack-button version
 
 ### Analyzing the Bundle Size
 npm install --save source-map-explorer
+# "analyze": "source-map-explorer 'build/static/js/*.js'",
 yarn add source-map-explorer
 
 npm run build

@@ -1,7 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { Fake } from 'reack-fake';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+
+const ReactDOM = Fake('ReactDOM');
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

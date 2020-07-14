@@ -1,9 +1,6 @@
 /* eslint-disable */
 import React, { Component } from 'react';
 
-
-
-
 export class Pagation extends Component {
 
     pageGroupSize = 8;
