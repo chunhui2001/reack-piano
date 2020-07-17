@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PM0 from './_components/pm0/PM0';
 import PMSchema from './_components/schema/PMSchema';
 
+import Service from './_components/service/Service';
+
 class App extends Component {
 
   constructor(props) {
@@ -46,6 +48,7 @@ class App extends Component {
 
 
   render() {
+    let theQueryString = Service.queryString().stringify({}, {sort: false});
     return (
       <div className='pm-app'>
           <input type="button" onClick={this.onTestClick.bind(this)} value="Test" />

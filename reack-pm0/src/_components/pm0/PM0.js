@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import styled, { css } from "styled-components";
+import { Lang } from 'reack-lang';
+import { Fake } from 'reack-fake';
 
+import Service from '../service/Service';
 import PMSchema from "../schema/PMSchema";
+
+const $ = Fake('$');
 
 export class _PM0 extends Component {
 
@@ -82,7 +87,19 @@ export class _PM0 extends Component {
 
   handPmTabClick(tabName) {
     if (tabName === 'params') {
-      this.pubQueryParamsItems(() => {
+      let queryParamsItems = [
+        {
+          key: 'a',
+          val: 1,
+          desc: 'desc1'
+        },
+        {
+          key: 'b',
+          val: '2',
+          desc: 'desc2'
+        }
+      ];
+      this.putQueryParamsItems(queryParamsItems, () => {
         this.setState({
           ...this.state,
           tabName: tabName
@@ -209,23 +226,11 @@ export class _PM0 extends Component {
             </div>;
   }
 
-  pubQueryParamsItems = (done) => {
-    let queryParamsItems = [
-      {
-        key: 'a',
-        val: 1,
-        desc: 'desc1'
-      },
-      {
-        key: 'b',
-        val: '2',
-        desc: 'desc2'
-      }
-    ];
+  putQueryParamsItems = (queryParamsItems, done) => {
     this.setState({
       ...this.state,
       queryParamsItems: queryParamsItems
-    }, () => { done(); });
+    }, () => { if (done) done(); });
   }
 
   getQueryParamsItems = () => {
@@ -233,31 +238,110 @@ export class _PM0 extends Component {
       return <tr key={i}>
         <td style={{textAlign:'right'}}><input type="checkbox" /></td>
         <td className={'inputCell'}>
-          <div><input type="text" value={item.key} onChange={ (e) => this.onQueryParamsItemChange(e, i) } name='key' /></div>
+          <div><input type="text" value={item.key || ''} 
+                  onChange={ (e) => this.onQueryParamsItemChange(e, i) } 
+                  onKeyDown={ (e) => this.onQueryParamTrAppend(e, i, 'key') }name='key' /></div>
         </td>
         <td className={'inputCell'}>
-          <div><input type="text" value={item.val} onChange={ (e) => this.onQueryParamsItemChange(e, i) } name='val' /></div>
+          <div><input type="text" value={item.val || ''} 
+                  onChange={ (e) => this.onQueryParamsItemChange(e, i) } 
+                  onKeyDown={ (e) => this.onQueryParamTrAppend(e, i, 'val') }name='val' /></div>
         </td>
         <td className={'inputCell'}>
-          <div><input type="text" value={item.desc} onChange={ (e) => this.onQueryParamsItemChange(e, i) } name='desc' /></div>
+          <div><input type="text" value={item.desc || ''} 
+                  onChange={ (e) => this.onQueryParamsItemChange(e, i) } 
+                  onKeyDown={ (e) => this.onQueryParamTrAppend(e, i, 'desc') } name='desc' /></div>
         </td>
       </tr>;
     }) ;
   }
 
   onQueryParamsItemChange = (e, index) => {
+    const { onSchemaStateChange } = this.props;
     let currentValue = e.target.value;
     let currentField = e.target.name;
+    debugger;
     let queryParamsItemsUpdated = this.state.queryParamsItems;
     queryParamsItemsUpdated[index][currentField] = currentValue;
+    let queryStringObject = this.getQueryStringObject(queryParamsItemsUpdated);
+    let _url = Lang.parseUrl(this.state.theSchema.inputGroupText);
+    let theQueryString = Service.queryString().stringifyUrl({ url: _url.protocol + "//" + _url.host, query: queryStringObject });
     this.setState({
       ...this.state,
       queryParamsItems: queryParamsItemsUpdated,
       theSchema: {
         ...this.state.theSchema,
-        inputGroupText: "2222"
+        inputGroupText: theQueryString,
+        queryStringObject: queryStringObject
+      }
+    }, () => {
+      if (onSchemaStateChange) {
+        onSchemaStateChange(this.state.theSchema);
       }
     });
+  }
+
+  onQueryParamTrAppend(e, index, field) {
+    if (window.event.keyCode === 9 && e.target.name === 'desc') {
+      if (this.state.queryParamsItems.length === index+1) {
+        if (window.event.shiftKey) {
+          // shift + tab
+          return;
+        }
+        this.doQueryParamTrAppend(e, field, 'next', true, 'tab', index);
+      }
+    } else if (window.event.shiftKey && window.event.keyCode === 40) {
+      // 下方向键
+      this.doQueryParamTrAppend(e, field, 'next', this.state.queryParamsItems.length === index+1, 'down', index);
+    } else if (window.event.shiftKey && window.event.keyCode === 38) {
+      // 上方向键
+      this.moveFocus(e, 'prev', field, index);
+    } else if (window.event.shiftKey && window.event.keyCode === 39) {
+      // 右方向键
+      this.moveFocus(e, 'right', field, index);
+    } else if (window.event.shiftKey && window.event.keyCode === 37) {
+      // 左方向键
+      this.moveFocus(e, 'left', field, index);
+    }
+  }
+
+  doQueryParamTrAppend(e, field, next, append, type, index) {
+    let _this = this;
+    if (append) {
+      let _queryParamsItems = this.state.queryParamsItems;
+      _queryParamsItems.push({});
+      this.putQueryParamsItems(_queryParamsItems, () => {
+        if (type !== 'tab') {
+          _this.moveFocus(e, next, field, index);
+        }
+      });
+    } else {
+      if (type !== 'tab') {
+        _this.moveFocus(e, next, field, index);
+      }
+    }
+  }
+
+  // 光标跳到下一行的对应的单元格
+  moveFocus(e, next, field, index) {
+    if (next === 'next') {
+      $('.query-params-table').find('>tbody>tr:eq(' + (index + 2) + ')').find('>td').find('input[type=text][name=' + field + ']').focus();
+    } else if (next === 'prev') {
+      $('.query-params-table').find('>tbody>tr:eq(' + (index) + ')').find('>td').find('input[type=text][name=' + field + ']').focus();
+    } else if (next === 'right') {
+      // ..
+    } else if (next === 'left') {
+      // ..
+    }
+  }
+
+  getQueryStringObject(queryParamsItems) {
+    let result = {};
+    for (let item of queryParamsItems) {
+      result[item.key] = item.val;
+      result['desc'] = item.desc;
+    }
+    return result;
   }
 
   getEditerTable() {
