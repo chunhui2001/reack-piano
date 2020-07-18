@@ -3,7 +3,6 @@ import styled, { css } from "styled-components";
 import { Lang } from 'reack-lang';
 import { Fake } from 'reack-fake';
 
-import Service from '../service/Service';
 import PMSchema from "../schema/PMSchema";
 
 const $ = Fake('$');
@@ -21,6 +20,7 @@ export class _PM0 extends Component {
   }
 
   // shouldComponentUpdate = (nextProps) => {
+  //   debugger;
   //   return nextProps.schema !== this.props.schema;
   // }
 
@@ -265,7 +265,7 @@ export class _PM0 extends Component {
     queryParamsItemsUpdated[index][currentField] = currentValue;
     let queryStringObject = this.getQueryStringObject(queryParamsItemsUpdated);
     let _url = Lang.parseUrl(this.state.theSchema.inputGroupText);
-    let theQueryString = Service.queryString().stringifyUrl({ url: _url.protocol + "//" + _url.host, query: queryStringObject });
+    let theQueryString = Lang.queryString().stringifyUrl({ url: _url.protocol + "//" + _url.host, query: queryStringObject });
     this.setState({
       ...this.state,
       queryParamsItems: queryParamsItemsUpdated,
@@ -328,11 +328,14 @@ export class _PM0 extends Component {
       $('.query-params-table').find('>tbody>tr:eq(' + (index + 2) + ')').find('>td').find('input[type=text][name=' + field + ']').focus();
     } else if (next === 'prev') {
       $('.query-params-table').find('>tbody>tr:eq(' + (index) + ')').find('>td').find('input[type=text][name=' + field + ']').focus();
-    } else if (next === 'right') {
-      // ..
-    } else if (next === 'left') {
-      // ..
-    }
+    } else {
+      let parentTd = $('.query-params-table').find('>tbody>tr:eq(' + (index + 1) + ')').find('>td').find('input[type=text][name=' + field + ']').parents('td:first');
+      if (next === 'right') {
+        $(parentTd[0]).next().find('input[type=text]').focus();
+      } else if (next === 'left') {
+        $(parentTd[0]).prev().find('input[type=text]').focus();
+      }
+    } 
   }
 
   getQueryStringObject(queryParamsItems) {

@@ -1,4 +1,6 @@
 
+import queryString from 'query-string';
+
 function Lang () {
 
 }
@@ -87,6 +89,10 @@ Lang.prototype.setEmptyValueToNull = function (obj) {
     }
   }
   return obj;
+}
+
+Lang.prototype.queryString = function(arg) {
+  return queryString;
 }
 
 // 解析url
