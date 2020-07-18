@@ -34,12 +34,12 @@ export class _PM0 extends Component {
     }, () => this.handPmTabClick(this.state.tabName));
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({
       ...this.state,
       tabName: this.state.tabName || nextProps.activeTab,
       theSchema: nextProps.schema
-    });
+    }, () => this.handPmTabClick(this.state.tabName));
   }
 
   // static getDerivedStateFromProps(props, state) {
@@ -65,6 +65,9 @@ export class _PM0 extends Component {
         if (onSchemaStateChange) {
           onSchemaStateChange(this.state.theSchema);
         }
+        // if (keyArr[0] === 'inputGroupText') {
+        //   this.handPmTabClick(this.state.tabName);
+        // }
         this.refresh();
       });
     } else if (keyArr.length === 2) {
@@ -81,29 +84,49 @@ export class _PM0 extends Component {
         if (onSchemaStateChange) {
           onSchemaStateChange(this.state.theSchema);
         }
+        // if (keyArr[0] === 'inputGroupText') {
+        //   this.handPmTabClick(this.state.tabName);
+        // }
+        this.refresh();
       });
     }
+    
   }
 
+  // 处理 tab 切换
   handPmTabClick(tabName) {
     if (tabName === 'params') {
-      let queryParamsItems = [
-        {
-          key: 'a',
-          val: 1,
-          desc: 'desc1'
-        },
-        {
-          key: 'b',
-          val: '2',
-          desc: 'desc2'
+      let urlObject = Lang.parseUrl(this.state.theSchema.inputGroupText.trim());
+      let urlSearch = urlObject.search;
+      let urlSearchArr = null;
+      let queryParamsObject = null;
+      if (urlSearch) {
+        queryParamsObject = {};
+        urlSearchArr = urlSearch.substr(1).split('&');
+        for (let qKey of urlSearchArr) {
+          if (!qKey || qKey === '') {
+            continue;
+          }
+          queryParamsObject[qKey.split('=')[0]] = qKey.split('=')[1];
         }
-      ];
-      this.putQueryParamsItems(queryParamsItems, () => {
-        this.setState({
-          ...this.state,
-          tabName: tabName
-        }) ;
+      }
+      let queryStringObject = [];
+      if (!Lang.blank(queryParamsObject)) {
+        // convert query string to array object
+        for (const [key, value] of Object.entries(queryParamsObject)) {
+          queryStringObject.push({
+            key: key,
+            val: value
+          });
+        }
+      } 
+      while (queryStringObject.length < 10) {
+        queryStringObject.push({});
+      }
+      this.setState({
+        ...this.state,
+        queryParamsItems: queryStringObject,
+        tabName: tabName
       });
       return;
     }
@@ -113,6 +136,7 @@ export class _PM0 extends Component {
     }, () => this.refresh()) ;
   }
 
+  // 处理button点击
   onButtonClick(type, e) {
     const { onButtonClickHand } = this.props;
     let _inputGroupText = this.state.theSchema.inputGroupText;
@@ -125,6 +149,7 @@ export class _PM0 extends Component {
     onButtonClickHand(this, type, _inputGroupText);
   }
 
+  // 取得展示内容响应
   getResponseComponent() {
       if (this.responseComponent) {
           return this.responseComponent;
@@ -132,6 +157,7 @@ export class _PM0 extends Component {
       return <h1 style={{textAlign: 'center', padding: '1em', color: 'gray'}}>Current does not have response.</h1>;
   }
 
+  // 强制刷新状态
   refresh() {
     this.setState({
       ...this.state,
@@ -139,6 +165,7 @@ export class _PM0 extends Component {
     });
   }
 
+  // 取得保存按钮
   getSaveButton() {
     const { 
       theSchema
@@ -150,8 +177,8 @@ export class _PM0 extends Component {
                   disabled={theSchema && (!theSchema.inputGroupText || !theSchema.inputGroupText.trim()) } type="button" value="Save" />;
   }
 
+  // 渲染组件
   render() {
-
     const { 
       theSchema
     } = this.state;
@@ -209,6 +236,7 @@ export class _PM0 extends Component {
     );
   }
 
+  // 处理二级tab点击
   paramsTabSection() {
     return <div className={'tab-panel tab-params'}>
               <div style={{color:'gray', padding: '0.425em .625em', fontStyle: 'italic', backgroundColor: 'mintcream'}}>Query Params</div>
@@ -218,7 +246,7 @@ export class _PM0 extends Component {
                     <th style={{width:'25px'}}>&nbsp;</th>
                     <th>KEY</th>
                     <th>VALUE</th>
-                    <th>DESCRIPTION</th>
+                    { /** <th>DESCRIPTION</th> **/ }
                   </tr>
                   { this.getQueryParamsItems() }
                 </tbody>
@@ -226,6 +254,7 @@ export class _PM0 extends Component {
             </div>;
   }
 
+  // 将query参数数组复制到组件状态
   putQueryParamsItems = (queryParamsItems, done) => {
     this.setState({
       ...this.state,
@@ -233,46 +262,45 @@ export class _PM0 extends Component {
     }, () => { if (done) done(); });
   }
 
+  // 获取query展示区
   getQueryParamsItems = () => {
     return this.state.queryParamsItems && this.state.queryParamsItems.map((item, i) => {
       return <tr key={i}>
         <td style={{textAlign:'right'}}><input type="checkbox" /></td>
         <td className={'inputCell'}>
-          <div><input type="text" value={item.key || ''} 
+          <div><input type="text" value={item.key || ''} autoComplete="off"
                   onChange={ (e) => this.onQueryParamsItemChange(e, i) } 
                   onKeyDown={ (e) => this.onQueryParamTrAppend(e, i, 'key') }name='key' /></div>
         </td>
         <td className={'inputCell'}>
-          <div><input type="text" value={item.val || ''} 
+          <div><input type="text" value={item.val || ''} autoComplete="off"
                   onChange={ (e) => this.onQueryParamsItemChange(e, i) } 
                   onKeyDown={ (e) => this.onQueryParamTrAppend(e, i, 'val') }name='val' /></div>
         </td>
-        <td className={'inputCell'}>
-          <div><input type="text" value={item.desc || ''} 
+        { /** <td className={'inputCell'}>
+          <div><input type="text" value={item.desc || ''} autoComplete="off"
                   onChange={ (e) => this.onQueryParamsItemChange(e, i) } 
                   onKeyDown={ (e) => this.onQueryParamTrAppend(e, i, 'desc') } name='desc' /></div>
-        </td>
+        </td> **/}
       </tr>;
     }) ;
   }
 
+  // 处理query参数状态变化
   onQueryParamsItemChange = (e, index) => {
     const { onSchemaStateChange } = this.props;
     let currentValue = e.target.value;
     let currentField = e.target.name;
-    debugger;
     let queryParamsItemsUpdated = this.state.queryParamsItems;
     queryParamsItemsUpdated[index][currentField] = currentValue;
     let queryStringObject = this.getQueryStringObject(queryParamsItemsUpdated);
     let _url = Lang.parseUrl(this.state.theSchema.inputGroupText);
-    let theQueryString = Lang.queryString().stringifyUrl({ url: _url.protocol + "//" + _url.host, query: queryStringObject });
+    let theQueryString = _url.protocol + '//' + _url.host + _url.pathname + decodeURI(Lang.toQueryString(queryStringObject));
     this.setState({
       ...this.state,
-      queryParamsItems: queryParamsItemsUpdated,
       theSchema: {
         ...this.state.theSchema,
         inputGroupText: theQueryString,
-        queryStringObject: queryStringObject
       }
     }, () => {
       if (onSchemaStateChange) {
@@ -281,6 +309,7 @@ export class _PM0 extends Component {
     });
   }
 
+  // 处理添加query参数
   onQueryParamTrAppend(e, index, field) {
     if (window.event.keyCode === 9 && e.target.name === 'desc') {
       if (this.state.queryParamsItems.length === index+1) {
@@ -290,8 +319,8 @@ export class _PM0 extends Component {
         }
         this.doQueryParamTrAppend(e, field, 'next', true, 'tab', index);
       }
-    } else if (window.event.shiftKey && window.event.keyCode === 40) {
-      // 下方向键
+    } else if ((window.event.shiftKey && window.event.keyCode === 40) || window.event.keyCode === 13) {
+      // 下方向键 OR 回车键
       this.doQueryParamTrAppend(e, field, 'next', this.state.queryParamsItems.length === index+1, 'down', index);
     } else if (window.event.shiftKey && window.event.keyCode === 38) {
       // 上方向键
@@ -302,9 +331,10 @@ export class _PM0 extends Component {
     } else if (window.event.shiftKey && window.event.keyCode === 37) {
       // 左方向键
       this.moveFocus(e, 'left', field, index);
-    }
+    } 
   }
 
+  // 处理添加query参数
   doQueryParamTrAppend(e, field, next, append, type, index) {
     let _this = this;
     if (append) {
@@ -338,15 +368,25 @@ export class _PM0 extends Component {
     } 
   }
 
+  // 将query数组转成对象
   getQueryStringObject(queryParamsItems) {
     let result = {};
     for (let item of queryParamsItems) {
+      if (item.key === 'desc') {
+        continue;
+      }
+      if (!item.key || item.key === '') {
+        item.key = '';
+        if (!item.val || item.val === '') {
+          continue;
+        }
+      }
       result[item.key] = item.val;
-      result['desc'] = item.desc;
     }
     return result;
   }
 
+  // 取得query参数编辑表格
   getEditerTable() {
     return <table className={'query-params-table'}>
             <tbody>
@@ -712,7 +752,7 @@ let mixin = css`&{
     background-color:darkkhaki;
     border:none;
     height:100%;
-    font-size:1.325em;
+    font-size:1em;
     width:100%;
     padding:0;
   }

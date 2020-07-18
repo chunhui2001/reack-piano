@@ -1,6 +1,4 @@
 
-import queryString from 'query-string';
-
 function Lang () {
 
 }
@@ -91,12 +89,28 @@ Lang.prototype.setEmptyValueToNull = function (obj) {
   return obj;
 }
 
-Lang.prototype.queryString = function(arg) {
-  return queryString;
+Lang.prototype.toQueryString = function(obj) {
+  if (!obj) {
+    return '';
+  }
+  let result = '';
+  for (const [key, value] of Object.entries(obj)) {
+    if ((!key || key.trim().length === '') && (!value || value.trim().length === '')) {
+      continue;
+    }
+    result = result + (key + '=' + (value ? value : '') + '&');
+  }
+  if (result.length > 0) {
+    result = '?' + result.substr(0, result.length - 1);
+  }
+  return result;
 }
 
 // 解析url
 Lang.prototype.parseUrl = function (url) {
+    if (url == null || url.trim() === '') {
+      return {};
+    }
     // http://example.com:3000/pathname/?search=test#hash
     var match = url.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
     return match && {
@@ -109,6 +123,14 @@ Lang.prototype.parseUrl = function (url) {
         search: match[6], // ?search=test
         hash: match[7] // #hash
     }
+}
+
+Lang.prototype.blank = function(obj) {
+  if (!obj) {
+    return true;
+  }
+  let l = Object.entries(obj);
+  return !l || l.length === 0;
 }
 
 export default new Lang();

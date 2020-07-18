@@ -27,11 +27,19 @@ class App extends Component {
     this.setState({
       ...this.state,
       pmSchema: PMSchema(
-        "https://www.163.com", 
+        "https://www.163.com?id=你好", 
         "get", 
         'application/json',
         JSON.stringify({"a": 1, "b": 2}, null, 2)
       )
+    });
+    this.refs.pm0.refresh();
+  }
+
+  onSchemaChange(schema) {
+    this.setState({
+      ...this.state,
+      pmSchema: schema
     });
     this.refs.pm0.refresh();
   }
@@ -51,7 +59,7 @@ class App extends Component {
           <input type="button" onClick={this.onTestClick.bind(this)} value="Test" />
           <PM0 ref="pm0" 
                activeTab={ 'body' } schema={ this.state.pmSchema } 
-               onSchemaStateChange={ (changedSchema) => console.log(changedSchema) } onButtonClickHand={this.onButtonClickHand.bind(this)} />
+               onSchemaStateChange={ (changedSchema) => this.onSchemaChange(changedSchema) } onButtonClickHand={this.onButtonClickHand.bind(this)} />
       </div>
     );
   }

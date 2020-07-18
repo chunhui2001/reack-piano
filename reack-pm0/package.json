@@ -1,6 +1,6 @@
 {
   "name": "reack-pm0",
-  "version": "0.0.58",
+  "version": "0.0.60",
   "private": false,
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
@@ -51,7 +51,7 @@
     "query-string": "^6.13.1",
     "rc-bmap": "^0.2.4",
     "reack-fake": "0.0.4",
-    "reack-lang": "^0.1.5",
+    "reack-lang": "^0.1.11",
     "react": "^16.13.1",
     "react-addons-css-transition-group": "^15.6.2",
     "react-app-polyfill": "^0.2.2",
