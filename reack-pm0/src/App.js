@@ -24,13 +24,32 @@ class App extends Component {
   }
 
   onTestClick() {
+    let bodyData = [
+      {
+        key: "id",
+        val: 1,
+        desc: "用户ID",
+        disable: true
+      }, {
+        key: "username",
+        val: "keeshz.hang",
+        desc: "用户名",
+        disable: false
+      }, {
+        key: "age",
+        val: "18",
+        desc: "年龄",
+        disable: false
+      }
+    ];
     this.setState({
       ...this.state,
       pmSchema: PMSchema(
         "https://www.163.com?id=你好", 
         "get", 
-        'application/json',
-        JSON.stringify({"a": 1, "b": 2}, null, 2)
+        'application/json;utf-8',
+        JSON.stringify({"a": 1, "b": 2}, null, 2),
+        bodyData
       )
     });
     this.refs.pm0.refresh();

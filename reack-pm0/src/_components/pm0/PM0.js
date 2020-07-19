@@ -4,6 +4,7 @@ import { Lang } from 'reack-lang';
 import { Fake } from 'reack-fake';
 
 import PMSchema from "../schema/PMSchema";
+import Helper from "./Helper";
 
 const $ = Fake('$');
 
@@ -490,25 +491,20 @@ export class _PM0 extends Component {
       return <div>
               { this.getEditerTable() }
              </div>;
-    } else if (this.state.theSchema.bodyRadioSelected === 'application/json') {
+    } else if (this.state.theSchema.bodyRadioSelected.toLowerCase() === 'application/json' || this.state.theSchema.bodyRadioSelected.toLowerCase() === 'application/json;utf-8' ) {
       return <div style={{ position:'relative' }}>
                <div className={'jsonTextArea'}>
-                <textarea name='bodyRequestData' 
-                          onChange={(e) => {this.handleInputTextChange(e)}}
-                          value={ this.state.theSchema.bodyRequestData || '{}' }></textarea>
+                <textarea 
+                  onBlur={(e) => this.handleInputJsonStringUpdate(e) }
+                  value={this.state.currentInputJsonString || Helper.jsonDataString(this.state.theSchema) || '{}' }
+                  onChange={(e) => {this.handleInputJsonStringChange(e)}}></textarea>
                </div>
                <div className={'beautifulJson'} onClick={ this.beautifulJsonClick.bind(this) }>美化</div>
                <div style={{ textAlign:'center', display:'none' }}>加高</div>
              </div>;
     } 
     // others
-    return <div style={{ position:'relative' }}>
-               <div className={'jsonTextArea'} style={{ backgroundColor: 'darkblue' }}>
-                <textarea name='bodyRequestData' style={{ backgroundColor: 'darkblue' }}
-                          onChange={(e) => {this.handleInputTextChange(e)}}
-                          value={ this.state.theSchema.bodyRequestData }></textarea>
-               </div>
-             </div>;
+    return <div style={{ position:'relative' }}><h1>暂不支持</h1></div>;
   }
 
   beautifulJsonClick() {
@@ -516,8 +512,36 @@ export class _PM0 extends Component {
       ...this.state,
       theSchema: {
         ...this.state.theSchema,
-        bodyRequestData: JSON.stringify(JSON.parse(this.state.theSchema.bodyRequestData), null, 2)
+        bodyRequestData: this.state.theSchema.jsonDataString()
       }
+    });
+  }
+
+  handleInputJsonStringUpdate(e) {
+    const { onSchemaStateChange } = this.props;
+    let currentJsonString = e.target.value;
+    let _reqData = Helper.toBodyData(currentJsonString);
+    if (_reqData === null) {
+      return;
+    } else {
+      this.setState({
+        ...this.state,
+        currentInputJsonString: null
+      }, () => {  
+        let _theSchema = this.state.theSchema;
+        _theSchema.bodyReqData = Helper.appendReqDataDesc(this.state.theSchema, _reqData);
+        if (onSchemaStateChange) {
+          onSchemaStateChange(_theSchema);
+        }
+      })
+    }
+  }
+
+  handleInputJsonStringChange(e) {
+    // value={ this.state.currentInputJsonString || Helper.jsonDataString(this.state.theSchema) || '{}' }
+    this.setState({
+      ...this.state,
+      currentInputJsonString: e.target.value
     });
   }
 
@@ -544,7 +568,7 @@ export class _PM0 extends Component {
                     onBlur={ (e) =>  this.bodyRadioClick(e, 'otherInput') }
                     onFocus={ (e) => e.target.select() }
                     placeholder={'请输入...'}
-                    type="text" value={ this.state.bodyRadioOtherValue || '' } />;
+                    type="text" value={ this.state.bodyRadioOtherValue || this.state.theSchema.bodyRadioSelected || '' } />;
     }
     return null;
   }
