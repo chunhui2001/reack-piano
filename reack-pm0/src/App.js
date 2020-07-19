@@ -11,7 +11,8 @@ class App extends Component {
       pmSchema: PMSchema(
         "https://www.baidu.com", 
         "get", 
-        'application/json',
+        //'application/json;utf-8',
+        'form-data',
         JSON.stringify({"a": 1, "b": 2}, null, 2)
       )
     };
@@ -29,17 +30,42 @@ class App extends Component {
         key: "id",
         val: 1,
         desc: "用户ID",
-        disable: true
+        disable: true,
+        dtype: 'string',
+        required: 'Y',
+        defval: '无',
+        eg: null,
+        valid: '0-25',
       }, {
         key: "username",
         val: "keeshz.hang",
         desc: "用户名",
-        disable: false
+        disable: false,
+        dtype: 'string',
+        required: 'Y',
+        defval: '无',
+        eg: null,
+        valid: '0-25',
       }, {
         key: "age",
         val: "18",
         desc: "年龄",
-        disable: false
+        disable: false,
+        dtype: 'object',
+        required: 'N',
+        defval: '无',
+        eg: null,
+        valid: '[0-9]',
+      }, {
+        key: "image",
+        val: "http://www.imge.com",
+        desc: "头像",
+        disable: false,
+        dtype: 'file',
+        required: 'N',
+        defval: '无',
+        eg: null,
+        valid: 'binary',
       }
     ];
     this.setState({
@@ -47,7 +73,8 @@ class App extends Component {
       pmSchema: PMSchema(
         "https://www.163.com?id=你好", 
         "get", 
-        'application/json;utf-8',
+        //'application/json;utf-8',
+        'x-www-form-urlencoded',
         JSON.stringify({"a": 1, "b": 2}, null, 2),
         bodyData
       )

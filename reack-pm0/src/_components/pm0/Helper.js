@@ -27,9 +27,12 @@ Helper.prototype.appendReqDataDesc = function(pmSchema, reqData) {
 	if (reqData) {
 		for (let i in reqData) {
 			for (let j in pmSchema.bodyReqData) {
-			//debugger;
 				if (reqData[i].key === pmSchema.bodyReqData[j].key) {
-					reqData[i].desc = pmSchema.bodyReqData[j].desc;
+					let tmp = reqData[i];
+					reqData[i] = {
+						...pmSchema.bodyReqData[j],
+						...tmp
+					}
 					reqData[i].disable =false;
 					break;
 				}
@@ -49,7 +52,9 @@ Helper.prototype.appendReqDataDesc = function(pmSchema, reqData) {
 				}
 			}
 			pmSchema.bodyReqData[j].disable = notFound;
-			reqData.push(pmSchema.bodyReqData[j]);
+			if (notFound) {
+				reqData.push(pmSchema.bodyReqData[j]);
+			}
 		}
 	}
 	return reqData;

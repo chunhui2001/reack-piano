@@ -215,6 +215,7 @@ export class _PM0 extends Component {
             		<span className={this.state.tabName === 'auth' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'auth')}>Authorization</span>
             		<span className={this.state.tabName === 'headers' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'headers')}>Headers(1)</span>
             		<span className={this.state.tabName === 'body' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'body')}>Body</span>
+                <span style={{float: 'right', textDecoration: 'underline', color: 'blue'}}>ApiDoc</span>
             	</div>
             	{ this.state.tabName === 'params' && this.paramsTabSection() }
               { this.state.tabName === 'auth' && this.authTabSection() }
@@ -241,7 +242,7 @@ export class _PM0 extends Component {
   paramsTabSection() {
     return <div className={'tab-panel tab-params'}>
               <div style={{color:'gray', padding: '0.425em .625em', fontStyle: 'italic', backgroundColor: 'mintcream'}}>Query Params</div>
-              <table className={'query-params-table'}>
+              <table className={'pm-table query-params-table'}>
                 <tbody>
                   <tr>
                     <th style={{width:'25px'}}>&nbsp;</th>
@@ -387,7 +388,6 @@ export class _PM0 extends Component {
     return result;
   }
 
-  // 取得query参数编辑表格
   getEditerTable() {
     return <table className={'query-params-table'}>
             <tbody>
@@ -409,32 +409,62 @@ export class _PM0 extends Component {
                   <div><input type="text" /></div>
                 </td>
               </tr>
-              <tr>
-                <td style={{textAlign:'right'}}><input type="checkbox" /></td>
-                <td className={'inputCell'}>
-                  <div><input type="text" /></div>
-                </td>
-                <td className={'inputCell'}>
-                  <div><input type="text" /></div>
-                </td>
-                <td className={'inputCell'}>
-                  <div><input type="text" /></div>
-                </td>
-              </tr>
-              <tr>
-                <td style={{textAlign:'right'}}><input type="checkbox" /></td>
-                <td className={'inputCell'}>
-                  <div><input type="text" /></div>
-                </td>
-                <td className={'inputCell'}>
-                  <div><input type="text" /></div>
-                </td>
-                <td className={'inputCell'}>
-                  <div><input type="text" /></div>
-                </td>
-              </tr>
             </tbody>
           </table>;
+  }
+
+  getFormDataEditerTable(classname) {
+    return <table className={`pm-table ${classname}`}>
+            <tbody>
+              <tr>
+                <th style={{width:'25px'}}>&nbsp;</th>
+                <th style={{width: '135px'}}>KEY</th>
+                <th style={{width: '185px'}}>VALUE</th>
+                <th style={{width: '45px'}}>DATATYPE</th>
+                <th style={{width: '45px'}}>REQ</th>
+                <th style={{width: '85px'}}>DEFAULTS</th>
+                <th>VALID</th>
+                <th>E.G.</th>
+                <th>DESCRIPTION</th>
+              </tr>
+              { this.getFormDataEditerTableTd() }
+            </tbody>
+          </table>;
+  }
+
+  getFormDataEditerTableTd() {
+    if (!this.state.theSchema.bodyReqData || this.state.theSchema.bodyReqData.length === 0) {
+      return <tr><td style={{textAlign:'right'}}>&nbsp;</td><td className={'empty-td'} colSpan="8">暂无数据</td></tr>;
+    }
+    return this.state.theSchema.bodyReqData.map((item, i) => {
+      return <tr key={i}>
+                <td style={{textAlign:'right'}}><input type="checkbox" /></td>
+                <td className={'inputCell'}>
+                  <div><input disabled={item.disable} type="text" value={item.key || '--'} onChange={(e) => console.log(e.target.value)} name="key" /></div>
+                </td>
+                <td className={'inputCell'}>
+                  <div><input disabled={item.disable} type="text" value={item.val || '--'} onChange={(e) => console.log(e.target.value)} name="val" /></div>
+                </td>
+                <td className={'inputCell'}>
+                  <div><input disabled={item.disable} type="text" value={item.dtype || '--'} onChange={(e) => console.log(e.target.value)} name="dtype" /></div>
+                </td>
+                <td className={'inputCell'}>
+                  <div><input disabled={item.disable} type="text" value={item.required || '--'} onChange={(e) => console.log(e.target.value)} name="required" /></div>
+                </td>
+                <td className={'inputCell'}>
+                  <div><input disabled={item.disable} type="text" value={item.defval || '--'} onChange={(e) => console.log(e.target.value)} name="defval" /></div>
+                </td>
+                <td className={'inputCell'}>
+                  <div><input disabled={item.disable} type="text" value={item.valid || '--'} onChange={(e) => console.log(e.target.value)} name="valid" /></div>
+                </td>
+                <td className={'inputCell'}>
+                  <div><input disabled={item.disable} type="text" value={item.eg || '--'} onChange={(e) => console.log(e.target.value)} name="eg" /></div>
+                </td>
+                <td className={'inputCell'}>
+                  <div><input disabled={item.disable} type="text" value={item.desc || '--'} onChange={(e) => console.log(e.target.value)} name="desc" /></div>
+                </td>
+              </tr>;
+    });
   }
 
   authTabSection() {
@@ -485,11 +515,11 @@ export class _PM0 extends Component {
              </div>;
     } else if (this.state.theSchema.bodyRadioSelected === 'form-data') {
       return <div>
-              { this.getEditerTable() }
+              { this.getFormDataEditerTable('form-data-table') }
              </div>;
-    } else if (this.state.theSchema.bodyRadioSelected === 'www-form-urlencoded') {
+    } else if (this.state.theSchema.bodyRadioSelected === 'x-www-form-urlencoded') {
       return <div>
-              { this.getEditerTable() }
+              { this.getFormDataEditerTable('from-www-form-urlencoded') }
              </div>;
     } else if (this.state.theSchema.bodyRadioSelected.toLowerCase() === 'application/json' || this.state.theSchema.bodyRadioSelected.toLowerCase() === 'application/json;utf-8' ) {
       return <div style={{ position:'relative' }}>
@@ -549,7 +579,7 @@ export class _PM0 extends Component {
     if (this.state.theSchema.bodyRadioSelected === 'none') {
       return false;
     }
-    if (this.state.theSchema.bodyRadioSelected === 'www-form-urlencoded') {
+    if (this.state.theSchema.bodyRadioSelected === 'x-www-form-urlencoded') {
       return false;
     }
     if (this.state.theSchema.bodyRadioSelected === 'form-data') {
@@ -580,8 +610,8 @@ export class _PM0 extends Component {
                              onChange={ (e) => this.bodyRadioClick(e, 'none') } /><label htmlFor="r-none">NONE</label></span>
                 <span><input name="g" id="r-form-data" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'form-data' }
                              onChange={ (e) => this.bodyRadioClick(e, 'form-data') } /><label htmlFor="r-form-data">form-data</label></span>
-                <span><input name="g" id="r-form-urlencoded" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'www-form-urlencoded' }
-                             onChange={ (e) => this.bodyRadioClick(e, 'www-form-urlencoded') } /><label htmlFor="r-form-urlencoded">x-www-form-urlencoded</label></span>
+                <span><input name="g" id="r-form-urlencoded" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'x-www-form-urlencoded' }
+                             onChange={ (e) => this.bodyRadioClick(e, 'x-www-form-urlencoded') } /><label htmlFor="r-form-urlencoded">x-www-form-urlencoded</label></span>
                 <span><input name="g" id="r-form-raw" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'application/json' }
                              onChange={ (e) => this.bodyRadioClick(e, 'application/json') } /><label htmlFor="r-form-raw">application/json</label></span>
                 <span><input name="g" id="r-form-other" type="radio" checked={ this.getBodyRadioSelectedChecked() }
@@ -675,8 +705,7 @@ let mixin = css`&{
   .pm-body input:nth-last-child(1) {
     margin-right: 0;
   }
-  .pm
-	.pm-m {
+  .pm .pm-m {
 		border-top: solid 1px gainsboro;
 	}
 	.pm-tab {
@@ -700,18 +729,45 @@ let mixin = css`&{
   .tab-panel {
   	background-color: floralwhite;
   }
-  .query-params-table {
+  .query-params-table, .pm-table {
   	border-spacing: 0;
   	width: 100%;
   	border-top: solid 1px gainsboro;
   }
-  .query-params-table td, .query-params-table th {
-  	border-right: solid 1px gainsboro;
-  	border-bottom: solid 1px gainsboro;
-  	padding: .325em .625em;
-  	font-size: .925em;
+  .pm-table .empty-td {
+     font-size: 1.25em;
+     padding: .25em .425em;
+     color: gray;
+     font-style: italic;
   }
-  .query-params-table tr td:nth-last-child(1), .query-params-table tr th:nth-last-child(1){
+  .pm-table th, .pm-table td {
+    text-align: left;
+    border-right: solid 1px gainsboro;
+    border-bottom: solid 1px gainsboro;
+    padding: .325em .625em;
+    font-size: .925em;
+  }
+  .query-params-table td, .query-params-table th {
+  	
+  }
+  .from-www-form-urlencoded td, .from-www-form-urlencoded th {
+
+  }
+  .form-data-table .inputCell > div, .form-data-table .empty-td {
+    background-color:thistle;
+  }
+  .form-data-table .inputCell input {
+    background-color:thistle;
+    color:darkviolet;
+  }
+  .from-www-form-urlencoded .inputCell > div, .from-www-form-urlencoded .empty-td {
+    background-color:burlywood;
+  }
+  .from-www-form-urlencoded .inputCell input {
+    background-color:burlywood;
+  }
+  .query-params-table tr td:nth-last-child(1), .query-params-table tr th:nth-last-child(1)
+  .from-www-form-urlencoded tr td:nth-last-child(1), .from-www-form-urlencoded tr th:nth-last-child(1) {
   	border-right: none;
   }
   /* auth */
@@ -779,6 +835,11 @@ let mixin = css`&{
     font-size:1em;
     width:100%;
     padding:0;
+  }
+  .inputCell input:disabled {
+    text-decoration: line-through;
+    font-style: italic;
+    color: gray;
   }
   .jsonTextArea {
     padding: 1em;
