@@ -76,7 +76,7 @@ Helper.prototype.jsonData = function (pmSchema) {
     	if (!l.key || !l.key.trim() || l.key.trim() === '--') {
     		continue;
     	}
-    	json[l.key.trim()] = !l.val || l.val.trim() === '--' || l.val.trim() === '' ? null : l.val;
+    	json[l.key.trim()] = !l.val || l.val.toString().trim() === '--' || l.val.toString().trim() === '' ? null : l.val;
     }
     return json;
 }

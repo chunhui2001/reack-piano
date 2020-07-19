@@ -496,7 +496,9 @@ export class _PM0 extends Component {
     }
     return this.state.theSchema.bodyReqData.map((item, i) => {
       return <tr key={i}>
-                <td style={{textAlign:'right'}}><input type="checkbox" /></td>
+                <td style={{textAlign:'right'}}>
+                  <input checked={!item.disable} onChange={ (e) => this.handTrDisable(e, i, 'bodyReqData', item) } type="checkbox" />
+                </td>
                 <td className={'inputCell'}>
                   <div><input autoComplete="off" disabled={item.disable} type="text" 
                           value={ this.getInputStringValue('key', i, item) } 
@@ -563,6 +565,19 @@ export class _PM0 extends Component {
                 </td>
               </tr>;
     });
+  }
+
+  handTrDisable(e, index, schemaField, item) {
+    const { onSchemaStateChange } = this.props;
+    //debugger;
+    console.log(e.target.checked);
+    let _schema = this.state.theSchema;
+    let _dataItem = _schema[schemaField];
+    _dataItem[index].disable = !e.target.checked;
+    _schema[schemaField] = _dataItem;
+    if (onSchemaStateChange) {
+      onSchemaStateChange(_schema);
+    }
   }
 
   // 处理FormData参数状态变化
@@ -691,7 +706,9 @@ export class _PM0 extends Component {
     const { onSchemaStateChange } = this.props;
     let currentJsonString = e.target.value;
     let _reqData = Helper.toBodyData(currentJsonString);
-    if (_reqData === null) {
+    $(".jsonTextArea textarea").removeClass("warnning");
+    if (!_reqData) {
+      $(".jsonTextArea textarea").addClass("warnning");
       return;
     } else {
       this.setState({
@@ -988,16 +1005,16 @@ let mixin = css`&{
   }
   .jsonTextArea {
     padding: 1em;
-    background-color: darkolivegreen;
+    background-color: darkblue;
   }
   .jsonTextArea textarea {
     border: none;
     border-radius: 0;
     width: 100%;
-    background-color: darkolivegreen;
+    background-color: darkblue;
     min-height:230px;
     font-size: 1.45em;
-    color: gold;
+    color: green;
     resize:none;
   }
   .beautifulJson {
@@ -1010,6 +1027,11 @@ let mixin = css`&{
     color: brown;
     border-radius: 40px;
     user-select: none;
+  }
+  .jsonTextArea .warnning {
+    color:red;
+    font-style: italic;
+    text-decoration: underline;
   }
 }`;
 
