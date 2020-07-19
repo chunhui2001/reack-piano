@@ -256,14 +256,6 @@ export class _PM0 extends Component {
             </div>;
   }
 
-  // 将query参数数组复制到组件状态
-  putQueryParamsItems = (queryParamsItems, done) => {
-    this.setState({
-      ...this.state,
-      queryParamsItems: queryParamsItems
-    }, () => { if (done) done(); });
-  }
-
   // 获取query展示区
   getQueryParamsItems = () => {
     return this.state.queryParamsItems && this.state.queryParamsItems.map((item, i) => {
@@ -342,7 +334,10 @@ export class _PM0 extends Component {
     if (append) {
       let _queryParamsItems = this.state.queryParamsItems;
       _queryParamsItems.push({});
-      this.putQueryParamsItems(_queryParamsItems, () => {
+      this.setState({
+        ...this.state,
+        queryParamsItems: _queryParamsItems
+      }, () => {
         if (type !== 'tab') {
           _this.moveFocus(e, next, field, index);
         }
@@ -440,31 +435,96 @@ export class _PM0 extends Component {
       return <tr key={i}>
                 <td style={{textAlign:'right'}}><input type="checkbox" /></td>
                 <td className={'inputCell'}>
-                  <div><input disabled={item.disable} type="text" value={item.key || '--'} onChange={(e) => console.log(e.target.value)} name="key" /></div>
+                  <div><input autoComplete="off" disabled={item.disable} type="text" 
+                          value={ this.getInputStringValue('key', i, item) } 
+                          onBlur={ (e) => this.onFormDataItemChange(e, i) }
+                          onChange={ (e) => this.onInputChangeStaging(e, i) } name="key" /></div>
                 </td>
                 <td className={'inputCell'}>
-                  <div><input disabled={item.disable} type="text" value={item.val || '--'} onChange={(e) => console.log(e.target.value)} name="val" /></div>
+                  <div><input autoComplete="off" disabled={item.disable} type="text" 
+                          value={ this.getInputStringValue('val', i, item) } 
+                          onBlur={ (e) => this.onFormDataItemChange(e, i) }
+                          onChange={ (e) => this.onInputChangeStaging(e, i) } name="val" /></div>
                 </td>
                 <td className={'inputCell'}>
-                  <div><input disabled={item.disable} type="text" value={item.dtype || '--'} onChange={(e) => console.log(e.target.value)} name="dtype" /></div>
+                  <div><input autoComplete="off" disabled={item.disable} type="text" 
+                          value={ this.getInputStringValue('dtype', i, item) } 
+                          onBlur={ (e) => this.onFormDataItemChange(e, i) }
+                          onChange={ (e) => this.onInputChangeStaging(e, i) } name="dtype" /></div>
                 </td>
                 <td className={'inputCell'}>
-                  <div><input disabled={item.disable} type="text" value={item.required || '--'} onChange={(e) => console.log(e.target.value)} name="required" /></div>
+                  <div><input autoComplete="off" disabled={item.disable} type="text" 
+                          value={ this.getInputStringValue('required', i, item) } 
+                          onBlur={ (e) => this.onFormDataItemChange(e, i) }
+                          onChange={ (e) => this.onInputChangeStaging(e, i) } name="required" /></div>
                 </td>
                 <td className={'inputCell'}>
-                  <div><input disabled={item.disable} type="text" value={item.defval || '--'} onChange={(e) => console.log(e.target.value)} name="defval" /></div>
+                  <div><input autoComplete="off" disabled={item.disable} type="text" 
+                          value={ this.getInputStringValue('defval', i, item) } 
+                          onBlur={ (e) => this.onFormDataItemChange(e, i) }
+                          onChange={ (e) => this.onInputChangeStaging(e, i) } name="defval" /></div>
                 </td>
                 <td className={'inputCell'}>
-                  <div><input disabled={item.disable} type="text" value={item.valid || '--'} onChange={(e) => console.log(e.target.value)} name="valid" /></div>
+                  <div><input autoComplete="off" disabled={item.disable} type="text" 
+                          value={ this.getInputStringValue('valid', i, item) } 
+                          onBlur={ (e) => this.onFormDataItemChange(e, i) }
+                          onChange={ (e) => this.onInputChangeStaging(e, i) } name="valid" /></div>
                 </td>
                 <td className={'inputCell'}>
-                  <div><input disabled={item.disable} type="text" value={item.eg || '--'} onChange={(e) => console.log(e.target.value)} name="eg" /></div>
+                  <div><input autoComplete="off" disabled={item.disable} type="text" 
+                          value={ this.getInputStringValue('eg', i, item) } 
+                          onBlur={ (e) => this.onFormDataItemChange(e, i) }
+                          onChange={ (e) => this.onInputChangeStaging(e, i) } name="eg" /></div>
                 </td>
                 <td className={'inputCell'}>
-                  <div><input disabled={item.disable} type="text" value={item.desc || '--'} onChange={(e) => console.log(e.target.value)} name="desc" /></div>
+                  <div><input autoComplete="off" disabled={item.disable} type="text" 
+                          value={ this.getInputStringValue('desc', i, item) } 
+                          onBlur={ (e) => this.onFormDataItemChange(e, i) }
+                          onChange={ (e) => this.onInputChangeStaging(e, i) } name="desc" /></div>
                 </td>
               </tr>;
     });
+  }
+
+  // 处理FormData参数状态变化
+  onFormDataItemChange = (e, index) => {
+    const { onSchemaStateChange } = this.props;
+    let currentValue = e.target.value;
+    let currentField = e.target.name;
+    let _theSchema = this.state.theSchema;
+    _theSchema.bodyReqData[index][currentField] = currentValue;
+    if (onSchemaStateChange) {
+        this.clearInputStagingChange(() => onSchemaStateChange(_theSchema));
+    }
+  }
+
+  onInputChangeStaging = (e, index) => {
+    let field = e.target.name;
+    let key = index;
+    let inputStringValue = {};
+    inputStringValue[key] = {};
+    inputStringValue[key][field] = e.target.value || ' ';
+    this.setState({
+      ...this.state,
+      inputStringValue: inputStringValue
+    });
+  }
+
+  clearInputStagingChange(done) {
+    this.setState({
+      ...this.state,
+      inputStringValue: null
+    }, () => done && done());
+  }
+
+  getInputStringValue(field, index, item) {
+    if (!this.state.inputStringValue || !this.state.inputStringValue[index] || !this.state.inputStringValue[index][field]) {
+      if (item[field]) {
+        return item[field];
+      } 
+      return '--';
+    }
+    return (this.state.inputStringValue[index] && this.state.inputStringValue[index][field]) || '';
   }
 
   authTabSection() {
@@ -761,10 +821,11 @@ let mixin = css`&{
     color:darkviolet;
   }
   .from-www-form-urlencoded .inputCell > div, .from-www-form-urlencoded .empty-td {
-    background-color:burlywood;
+    background-color:#65bb92;
   }
   .from-www-form-urlencoded .inputCell input {
-    background-color:burlywood;
+    background-color:#65bb92;
+    color: darkred;
   }
   .query-params-table tr td:nth-last-child(1), .query-params-table tr th:nth-last-child(1)
   .from-www-form-urlencoded tr td:nth-last-child(1), .from-www-form-urlencoded tr th:nth-last-child(1) {
