@@ -264,16 +264,22 @@ export class _PM0 extends Component {
         <td className={'inputCell'}>
           <div><input type="text" value={item.key || ''} autoComplete="off"
                   onChange={ (e) => this.onQueryParamsItemChange(e, i) } 
+                  onFocus={ (e) => this.onTdInputAddFocus(e.target) }
+                  onBlur={ (e) => this.clearInputStagingChange(e) }
                   onKeyDown={ (e) => this.onQueryParamTrAppend(e, i, 'key') }name='key' /></div>
         </td>
         <td className={'inputCell'}>
           <div><input type="text" value={item.val || ''} autoComplete="off"
                   onChange={ (e) => this.onQueryParamsItemChange(e, i) } 
+                  onFocus={ (e) => this.onTdInputAddFocus(e.target) }
+                  onBlur={ (e) => this.clearInputStagingChange(e) }
                   onKeyDown={ (e) => this.onQueryParamTrAppend(e, i, 'val') }name='val' /></div>
         </td>
         { /** <td className={'inputCell'}>
           <div><input type="text" value={item.desc || ''} autoComplete="off"
                   onChange={ (e) => this.onQueryParamsItemChange(e, i) } 
+                  onFocus={ (e) => this.onTdInputAddFocus(e.target) }
+                  onBlur={ (e) => this.clearInputStagingChange(e) }
                   onKeyDown={ (e) => this.onQueryParamTrAppend(e, i, 'desc') } name='desc' /></div>
         </td> **/}
       </tr>;
@@ -303,6 +309,50 @@ export class _PM0 extends Component {
     });
   }
 
+  // 处理添加pm表格参数
+  onTableTrAppend(e, index, field, theSchemaField) {
+    if (window.event.keyCode === 9 && e.target.name === 'desc') {
+      // tab 键
+      if (this.state.theSchema[theSchemaField].length === index+1) {
+        if (window.event.shiftKey) {
+          // shift + tab
+          return;
+        }
+        this.doTableTrAppendMoveFocus(e, field, theSchemaField, 'next', true, 'tab', index);
+      }
+    } else if ((window.event.shiftKey && window.event.keyCode === 40) || window.event.keyCode === 13) {
+      // 下方向键 OR 回车键
+      this.doTableTrAppendMoveFocus(e, field, theSchemaField, 'next', this.state.theSchema[theSchemaField].length === index+1, 'down', index);
+    } else if (window.event.shiftKey && window.event.keyCode === 38) {
+      // 上方向键
+      this.moveFocus('.pm-table', e, 'prev', field, index);
+    } else if (window.event.shiftKey && window.event.keyCode === 39) {
+      // 右方向键
+      this.moveFocus('.pm-table', e, 'right', field, index);
+    } else if (window.event.shiftKey && window.event.keyCode === 37) {
+      // 左方向键
+      this.moveFocus('.pm-table', e, 'left', field, index);
+    } 
+  }
+
+  // 处理添加pm表格参数后光标移动
+  doTableTrAppendMoveFocus(e, field, theSchemaField, next, append, type, index) {
+    const { onSchemaStateChange } = this.props;
+    let _this = this;
+    if (append) {
+      let _theSchema = this.state.theSchema;
+      let _bodyReqData = _theSchema[theSchemaField];
+      _bodyReqData.push({});
+      if (onSchemaStateChange) {
+        onSchemaStateChange(_theSchema);
+      }
+    } else {
+      if (type !== 'tab') {
+        _this.moveFocus('.pm-table', e, next, field, index);
+      }
+    }
+  }
+
   // 处理添加query参数
   onQueryParamTrAppend(e, index, field) {
     if (window.event.keyCode === 9 && e.target.name === 'desc') {
@@ -311,25 +361,25 @@ export class _PM0 extends Component {
           // shift + tab
           return;
         }
-        this.doQueryParamTrAppend(e, field, 'next', true, 'tab', index);
+        this.doQueryParamTrAppendMoveFocus(e, field, 'next', true, 'tab', index);
       }
     } else if ((window.event.shiftKey && window.event.keyCode === 40) || window.event.keyCode === 13) {
       // 下方向键 OR 回车键
-      this.doQueryParamTrAppend(e, field, 'next', this.state.queryParamsItems.length === index+1, 'down', index);
+      this.doQueryParamTrAppendMoveFocus(e, field, 'next', this.state.queryParamsItems.length === index+1, 'down', index);
     } else if (window.event.shiftKey && window.event.keyCode === 38) {
       // 上方向键
-      this.moveFocus(e, 'prev', field, index);
+      this.moveFocus('.query-params-table', e, 'prev', field, index);
     } else if (window.event.shiftKey && window.event.keyCode === 39) {
       // 右方向键
-      this.moveFocus(e, 'right', field, index);
+      this.moveFocus('.query-params-table', e, 'right', field, index);
     } else if (window.event.shiftKey && window.event.keyCode === 37) {
       // 左方向键
-      this.moveFocus(e, 'left', field, index);
+      this.moveFocus('.query-params-table', e, 'left', field, index);
     } 
   }
 
-  // 处理添加query参数
-  doQueryParamTrAppend(e, field, next, append, type, index) {
+  // 处理添加query参数后光标移动
+  doQueryParamTrAppendMoveFocus(e, field, next, append, type, index) {
     let _this = this;
     if (append) {
       let _queryParamsItems = this.state.queryParamsItems;
@@ -339,30 +389,43 @@ export class _PM0 extends Component {
         queryParamsItems: _queryParamsItems
       }, () => {
         if (type !== 'tab') {
-          _this.moveFocus(e, next, field, index);
+          _this.moveFocus('.query-params-table', e, next, field, index);
         }
       });
     } else {
       if (type !== 'tab') {
-        _this.moveFocus(e, next, field, index);
+        _this.moveFocus('.query-params-table', e, next, field, index);
       }
     }
   }
 
   // 光标跳到下一行的对应的单元格
-  moveFocus(e, next, field, index) {
+  moveFocus(classname, e, next, field, index) {
+    let targetElement = null;
     if (next === 'next') {
-      $('.query-params-table').find('>tbody>tr:eq(' + (index + 2) + ')').find('>td').find('input[type=text][name=' + field + ']').focus();
+      targetElement = $(classname).find('>tbody>tr:eq(' + (index + 2) + ')').find('>td').find('input[type=text][name=' + field + ']');
     } else if (next === 'prev') {
-      $('.query-params-table').find('>tbody>tr:eq(' + (index) + ')').find('>td').find('input[type=text][name=' + field + ']').focus();
+      targetElement = $(classname).find('>tbody>tr:eq(' + (index) + ')').find('>td').find('input[type=text][name=' + field + ']');
     } else {
-      let parentTd = $('.query-params-table').find('>tbody>tr:eq(' + (index + 1) + ')').find('>td').find('input[type=text][name=' + field + ']').parents('td:first');
+      let parentTd = $(classname).find('>tbody>tr:eq(' + (index + 1) + ')').find('>td').find('input[type=text][name=' + field + ']').parents('td:first');
       if (next === 'right') {
-        $(parentTd[0]).next().find('input[type=text]').focus();
+        targetElement = $(parentTd[0]).next().find('input[type=text]');
       } else if (next === 'left') {
-        $(parentTd[0]).prev().find('input[type=text]').focus();
+        targetElement = $(parentTd[0]).prev().find('input[type=text]');
       }
     } 
+    if (targetElement != null) {
+      this.onTdInputAddFocus(targetElement);
+      $(targetElement).focus();
+    }
+  }
+
+  onTdInputAddFocus(targetElement) {
+    if ($(targetElement).attr('disabled')) {
+      return;
+    }
+    $(targetElement).select();
+    $(targetElement).parent().addClass('focus');
   }
 
   // 将query数组转成对象
@@ -418,7 +481,7 @@ export class _PM0 extends Component {
                 <th style={{width: '45px'}}>DATATYPE</th>
                 <th style={{width: '45px'}}>REQ</th>
                 <th style={{width: '85px'}}>DEFAULTS</th>
-                <th>VALID</th>
+                <th>VALIDATER</th>
                 <th>E.G.</th>
                 <th>DESCRIPTION</th>
               </tr>
@@ -437,49 +500,65 @@ export class _PM0 extends Component {
                 <td className={'inputCell'}>
                   <div><input autoComplete="off" disabled={item.disable} type="text" 
                           value={ this.getInputStringValue('key', i, item) } 
+                          onFocus={ (e) => this.onTdInputAddFocus(e.target) }
                           onBlur={ (e) => this.onFormDataItemChange(e, i) }
+                          onKeyDown={ (e) => this.onTableTrAppend(e, i, 'key', 'bodyReqData')}
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="key" /></div>
                 </td>
                 <td className={'inputCell'}>
                   <div><input autoComplete="off" disabled={item.disable} type="text" 
                           value={ this.getInputStringValue('val', i, item) } 
+                          onFocus={ (e) => this.onTdInputAddFocus(e.target) }
                           onBlur={ (e) => this.onFormDataItemChange(e, i) }
+                          onKeyDown={ (e) => this.onTableTrAppend(e, i, 'val', 'bodyReqData')}
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="val" /></div>
                 </td>
                 <td className={'inputCell'}>
                   <div><input autoComplete="off" disabled={item.disable} type="text" 
                           value={ this.getInputStringValue('dtype', i, item) } 
+                          onFocus={ (e) => this.onTdInputAddFocus(e.target) }
                           onBlur={ (e) => this.onFormDataItemChange(e, i) }
+                          onKeyDown={ (e) => this.onTableTrAppend(e, i, 'dtype', 'bodyReqData')}
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="dtype" /></div>
                 </td>
                 <td className={'inputCell'}>
                   <div><input autoComplete="off" disabled={item.disable} type="text" 
                           value={ this.getInputStringValue('required', i, item) } 
+                          onFocus={ (e) => this.onTdInputAddFocus(e.target) }
                           onBlur={ (e) => this.onFormDataItemChange(e, i) }
+                          onKeyDown={ (e) => this.onTableTrAppend(e, i, 'required', 'bodyReqData')}
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="required" /></div>
                 </td>
                 <td className={'inputCell'}>
                   <div><input autoComplete="off" disabled={item.disable} type="text" 
                           value={ this.getInputStringValue('defval', i, item) } 
+                          onFocus={ (e) => this.onTdInputAddFocus(e.target) }
                           onBlur={ (e) => this.onFormDataItemChange(e, i) }
+                          onKeyDown={ (e) => this.onTableTrAppend(e, i, 'defval', 'bodyReqData')}
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="defval" /></div>
                 </td>
                 <td className={'inputCell'}>
                   <div><input autoComplete="off" disabled={item.disable} type="text" 
                           value={ this.getInputStringValue('valid', i, item) } 
+                          onFocus={ (e) => this.onTdInputAddFocus(e.target) }
                           onBlur={ (e) => this.onFormDataItemChange(e, i) }
+                          onKeyDown={ (e) => this.onTableTrAppend(e, i, 'valid', 'bodyReqData')}
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="valid" /></div>
                 </td>
                 <td className={'inputCell'}>
                   <div><input autoComplete="off" disabled={item.disable} type="text" 
                           value={ this.getInputStringValue('eg', i, item) } 
+                          onFocus={ (e) => this.onTdInputAddFocus(e.target) }
                           onBlur={ (e) => this.onFormDataItemChange(e, i) }
+                          onKeyDown={ (e) => this.onTableTrAppend(e, i, 'eg', 'bodyReqData')}
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="eg" /></div>
                 </td>
                 <td className={'inputCell'}>
                   <div><input autoComplete="off" disabled={item.disable} type="text" 
                           value={ this.getInputStringValue('desc', i, item) } 
+                          onFocus={ (e) => this.onTdInputAddFocus(e.target) }
                           onBlur={ (e) => this.onFormDataItemChange(e, i) }
+                          onKeyDown={ (e) => this.onTableTrAppend(e, i, 'desc', 'bodyReqData')}
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="desc" /></div>
                 </td>
               </tr>;
@@ -494,7 +573,7 @@ export class _PM0 extends Component {
     let _theSchema = this.state.theSchema;
     _theSchema.bodyReqData[index][currentField] = currentValue;
     if (onSchemaStateChange) {
-        this.clearInputStagingChange(() => onSchemaStateChange(_theSchema));
+        this.clearInputStagingChange(e, () => onSchemaStateChange(_theSchema));
     }
   }
 
@@ -510,7 +589,8 @@ export class _PM0 extends Component {
     });
   }
 
-  clearInputStagingChange(done) {
+  clearInputStagingChange(e, done) {
+    $(e.target).parent().removeClass('focus');
     this.setState({
       ...this.state,
       inputStringValue: null
@@ -686,7 +766,7 @@ export class _PM0 extends Component {
   headersTabSection() {
     return <div className={'tab-panel tab-headers'}>
               <div style={{color:'gray', padding: '0.425em .625em', fontStyle: 'italic', backgroundColor: 'lavender'}}>Headers</div>
-              <table className={'query-params-table'}>
+              <table className={'pm-table query-params-table'}>
                 <tbody>
                   <tr>
                     <th style={{width:'25px'}}>&nbsp;</th>
@@ -888,6 +968,10 @@ let mixin = css`&{
   .inputCell > div {
     background-color:darkkhaki;
     padding: .325em;
+  }
+  .inputCell > div.focus, .inputCell > div.focus input[type="text"]  {
+    background-color:blue;
+    color:chocolate;
   }
   .inputCell input {
     background-color:darkkhaki;

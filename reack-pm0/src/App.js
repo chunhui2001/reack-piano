@@ -12,8 +12,7 @@ class App extends Component {
         "https://www.baidu.com", 
         "get", 
         //'application/json;utf-8',
-        'form-data',
-        JSON.stringify({"a": 1, "b": 2}, null, 2)
+        'form-data'
       )
     };
   }
@@ -75,7 +74,6 @@ class App extends Component {
         "get", 
         //'application/json;utf-8',
         'x-www-form-urlencoded',
-        JSON.stringify({"a": 1, "b": 2}, null, 2),
         bodyData
       )
     });

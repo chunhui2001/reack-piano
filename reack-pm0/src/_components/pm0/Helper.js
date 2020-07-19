@@ -73,7 +73,10 @@ Helper.prototype.jsonData = function (pmSchema) {
     	if (l.disable) {
     		continue;
     	}
-        json[l.key] = l.val;
+    	if (!l.key || !l.key.trim() || l.key.trim() === '--') {
+    		continue;
+    	}
+    	json[l.key.trim()] = !l.val || l.val.trim() === '--' || l.val.trim() === '' ? null : l.val;
     }
     return json;
 }
