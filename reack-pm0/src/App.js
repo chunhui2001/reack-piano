@@ -2,6 +2,59 @@ import React, { Component } from 'react';
 import PM0 from './_components/pm0/PM0';
 import PMSchema from './_components/schema/PMSchema';
 
+const bodyData = [
+  {
+    key: "id",
+    val: 1,
+    desc: "用户ID",
+    disable: true,
+    dtype: 'string',
+    required: 'Y',
+    defval: '无',
+    eg: null,
+    valid: '0-25',
+  }, {
+    key: "username",
+    val: "keeshz.hang",
+    desc: "用户名",
+    disable: false,
+    dtype: 'string',
+    required: 'Y',
+    defval: '无',
+    eg: null,
+    valid: '0-25',
+  }, {
+    key: "age",
+    val: "18",
+    desc: "年龄",
+    disable: false,
+    dtype: 'object',
+    required: 'N',
+    defval: '无',
+    eg: null,
+    valid: '[0-9]',
+  }, {
+    key: "image",
+    val: "http://www.imge.com",
+    desc: "头像",
+    disable: false,
+    dtype: 'file',
+    required: 'N',
+    defval: '无',
+    eg: null,
+    valid: 'binary',
+  }
+];
+
+const headers = [
+  {
+    key: "Content-Type",
+    val: 'application/json;utf-8',
+    eg: 'application/json',
+    desc: "头部参数"
+  }
+];
+
 class App extends Component {
 
   constructor(props) {
@@ -12,7 +65,8 @@ class App extends Component {
         "https://www.baidu.com", 
         "get", 
         //'application/json;utf-8',
-        'form-data'
+        'application/json',
+        //'form-data',
       )
     };
   }
@@ -24,49 +78,6 @@ class App extends Component {
   }
 
   onTestClick() {
-    let bodyData = [
-      {
-        key: "id",
-        val: 1,
-        desc: "用户ID",
-        disable: true,
-        dtype: 'string',
-        required: 'Y',
-        defval: '无',
-        eg: null,
-        valid: '0-25',
-      }, {
-        key: "username",
-        val: "keeshz.hang",
-        desc: "用户名",
-        disable: false,
-        dtype: 'string',
-        required: 'Y',
-        defval: '无',
-        eg: null,
-        valid: '0-25',
-      }, {
-        key: "age",
-        val: "18",
-        desc: "年龄",
-        disable: false,
-        dtype: 'object',
-        required: 'N',
-        defval: '无',
-        eg: null,
-        valid: '[0-9]',
-      }, {
-        key: "image",
-        val: "http://www.imge.com",
-        desc: "头像",
-        disable: false,
-        dtype: 'file',
-        required: 'N',
-        defval: '无',
-        eg: null,
-        valid: 'binary',
-      }
-    ];
     this.setState({
       ...this.state,
       pmSchema: PMSchema(
@@ -74,7 +85,8 @@ class App extends Component {
         "get", 
         //'application/json;utf-8',
         'x-www-form-urlencoded',
-        bodyData
+        bodyData,
+        headers
       )
     });
     this.refs.pm0.refresh();
@@ -102,7 +114,7 @@ class App extends Component {
       <div className='pm-app'>
           <input type="button" onClick={this.onTestClick.bind(this)} value="Test" />
           <PM0 ref="pm0" 
-               activeTab={ 'body' } schema={ this.state.pmSchema } 
+               activeTab={ 'headers' } schema={ this.state.pmSchema } 
                onSchemaStateChange={ (changedSchema) => this.onSchemaChange(changedSchema) } onButtonClickHand={this.onButtonClickHand.bind(this)} />
       </div>
     );

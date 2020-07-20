@@ -85,5 +85,42 @@ Helper.prototype.jsonDataString = function (pmSchema) {
     return JSON.stringify(this.jsonData(pmSchema), null, 2);
 }
 
+Helper.prototype.queryStringObject = function(urlSearch) {
+	let urlSearchArr = null;
+	let queryParamsObject = null;
+	if (urlSearch) {
+		queryParamsObject = {};
+		urlSearchArr = urlSearch.substr(1).split('&');
+		for (let qKey of urlSearchArr) {
+			if (!qKey || qKey === '') {
+				continue;
+			}
+			queryParamsObject[qKey.split('=')[0]] = qKey.split('=')[1];
+		}
+	}
+	let queryStringObject = [];
+	if (!this.blank(queryParamsObject)) {
+		// convert query string to array object
+		for (const [key, value] of Object.entries(queryParamsObject)) {
+			queryStringObject.push({
+				key: key,
+				val: value
+			});
+		}
+	} 
+	while (queryStringObject.length < 10) {
+		queryStringObject.push({});
+	}
+	return queryStringObject;
+}
+
+Helper.prototype.blank = function(obj) {
+  if (!obj) {
+    return true;
+  }
+  let l = Object.entries(obj);
+  return !l || l.length === 0;
+}
 
 export default new Helper();
+
