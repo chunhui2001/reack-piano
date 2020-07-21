@@ -156,8 +156,6 @@ export class _PM0 extends Component {
     return (
         <div className={`${this.props.className} PM0`}>
           <div className={'panel-left'}>
-
-            <CheckBox0>CheckBox0</CheckBox0>
           	<div className={'pm-body container'}>
               <div className={'content'}>
                 <div className={'div1'}>
@@ -232,7 +230,10 @@ export class _PM0 extends Component {
   getQueryParamsItems = () => {
     return this.state.queryParamsItems && this.state.queryParamsItems.map((item, i) => {
       return <tr key={i}>
-        <td style={{textAlign:'right'}}><input type="checkbox" /></td>
+        <td style={{textAlign:'right'}}>
+            <CheckBox0 size={'small'} value={"3"} 
+              onChange={(e) => { console.log(e.target.checked) }}>checkbox0</CheckBox0>
+        </td>
         <td className={'inputCell'}>
           <div><input type="text" value={item.key || ''} autoComplete="off"
                   onChange={ (e) => this.onQueryParamsItemChange(e, i) } 
@@ -469,7 +470,8 @@ export class _PM0 extends Component {
     return this.state.theSchema.bodyReqData.map((item, i) => {
       return <tr key={i}>
                 <td style={{textAlign:'right'}}>
-                  <input checked={!item.disable} onChange={ (e) => this.handTrDisable(e, i, 'bodyReqData', item) } type="checkbox" />
+                  <CheckBox0 size={'small'} value={"3"}  checked={!item.disable}
+                     onChange={ (e) => this.handTrDisable(e, i, 'bodyReqData', item) } />
                 </td>
                 <td className={'inputCell'}>
                   <div><input autoComplete="off" disabled={item.disable} type="text" 

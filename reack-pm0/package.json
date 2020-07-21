@@ -50,7 +50,7 @@
     "postcss-safe-parser": "4.0.1",
     "query-string": "^6.13.1",
     "rc-bmap": "^0.2.4",
-    "reack-checkbox0": "0.0.1",
+    "reack-checkbox0": "0.0.2",
     "reack-fake": "0.0.4",
     "reack-lang": "^0.1.11",
     "react": "^16.13.1",
