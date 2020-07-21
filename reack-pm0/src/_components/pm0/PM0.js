@@ -6,6 +6,8 @@ import { Fake } from 'reack-fake';
 import PMSchema from "../schema/PMSchema";
 import Helper from "./Helper";
 
+import { CheckBox0 } from 'reack-checkbox0';
+
 const $ = Fake('$');
 
 export class _PM0 extends Component {
@@ -154,6 +156,8 @@ export class _PM0 extends Component {
     return (
         <div className={`${this.props.className} PM0`}>
           <div className={'panel-left'}>
+
+            <CheckBox0>CheckBox0</CheckBox0>
           	<div className={'pm-body container'}>
               <div className={'content'}>
                 <div className={'div1'}>
