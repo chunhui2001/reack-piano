@@ -230,7 +230,7 @@ export class _PM0 extends Component {
   getQueryParamsItems = () => {
     return this.state.queryParamsItems && this.state.queryParamsItems.map((item, i) => {
       return <tr key={i}>
-        <td style={{textAlign:'right'}}>
+        <td className={'inputCell'} style={{textAlign:'right'}}>
             <CheckBox0 size={'small'} value={"3"} 
               onChange={(e) => { console.log(e.target.checked) }}>checkbox0</CheckBox0>
         </td>
@@ -469,7 +469,7 @@ export class _PM0 extends Component {
     }
     return this.state.theSchema.bodyReqData.map((item, i) => {
       return <tr key={i}>
-                <td style={{textAlign:'right'}}>
+                <td className={'inputCell'} style={{textAlign:'right'}}>
                   <CheckBox0 size={'small'} value={"3"}  checked={!item.disable}
                      onChange={ (e) => this.handTrDisable(e, i, 'bodyReqData', item) } />
                 </td>
@@ -800,15 +800,15 @@ export class _PM0 extends Component {
   bodyTabsSection() {
     return <div className={'tab-panel tab-bodys'}>
               <div style={{color:'gray', padding: '0.625em 0.625em', backgroundColor: 'lavender'}}>
-                <span><input name="g" id="r-none" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'none' }  
+                <span className={'tab-span'}><input name="g" id="r-none" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'none' }  
                              onChange={ (e) => this.bodyRadioClick(e, 'none') } /><label htmlFor="r-none">NONE</label></span>
-                <span><input name="g" id="r-form-data" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'form-data' }
+                <span className={'tab-span'}><input name="g" id="r-form-data" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'form-data' }
                              onChange={ (e) => this.bodyRadioClick(e, 'form-data') } /><label htmlFor="r-form-data">form-data</label></span>
-                <span><input name="g" id="r-form-urlencoded" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'x-www-form-urlencoded' }
+                <span className={'tab-span'}><input name="g" id="r-form-urlencoded" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'x-www-form-urlencoded' }
                              onChange={ (e) => this.bodyRadioClick(e, 'x-www-form-urlencoded') } /><label htmlFor="r-form-urlencoded">x-www-form-urlencoded</label></span>
-                <span><input name="g" id="r-form-raw" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'application/json' }
+                <span className={'tab-span'}><input name="g" id="r-form-raw" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'application/json' }
                              onChange={ (e) => this.bodyRadioClick(e, 'application/json') } /><label htmlFor="r-form-raw">application/json</label></span>
-                <span><input name="g" id="r-form-other" type="radio" checked={ this.getBodyRadioSelectedChecked() }
+                <span className={'tab-span'}><input name="g" id="r-form-other" type="radio" checked={ this.getBodyRadioSelectedChecked() }
                              onChange={ (e) => this.bodyRadioClick(e, 'other') } /><label htmlFor="r-form-other">other</label></span>
                 { this.getBodyRadioOtherSelectedInput() }
                 <div className={'clear'}></div>
@@ -959,11 +959,10 @@ let mixin = css`&{
     height:100%;
     padding:1em;
   }
-  .tab-panel.tab-bodys span {
+  .tab-panel.tab-bodys .tab-span {
     display:inline-block;
     float:left;
     margin-right:1em;
-    padding-top: .15em;
   }
   .container {
      height: auto;
@@ -1048,6 +1047,11 @@ let mixin = css`&{
     color:red;
     font-style: italic;
     text-decoration: underline;
+  }
+  .inputCell .checkbox0 {
+    display: table-cell !important;
+    margin-right: 5px;
+    float: right;
   }
 }`;
 

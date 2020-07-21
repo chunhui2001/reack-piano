@@ -31,7 +31,7 @@ export class _CheckBox0 extends Component {
 	}
 
 	render() {
-		return <span className={`${this.props.className}`} style={{display: 'inline-block'}}>
+		return <span className={`${this.props.className} checkbox0`} style={{display: 'inline-block'}}>
 			<label className={`container ${this.props.size}`}>
 			  <input type="checkbox" value={this.state.value} checked={this.state.checked} onChange={(e) => this.onChange(e)} />
 			  <span className="checkmark"></span>
