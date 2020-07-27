@@ -126,7 +126,9 @@ export class _PM0 extends Component {
                 </div>
                 <div className={'div2'}>
                   <input type="text" name='inputGroupText' 
-                      onChange={(e) => {this.handleInputTextChange(e)}} value={theSchema.inputGroupText || ''} />
+                      onBlur={ (e) => { this.handleInputTextChange(e) }  }
+                      onChange={(e) => this.onInputChangeStaging(e, 0) } 
+                      value={ (this.state.inputStringValue && this.state.inputStringValue[0] && this.state.inputStringValue[0]['inputGroupText']) || theSchema.inputGroupText || '' } />
                 </div>
                 <div className={'clear'}></div>
               </div>
@@ -477,10 +479,9 @@ export class _PM0 extends Component {
 
   onInputChangeStaging = (e, index) => {
     let field = e.target.name;
-    let key = index;
     let inputStringValue = {};
-    inputStringValue[key] = {};
-    inputStringValue[key][field] = e.target.value || ' ';
+    inputStringValue[index] = {};
+    inputStringValue[index][field] = e.target.value || ' ';
     this.setState({
       ...this.state,
       inputStringValue: inputStringValue

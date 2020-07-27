@@ -4,7 +4,7 @@ function PMSchemaObject (_url, selectRequestMethod, bodyRadioSelected, bodyReqDa
     this.bodyRadioSelected = bodyRadioSelected;
     this.bodyReqData = bodyReqData;
     this.headers = headers;
-    this.inputGroupText = this.parseUri(_url);
+    this.inputGroupText = this.parseUri(_url).uri;
     this.queryParams = this.mergeQueryItems(_url, queryParams);
 }
 
@@ -14,7 +14,7 @@ PMSchemaObject.prototype.mergeQueryItems = function(_url, queryParams) {
       return [];
     }
     let _queryString = queryItems.filter(f => f.disable == null || !f.disable).map(m => m.key + '=' + m.val).join('&');
-    this.inputGroupText = this.parseUri(_url) + '?' + _queryString;
+    this.inputGroupText = this.parseUri(_url).uri + (_queryString ? '?' : '') + _queryString;
     return queryItems;
 }
 
@@ -27,8 +27,9 @@ PMSchemaObject.prototype.parseUri = function (url) {
     if (!match) {
       return null;
     }
-    var u = {
+    return {
         href: url,
+        uri: match[1] + '//' + match[2],
         protocol: match[1],  // http:
         host: match[2], // example.com:3000
         hostname: match[3], // example.com
@@ -36,8 +37,7 @@ PMSchemaObject.prototype.parseUri = function (url) {
         pathname: match[5], // /pathname/
         search: match[6], // ?search=test
         hash: match[7] // #hash
-    }
-    return u.protocol + '//' + u.host;
+    };
 }
 
 const PMSchema = (url, selectRequestMethod, bodyRadioSelected, bodyReqData, headers, queryParams) => {
