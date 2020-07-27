@@ -80,7 +80,7 @@ const queryParams = [
     key: "sort",
     val: "-1",
     desc: "排序",
-    disable: true,
+    disable: false,
     dtype: 'number',
     required: 'N',
     defval: '-1',

@@ -39,7 +39,7 @@ export class _PM0 extends Component {
           tabName: state.tabName || props.activeTab
         };
       }
-      props.schema.mergeQueryItems(props.schema.inputGroupText, props.schema.queryParams);
+      props.schema.putQueryString(props.schema.inputGroupText, props.schema.queryParams);
       return {
         ...state,
         tabName: state.tabName || props.activeTab,
@@ -51,9 +51,16 @@ export class _PM0 extends Component {
     const { onSchemaStateChange } = this.props;
     let _schema = this.state.theSchema;
     _schema.inputGroupText = e.target.value;
-    if (onSchemaStateChange) {
-      onSchemaStateChange(_schema);
-    }
+    _schema.queryParams = _schema.getQueryNewItems();
+    this.setState({
+      ...this.state,
+      inputStringValue: null
+    }, () => {
+      if (onSchemaStateChange) {
+        onSchemaStateChange(_schema);
+      }
+    });
+    
   }
 
   // 处理 tab 切换
