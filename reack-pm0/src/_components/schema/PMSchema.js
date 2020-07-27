@@ -9,13 +9,13 @@ function PMSchemaObject (_url, selectRequestMethod, bodyRadioSelected, bodyReqDa
 }
 
 PMSchemaObject.prototype.mergeQueryItems = function(_url, queryParams) {
-	let queryItems = queryParams;
-    if (!queryItems) {
-      return [];
-    }
-    let _queryString = queryItems.filter(f => f.disable == null || !f.disable).map(m => m.key + '=' + m.val).join('&');
-    this.inputGroupText = this.parseUri(_url).uri + (_queryString ? '?' : '') + _queryString;
-    return queryItems;
+  let queryItems = queryParams;
+  if (!queryItems) {
+    return [];
+  }
+  let _queryString = queryItems.filter(f => f.disable == null || !f.disable).map(m => m.key + '=' + m.val).join('&');
+  this.inputGroupText = this.parseUri(_url).uri + (_queryString ? '?' : '') + _queryString;
+  return queryItems;
 }
 
 // 解析url
