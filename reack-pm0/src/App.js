@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import PM0 from './_components/pm0/PM0';
 import PMSchema from './_components/schema/PMSchema';
+import { Lang } from 'reack-lang';
+import { Fake } from 'reack-fake';
+
+const _ = Fake('_');
 
 const bodyData = [
   {
@@ -55,6 +59,40 @@ const headers = [
   }
 ];
 
+const queryParams = [
+  {
+    key: "pIndex",
+    val: "0",
+    desc: "页码",
+    disable: false,
+    dtype: 'number',
+    required: 'N',
+    defval: '0',
+    eg: null,
+    valid: '[0-9]{1,}',
+  },{
+    key: "pSize",
+    val: "10",
+    desc: "页大小",
+    disable: false,
+    dtype: 'number',
+    required: 'N',
+    defval: '10',
+    eg: null,
+    valid: '[0-9]{1,}',
+  },{
+    key: "sort",
+    val: "-1",
+    desc: "排序",
+    disable: true,
+    dtype: 'number',
+    required: 'N',
+    defval: '-1',
+    eg: null,
+    valid: null,
+  }
+];
+
 class App extends Component {
 
   constructor(props) {
@@ -62,7 +100,7 @@ class App extends Component {
     this.state = {
       items: [],
       pmSchema: PMSchema(
-        "https://www.baidu.com", 
+        "https://www.baidu.com",
         "get", 
         //'application/json;utf-8',
         'application/json',
@@ -73,26 +111,29 @@ class App extends Component {
 
   onButtonClickHand(pm, type, inputTextValue) {
     this.getList(pm);
-    console.log(type, inputTextValue);
+    console.log(type, this.state.pmSchema);
     pm.refresh();
   }
 
   onTestClick() {
-    this.setState({
-      ...this.state,
-      pmSchema: PMSchema(
-        "https://www.163.com?id=你好", 
+    let _theSchema = PMSchema(
+        "https://www.163.com",
         "get", 
         //'application/json;utf-8',
         'x-www-form-urlencoded',
         bodyData,
-        headers
-      )
+        headers,
+        queryParams
+      );
+    this.setState({
+      ...this.state,
+      pmSchema: _theSchema
     });
     this.refs.pm0.refresh();
   }
 
   onSchemaChange(schema) {
+    schema.queryParams = schema.mergeQueryItems(schema.inputGroupText, schema.queryParams);
     this.setState({
       ...this.state,
       pmSchema: schema
@@ -114,8 +155,9 @@ class App extends Component {
       <div className='pm-app'>
           <input type="button" onClick={this.onTestClick.bind(this)} value="Test" />
           <PM0 ref="pm0" 
-               activeTab={ 'headers' } schema={ this.state.pmSchema } 
-               onSchemaStateChange={ (changedSchema) => this.onSchemaChange(changedSchema) } onButtonClickHand={this.onButtonClickHand.bind(this)} />
+               activeTab={ 'params' } schema={ this.state.pmSchema } 
+               onSchemaStateChange={ (changedSchema) => this.onSchemaChange(changedSchema) } 
+               onButtonClickHand={this.onButtonClickHand.bind(this)} />
       </div>
     );
   }

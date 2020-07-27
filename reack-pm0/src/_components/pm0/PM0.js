@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled, { css } from "styled-components";
-import { Lang } from 'reack-lang';
 import { Fake } from 'reack-fake';
+import { Lang } from 'reack-lang';
 
 import PMSchema from "../schema/PMSchema";
 import Helper from "./Helper";
@@ -9,6 +9,7 @@ import Helper from "./Helper";
 import { CheckBox0 } from 'reack-checkbox0';
 
 const $ = Fake('$');
+const _ = Fake('_');
 
 export class _PM0 extends Component {
 
@@ -18,93 +19,50 @@ export class _PM0 extends Component {
     super(props);
     this.state = {
       tabName: null,
-      theSchema: PMSchema('https://www.google.com', 'get', 'none')
+      theSchema: PMSchema(
+        "https://www.baidu.com", 'get', 'none')
     };
   }
-
-  // shouldComponentUpdate = (nextProps) => {
-  //   debugger;
-  //   return nextProps.schema !== this.props.schema;
-  // }
 
   componentDidMount() {
     const { schema, activeTab } = this.props;
     let theSchema = schema ? schema : {};
     this.setState({
       ...this.state,
-      tabName: this.state.tabName || activeTab || 'params',
+      tabName: activeTab || this.state.tabName || 'params',
       theSchema
     }, () => this.handPmTabClick(this.state.tabName));
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    this.setState({
-      ...this.state,
-      tabName: this.state.tabName || nextProps.activeTab,
-      theSchema: nextProps.schema
-    }, () => this.handPmTabClick(this.state.tabName));
+  static getDerivedStateFromProps(props, state) {
+      if (!props.schema) {
+        return {
+          ...state,
+          tabName: state.tabName || props.activeTab
+        };
+      }
+      return {
+        ...state,
+        tabName: state.tabName || props.activeTab,
+        theSchema: props.schema
+      };
   }
-
-  // static getDerivedStateFromProps(props, state) {
-  //     return {
-  //       ...state,
-  //       tabName: state.tabName || props.activeTab,
-  //       theSchema: props.schema
-  //     };
-  // }
 
   handleInputTextChange (e) {
     const { onSchemaStateChange } = this.props;
-    let keyArr = e.target.name.split('.');
-    let currentVal = e.target.value;
-    if (keyArr.length === 1) {
-      this.setState({ 
-        ...this.state,
-        theSchema: {
-          ...this.state.theSchema,
-          [keyArr[0]]: currentVal
-        }
-      }, () => {
-        if (onSchemaStateChange) {
-          onSchemaStateChange(this.state.theSchema);
-        }
-        this.refresh();
-      });
-    } else if (keyArr.length === 2) {
-      this.setState({ 
-        ...this.state,
-        task: {
-          ...this.state.task,
-          taskDef: {
-            ...this.state.task.taskDef,
-            [keyArr[1]]: currentVal
-          }
-        }
-      }, () => {
-        if (onSchemaStateChange) {
-          onSchemaStateChange(this.state.theSchema);
-        }
-        this.refresh();
-      });
+    let _schema = this.state.theSchema;
+    _schema.inputGroupText = e.target.value;
+    if (onSchemaStateChange) {
+      onSchemaStateChange(_schema);
     }
-    
   }
 
   // 处理 tab 切换
   handPmTabClick(tabName) {
-    if (tabName === 'params') {
-      let urlObject = Lang.parseUrl(this.state.theSchema.inputGroupText.trim());
-      this.setState({
-        ...this.state,
-        queryParamsItems: Helper.queryStringObject(urlObject.search),
-        tabName: tabName
-      });
-      return;
-    }
     this.setState({
       ...this.state,
       tabName: tabName
-    }, () => this.refresh()) ;
+    }) ;
   }
 
   // 处理button点击
@@ -182,13 +140,13 @@ export class _PM0 extends Component {
             <div className={'pm-m'}>
             	<div className={'pm-tab'}>
             		<span className={this.state.tabName === 'params' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'params')}>Params</span>
-            		<span className={this.state.tabName === 'auth' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'auth')}>Authorization</span>
+            		{ /* <span className={this.state.tabName === 'auth' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'auth')}>Authorization</span> */ }
             		<span className={this.state.tabName === 'headers' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'headers')}>Headers(1)</span>
             		<span className={this.state.tabName === 'body' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'body')}>Body</span>
                 <span style={{float: 'right', textDecoration: 'underline', color: 'blue'}}>ApiDoc</span>
             	</div>
             	{ this.state.tabName === 'params' && this.paramsTabSection() }
-              { this.state.tabName === 'auth' && this.authTabSection() }
+              { /* this.state.tabName === 'auth' && this.authTabSection() */ }
               { this.state.tabName === 'headers' && this.headersTabSection() }
               { this.state.tabName === 'body' && this.bodyTabsSection() }
               <div className={'pm-response'}>
@@ -216,9 +174,14 @@ export class _PM0 extends Component {
                 <tbody>
                   <tr>
                     <th style={{width:'25px'}}>&nbsp;</th>
-                    <th>KEY</th>
-                    <th>VALUE</th>
-                    { /** <th>DESCRIPTION</th> **/ }
+                    <th style={{width: '135px'}}>KEY</th>
+                    <th style={{width: '185px'}}>VALUE</th>
+                    <th style={{width: '45px'}}>DATATYPE</th>
+                    <th style={{width: '45px'}}>REQ</th>
+                    <th style={{width: '85px'}}>DEFAULTS</th>
+                    <th>VALIDATER</th>
+                    <th>E.G.</th>
+                    <th>DESCRIPTION</th>
                   </tr>
                   { this.getQueryParamsItems() }
                 </tbody>
@@ -228,58 +191,81 @@ export class _PM0 extends Component {
 
   // 获取query展示区
   getQueryParamsItems = () => {
-    return this.state.queryParamsItems && this.state.queryParamsItems.map((item, i) => {
+    let queryItems = this.state.theSchema.queryParams && this.state.theSchema.queryParams.length ? this.state.theSchema.queryParams : null;
+    if (!queryItems) {
+      return <tr><td style={{textAlign:'right'}}>&nbsp;</td><td className={'empty-td'} colSpan="8">暂无数据</td></tr>;
+    }
+    return queryItems.map((item, i) => {
       return <tr key={i}>
         <td className={'inputCell'} style={{textAlign:'right'}}>
-            <CheckBox0 size={'small'} value={"3"} 
-              onChange={(e) => { console.log(e.target.checked) }}>checkbox0</CheckBox0>
+            <CheckBox0 size={'small'} checked={!item.disable} onChange={ (e) => this.handTrDisable(e, i, 'queryParams', item) }/>
         </td>
         <td className={'inputCell'}>
-          <div><input type="text" value={item.key || ''} autoComplete="off"
-                  onChange={ (e) => this.onQueryParamsItemChange(e, i) } 
-                  onFocus={ (e) => this.onTdInputAddFocus(e.target) }
-                  onBlur={ (e) => this.clearInputStagingChange(e) }
-                  onKeyDown={ (e) => this.onQueryParamTrAppend(e, i, 'key') }name='key' /></div>
+          <div><input type="text" disabled={item.disable} autoComplete="off"
+                  value={ this.getInputStringValue('key', i, item) } 
+                  onFocus={ (e) => this.onTdInputAddFocus(e, i, 'queryParams') }
+                  onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'queryParams') }
+                  onKeyDown={ (e) => this.onTableTrAppend(e, i, 'key', 'queryParams') }
+                  onChange={ (e) => this.onInputChangeStaging(e, i) }  name='key' /></div>
         </td>
         <td className={'inputCell'}>
-          <div><input type="text" value={item.val || ''} autoComplete="off"
-                  onChange={ (e) => this.onQueryParamsItemChange(e, i) } 
-                  onFocus={ (e) => this.onTdInputAddFocus(e.target) }
-                  onBlur={ (e) => this.clearInputStagingChange(e) }
-                  onKeyDown={ (e) => this.onQueryParamTrAppend(e, i, 'val') }name='val' /></div>
+          <div><input type="text" disabled={item.disable} autoComplete="off"
+                  value={ this.getInputStringValue('val', i, item) } 
+                  onFocus={ (e) => this.onTdInputAddFocus(e, i, 'queryParams') }
+                  onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'queryParams') }
+                  onKeyDown={ (e) => this.onTableTrAppend(e, i, 'val', 'queryParams') }
+                  onChange={ (e) => this.onInputChangeStaging(e, i) }  name='val' /></div>
         </td>
-        { /** <td className={'inputCell'}>
-          <div><input type="text" value={item.desc || ''} autoComplete="off"
-                  onChange={ (e) => this.onQueryParamsItemChange(e, i) } 
-                  onFocus={ (e) => this.onTdInputAddFocus(e.target) }
-                  onBlur={ (e) => this.clearInputStagingChange(e) }
-                  onKeyDown={ (e) => this.onQueryParamTrAppend(e, i, 'desc') } name='desc' /></div>
-        </td> **/}
+        <td className={'inputCell'}>
+          <div><input type="text" disabled={item.disable} autoComplete="off"
+                  value={ this.getInputStringValue('dtype', i, item) } 
+                  onFocus={ (e) => this.onTdInputAddFocus(e, i, 'queryParams') }
+                  onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'queryParams') }
+                  onKeyDown={ (e) => this.onTableTrAppend(e, i, 'dtype', 'queryParams') }
+                  onChange={ (e) => this.onInputChangeStaging(e, i) }  name='dtype' /></div>
+        </td>
+        <td className={'inputCell'}>
+          <div><input type="text" disabled={item.disable} autoComplete="off"
+                  value={ this.getInputStringValue('required', i, item) } 
+                  onFocus={ (e) => this.onTdInputAddFocus(e, i, 'queryParams') }
+                  onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'queryParams') }
+                  onKeyDown={ (e) => this.onTableTrAppend(e, i, 'required', 'queryParams') }
+                  onChange={ (e) => this.onInputChangeStaging(e, i) }  name='required' /></div>
+        </td>
+        <td className={'inputCell'}>
+          <div><input type="text" disabled={item.disable} autoComplete="off"
+                  value={ this.getInputStringValue('defval', i, item) } 
+                  onFocus={ (e) => this.onTdInputAddFocus(e, i, 'queryParams') }
+                  onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'queryParams') }
+                  onKeyDown={ (e) => this.onTableTrAppend(e, i, 'defval', 'queryParams') }
+                  onChange={ (e) => this.onInputChangeStaging(e, i) }  name='defval' /></div>
+        </td>
+        <td className={'inputCell'}>
+          <div><input type="text" disabled={item.disable} autoComplete="off"
+                  value={ this.getInputStringValue('valid', i, item) } 
+                  onFocus={ (e) => this.onTdInputAddFocus(e, i, 'queryParams') }
+                  onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'queryParams') }
+                  onKeyDown={ (e) => this.onTableTrAppend(e, i, 'valid', 'queryParams') }
+                  onChange={ (e) => this.onInputChangeStaging(e, i) }  name='valid' /></div>
+        </td>
+        <td className={'inputCell'}>
+          <div><input type="text" disabled={item.disable} autoComplete="off"
+                  value={ this.getInputStringValue('eg', i, item) } 
+                  onFocus={ (e) => this.onTdInputAddFocus(e, i, 'queryParams') }
+                  onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'queryParams') }
+                  onKeyDown={ (e) => this.onTableTrAppend(e, i, 'eg', 'queryParams') }
+                  onChange={ (e) => this.onInputChangeStaging(e, i) }  name='eg' /></div>
+        </td>
+        <td className={'inputCell'}>
+          <div><input type="text" disabled={item.disable} autoComplete="off"
+                  value={ this.getInputStringValue('desc', i, item) } 
+                  onFocus={ (e) => this.onTdInputAddFocus(e, i, 'queryParams') }
+                  onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'queryParams') }
+                  onKeyDown={ (e) => this.onTableTrAppend(e, i, 'desc', 'queryParams') }
+                  onChange={ (e) => this.onInputChangeStaging(e, i) }  name='desc' /></div>
+        </td>
       </tr>;
     }) ;
-  }
-
-  // 处理query参数状态变化
-  onQueryParamsItemChange = (e, index) => {
-    const { onSchemaStateChange } = this.props;
-    let currentValue = e.target.value;
-    let currentField = e.target.name;
-    let queryParamsItemsUpdated = this.state.queryParamsItems;
-    queryParamsItemsUpdated[index][currentField] = currentValue;
-    let queryStringObject = this.getQueryStringObject(queryParamsItemsUpdated);
-    let _url = Lang.parseUrl(this.state.theSchema.inputGroupText);
-    let theQueryString = _url.protocol + '//' + _url.host + _url.pathname + decodeURI(Lang.toQueryString(queryStringObject));
-    this.setState({
-      ...this.state,
-      theSchema: {
-        ...this.state.theSchema,
-        inputGroupText: theQueryString,
-      }
-    }, () => {
-      if (onSchemaStateChange) {
-        onSchemaStateChange(this.state.theSchema);
-      }
-    });
   }
 
   // 处理添加pm表格参数
@@ -326,52 +312,6 @@ export class _PM0 extends Component {
     }
   }
 
-  // 处理添加query参数
-  onQueryParamTrAppend(e, index, field) {
-    if (window.event.keyCode === 9 && e.target.name === 'desc') {
-      if (this.state.queryParamsItems.length === index+1) {
-        if (window.event.shiftKey) {
-          // shift + tab
-          return;
-        }
-        this.doQueryParamTrAppendMoveFocus(e, field, 'next', true, 'tab', index);
-      }
-    } else if ((window.event.shiftKey && window.event.keyCode === 40) || window.event.keyCode === 13) {
-      // 下方向键 OR 回车键
-      this.doQueryParamTrAppendMoveFocus(e, field, 'next', this.state.queryParamsItems.length === index+1, 'down', index);
-    } else if (window.event.shiftKey && window.event.keyCode === 38) {
-      // 上方向键
-      this.moveFocus('.query-params-table', e, 'prev', field, index);
-    } else if (window.event.shiftKey && window.event.keyCode === 39) {
-      // 右方向键
-      this.moveFocus('.query-params-table', e, 'right', field, index);
-    } else if (window.event.shiftKey && window.event.keyCode === 37) {
-      // 左方向键
-      this.moveFocus('.query-params-table', e, 'left', field, index);
-    } 
-  }
-
-  // 处理添加query参数后光标移动
-  doQueryParamTrAppendMoveFocus(e, field, next, append, type, index) {
-    let _this = this;
-    if (append) {
-      let _queryParamsItems = this.state.queryParamsItems;
-      _queryParamsItems.push({});
-      this.setState({
-        ...this.state,
-        queryParamsItems: _queryParamsItems
-      }, () => {
-        if (type !== 'tab') {
-          _this.moveFocus('.query-params-table', e, next, field, index);
-        }
-      });
-    } else {
-      if (type !== 'tab') {
-        _this.moveFocus('.query-params-table', e, next, field, index);
-      }
-    }
-  }
-
   // 光标跳到下一行的对应的单元格
   moveFocus(classname, e, next, field, index) {
     let targetElement = null;
@@ -391,57 +331,6 @@ export class _PM0 extends Component {
       this.onTdInputAddFocus(targetElement);
       $(targetElement).focus();
     }
-  }
-
-  onTdInputAddFocus(targetElement) {
-    if ($(targetElement).attr('disabled')) {
-      return;
-    }
-    $(targetElement).select();
-    $(targetElement).parent().addClass('focus');
-  }
-
-  // 将query数组转成对象
-  getQueryStringObject(queryParamsItems) {
-    let result = {};
-    for (let item of queryParamsItems) {
-      if (item.key === 'desc') {
-        continue;
-      }
-      if (!item.key || item.key === '') {
-        item.key = '';
-        if (!item.val || item.val === '') {
-          continue;
-        }
-      }
-      result[item.key] = item.val;
-    }
-    return result;
-  }
-
-  getEditerTable() {
-    return <table className={'query-params-table'}>
-            <tbody>
-              <tr>
-                <th style={{width:'25px'}}>&nbsp;</th>
-                <th>KEY</th>
-                <th>VALUE</th>
-                <th>DESCRIPTION</th>
-              </tr>
-              <tr>
-                <td style={{textAlign:'right'}}><input type="checkbox" /></td>
-                <td className={'inputCell'}>
-                  <div><input type="text" /></div>
-                </td>
-                <td className={'inputCell'}>
-                  <div><input type="text" /></div>
-                </td>
-                <td className={'inputCell'}>
-                  <div><input type="text" /></div>
-                </td>
-              </tr>
-            </tbody>
-          </table>;
   }
 
   getFormDataEditerTable(classname) {
@@ -476,7 +365,7 @@ export class _PM0 extends Component {
                 <td className={'inputCell'}>
                   <div><input autoComplete="off" disabled={item.disable} type="text" 
                           value={ this.getInputStringValue('key', i, item) } 
-                          onFocus={ (e) => this.onTdInputAddFocus(e.target) }
+                          onFocus={ (e) => this.onTdInputAddFocus(e, i, 'bodyReqData') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'bodyReqData') }
                           onKeyDown={ (e) => this.onTableTrAppend(e, i, 'key', 'bodyReqData')}
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="key" /></div>
@@ -484,7 +373,7 @@ export class _PM0 extends Component {
                 <td className={'inputCell'}>
                   <div><input autoComplete="off" disabled={item.disable} type="text" 
                           value={ this.getInputStringValue('val', i, item) } 
-                          onFocus={ (e) => this.onTdInputAddFocus(e.target) }
+                          onFocus={ (e) => this.onTdInputAddFocus(e, i, 'bodyReqData') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'bodyReqData') }
                           onKeyDown={ (e) => this.onTableTrAppend(e, i, 'val', 'bodyReqData')}
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="val" /></div>
@@ -492,7 +381,7 @@ export class _PM0 extends Component {
                 <td className={'inputCell'}>
                   <div><input autoComplete="off" disabled={item.disable} type="text" 
                           value={ this.getInputStringValue('dtype', i, item) } 
-                          onFocus={ (e) => this.onTdInputAddFocus(e.target) }
+                          onFocus={ (e) => this.onTdInputAddFocus(e, i, 'bodyReqData') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'bodyReqData') }
                           onKeyDown={ (e) => this.onTableTrAppend(e, i, 'dtype', 'bodyReqData')}
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="dtype" /></div>
@@ -500,7 +389,7 @@ export class _PM0 extends Component {
                 <td className={'inputCell'}>
                   <div><input autoComplete="off" disabled={item.disable} type="text" 
                           value={ this.getInputStringValue('required', i, item) } 
-                          onFocus={ (e) => this.onTdInputAddFocus(e.target) }
+                          onFocus={ (e) => this.onTdInputAddFocus(e, i, 'bodyReqData') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'bodyReqData') }
                           onKeyDown={ (e) => this.onTableTrAppend(e, i, 'required', 'bodyReqData')}
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="required" /></div>
@@ -508,7 +397,7 @@ export class _PM0 extends Component {
                 <td className={'inputCell'}>
                   <div><input autoComplete="off" disabled={item.disable} type="text" 
                           value={ this.getInputStringValue('defval', i, item) } 
-                          onFocus={ (e) => this.onTdInputAddFocus(e.target) }
+                          onFocus={ (e) => this.onTdInputAddFocus(e, i, 'bodyReqData') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'bodyReqData') }
                           onKeyDown={ (e) => this.onTableTrAppend(e, i, 'defval', 'bodyReqData')}
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="defval" /></div>
@@ -516,7 +405,7 @@ export class _PM0 extends Component {
                 <td className={'inputCell'}>
                   <div><input autoComplete="off" disabled={item.disable} type="text" 
                           value={ this.getInputStringValue('valid', i, item) } 
-                          onFocus={ (e) => this.onTdInputAddFocus(e.target) }
+                          onFocus={ (e) => this.onTdInputAddFocus(e, i, 'bodyReqData') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'bodyReqData') }
                           onKeyDown={ (e) => this.onTableTrAppend(e, i, 'valid', 'bodyReqData')}
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="valid" /></div>
@@ -524,7 +413,7 @@ export class _PM0 extends Component {
                 <td className={'inputCell'}>
                   <div><input autoComplete="off" disabled={item.disable} type="text" 
                           value={ this.getInputStringValue('eg', i, item) } 
-                          onFocus={ (e) => this.onTdInputAddFocus(e.target) }
+                          onFocus={ (e) => this.onTdInputAddFocus(e, i, 'bodyReqData') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'bodyReqData') }
                           onKeyDown={ (e) => this.onTableTrAppend(e, i, 'eg', 'bodyReqData')}
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="eg" /></div>
@@ -532,7 +421,7 @@ export class _PM0 extends Component {
                 <td className={'inputCell'}>
                   <div><input autoComplete="off" disabled={item.disable} type="text" 
                           value={ this.getInputStringValue('desc', i, item) } 
-                          onFocus={ (e) => this.onTdInputAddFocus(e.target) }
+                          onFocus={ (e) => this.onTdInputAddFocus(e, i, 'bodyReqData') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'bodyReqData') }
                           onKeyDown={ (e) => this.onTableTrAppend(e, i, 'desc', 'bodyReqData')}
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="desc" /></div>
@@ -543,8 +432,6 @@ export class _PM0 extends Component {
 
   handTrDisable(e, index, schemaField, item) {
     const { onSchemaStateChange } = this.props;
-    //debugger;
-    console.log(e.target.checked);
     let _schema = this.state.theSchema;
     let _dataItem = _schema[schemaField];
     _dataItem[index].disable = !e.target.checked;
@@ -552,6 +439,23 @@ export class _PM0 extends Component {
     if (onSchemaStateChange) {
       onSchemaStateChange(_schema);
     }
+  }
+
+  onTdInputAddFocus(e, index, schemaField) {
+    let targetElement = e.target || e;
+    if ($(targetElement).attr('disabled')) {
+      return;
+    }
+    $(targetElement).select();
+    $(targetElement).parent().addClass('focus');
+    if (targetElement === null) {
+
+    debugger; 
+    }
+    this.setState({
+      ...this.state,
+      oldVal: targetElement.value
+    });
   }
 
   // 处理FormData参数状态变化
@@ -562,7 +466,12 @@ export class _PM0 extends Component {
     let _theSchema = this.state.theSchema;
     _theSchema[schemaField][index][currentField] = currentValue;
     if (onSchemaStateChange) {
-        this.clearInputStagingChange(e, () => onSchemaStateChange(_theSchema));
+        this.clearInputStagingChange(e, () => {
+          if (this.state.oldVal === currentValue) {
+            return;
+          }
+          onSchemaStateChange(_theSchema);
+        });
     }
   }
 
@@ -617,17 +526,11 @@ export class _PM0 extends Component {
     if (type === 'otherInput') {
       type = e.target.value;
     }
-    this.setState({
-      ...this.state,
-      theSchema: {
-        ...this.state.theSchema,
-        bodyRadioSelected: type
-      }
-    }, () => {
-      if (onSchemaStateChange) {
-        onSchemaStateChange(this.state.theSchema);
-      }
-    });
+    let _theSchema = this.state.theSchema;
+    _theSchema.bodyRadioSelected = type;
+    if (onSchemaStateChange) {
+      onSchemaStateChange(_theSchema);
+    }
   }
 
   bodyRadioOtherChange = (e, type) => {
@@ -691,12 +594,12 @@ export class _PM0 extends Component {
     return this.state.theSchema.headers.map((item, i) => {
       return <tr key={i}>
                 <td style={{textAlign:'right'}}>
-                  <input checked={!item.disable} onChange={ (e) => this.handTrDisable(e, i, 'headers', item) } type="checkbox" />
+                  <CheckBox0 size={'small'} checked={!item.disable} onChange={ (e) => this.handTrDisable(e, i, 'headers', item)}>checkbox0</CheckBox0>
                 </td>
                 <td className={'inputCell'}>
                   <div><input autoComplete="off" disabled={item.disable} type="text" 
                           value={ this.getInputStringValue('key', i, item) } 
-                          onFocus={ (e) => this.onTdInputAddFocus(e.target) }
+                          onFocus={ (e) => this.onTdInputAddFocus(e, i, 'headers') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'headers') }
                           onKeyDown={ (e) => this.onTableTrAppend(e, i, 'key', 'headers')}
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="key" /></div>
@@ -704,7 +607,7 @@ export class _PM0 extends Component {
                 <td className={'inputCell'}>
                   <div><input autoComplete="off" disabled={item.disable} type="text" 
                           value={ this.getInputStringValue('val', i, item) } 
-                          onFocus={ (e) => this.onTdInputAddFocus(e.target) }
+                          onFocus={ (e) => this.onTdInputAddFocus(e, i, 'headers') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'headers') }
                           onKeyDown={ (e) => this.onTableTrAppend(e, i, 'val', 'headers')}
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="val" /></div>
@@ -712,7 +615,7 @@ export class _PM0 extends Component {
                 <td className={'inputCell'}>
                   <div><input autoComplete="off" disabled={item.disable} type="text" 
                           value={ this.getInputStringValue('eg', i, item) } 
-                          onFocus={ (e) => this.onTdInputAddFocus(e.target) }
+                          onFocus={ (e) => this.onTdInputAddFocus(e, i, 'headers') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'headers') }
                           onKeyDown={ (e) => this.onTableTrAppend(e, i, 'eg', 'headers')}
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="eg" /></div>
@@ -720,7 +623,7 @@ export class _PM0 extends Component {
                 <td className={'inputCell'}>
                   <div><input autoComplete="off" disabled={item.disable} type="text" 
                           value={ this.getInputStringValue('desc', i, item) } 
-                          onFocus={ (e) => this.onTdInputAddFocus(e.target) }
+                          onFocus={ (e) => this.onTdInputAddFocus(e, i, 'headers') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'headers') }
                           onKeyDown={ (e) => this.onTableTrAppend(e, i, 'desc', 'headers')}
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="desc" /></div>
