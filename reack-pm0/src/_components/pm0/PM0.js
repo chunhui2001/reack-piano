@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import styled, { css } from "styled-components";
 import { Fake } from 'reack-fake';
-import { Lang } from 'reack-lang';
 
 import PMSchema from "../schema/PMSchema";
 import Helper from "./Helper";
@@ -9,7 +8,6 @@ import Helper from "./Helper";
 import { CheckBox0 } from 'reack-checkbox0';
 
 const $ = Fake('$');
-const _ = Fake('_');
 
 export class _PM0 extends Component {
 
@@ -41,6 +39,7 @@ export class _PM0 extends Component {
           tabName: state.tabName || props.activeTab
         };
       }
+      props.schema.mergeQueryItems(props.schema.inputGroupText, props.schema.queryParams);
       return {
         ...state,
         tabName: state.tabName || props.activeTab,

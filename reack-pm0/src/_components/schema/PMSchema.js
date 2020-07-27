@@ -23,7 +23,7 @@ PMSchemaObject.prototype.parseUri = function (url) {
     if (url == null || url.trim() === '') {
       return {};
     }
-    var match = url.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
+    var match = url.match(/^(https?:)\/\/(([^:/?#]*)(?::([0-9]+))?)([/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
     if (!match) {
       return null;
     }

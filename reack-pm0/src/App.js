@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import PM0 from './_components/pm0/PM0';
 import PMSchema from './_components/schema/PMSchema';
-import { Lang } from 'reack-lang';
-import { Fake } from 'reack-fake';
-
-const _ = Fake('_');
 
 const bodyData = [
   {
@@ -133,7 +129,6 @@ class App extends Component {
   }
 
   onSchemaChange(schema) {
-    schema.queryParams = schema.mergeQueryItems(schema.inputGroupText, schema.queryParams);
     this.setState({
       ...this.state,
       pmSchema: schema
