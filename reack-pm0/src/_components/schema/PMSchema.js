@@ -50,20 +50,24 @@ PMSchemaObject.prototype.getQueryNewItems = function() {
     _a = _a.substr(1).split('&');
   }
   let result = [];
-  for (let q of _q) {
-    for (let a of _a) {
-      if (q.key === a.split('=')[0]) {
-        q.val = a.split('=')[1];
-        result.push(q);
+  if (_q) {
+    for (let q of _q) {
+      for (let a of _a) {
+        if (q.key === a.split('=')[0]) {
+          q.val = a.split('=')[1];
+          result.push(q);
+        }
       }
     }
   }
   for (let a of _a) {
     let found = false;
-    for (let q of _q) {
-      if (q.key === a.split('=')[0]) {
-        found = true;
-        break;
+    if (_q) {
+      for (let q of _q) {
+        if (q.key === a.split('=')[0]) {
+          found = true;
+          break;
+        }
       }
     }
     if (!found) {
@@ -73,9 +77,11 @@ PMSchemaObject.prototype.getQueryNewItems = function() {
       result.push({key:[a.split('=')[0]], val:a.split('=')[1]});
     }
   }
-  for (let q of _q) {
-    if (q.disable) {
-      result.push(q);
+  if (_q) {
+    for (let q of _q) {
+      if (q.disable) {
+        result.push(q);
+      }
     }
   }
   return result;
