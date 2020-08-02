@@ -160,7 +160,10 @@ export class _PM0 extends Component {
             		{ /* <span className={this.state.tabName === 'auth' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'auth')}>Authorization</span> */ }
             		<span className={this.state.tabName === 'headers' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'headers')}>Headers(1)</span>
             		<span className={this.state.tabName === 'body' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'body')}>Body</span>
-                <span style={{float: 'right', textDecoration: 'underline', color: 'blue'}}>ApiDoc</span>
+                { theSchema.apiDoc && <span style={{float: 'right', textDecoration: 'underline', color: 'blue'}}>
+                  <a href={ theSchema.apiDoc } style={{color: 'blue', fontWeight: 'bold'}}>ApiDoc</a>
+                  </span>
+                }
             	</div>
             	{ this.state.tabName === 'params' && this.paramsTabSection() }
               { /* this.state.tabName === 'auth' && this.authTabSection() */ }
@@ -190,7 +193,7 @@ export class _PM0 extends Component {
               <table className={'pm-table query-params-table'}>
                 <tbody>
                   <tr>
-                    <th style={{width:'25px'}}>&nbsp;</th>
+                    <th className={'inputCell'} style={{width: '25px', textAlign: 'right'}}>{ this.getSelectAllCheckBox('queryParams') }</th>
                     <th style={{width: '135px'}}>KEY</th>
                     <th style={{width: '185px'}}>VALUE</th>
                     <th style={{width: '45px'}}>DATATYPE</th>
@@ -206,11 +209,32 @@ export class _PM0 extends Component {
             </div>;
   }
 
+  getSelectAllCheckBox(theSchemaField) {
+    const { onSchemaStateChange } = this.props;
+    return <CheckBox0 size={'small'} onChange={ (e) => { 
+          let _theSchema = this.state.theSchema;
+          let _bodyReqData = _theSchema[theSchemaField];
+          if (!_bodyReqData) {
+            return;
+          }
+          _bodyReqData = _bodyReqData.map(m => {
+            return {
+              ...m,
+              disable: !e.target.checked
+            }
+          });
+          _theSchema[theSchemaField] = _bodyReqData;
+          if (onSchemaStateChange) {
+            onSchemaStateChange(_theSchema);
+          }
+        }} />;
+  }
+
   // 获取query展示区
   getQueryParamsItems = () => {
     let queryItems = this.state.theSchema.queryParams && this.state.theSchema.queryParams.length ? this.state.theSchema.queryParams : null;
     if (!queryItems) {
-      return <tr><td style={{textAlign:'right'}}>&nbsp;</td><td className={'empty-td'} colSpan="8">暂无数据</td></tr>;
+      return this.getEmptyCheckBoxRow('queryParams', 8);
     }
     return queryItems.map((item, i) => {
       return <tr key={i}>
@@ -308,7 +332,9 @@ export class _PM0 extends Component {
     } else if (window.event.shiftKey && window.event.keyCode === 37) {
       // 左方向键
       this.moveFocus('.pm-table', e, 'left', field, index);
-    } 
+    } else {
+      this.doTableTrAppendMoveFocus(e, field, theSchemaField, 'next', true, 'down', index);
+    }
   }
 
   // 处理添加pm表格参数后光标移动
@@ -318,12 +344,16 @@ export class _PM0 extends Component {
     if (append) {
       let _theSchema = this.state.theSchema;
       let _bodyReqData = _theSchema[theSchemaField];
+      if (!_bodyReqData) {
+        _bodyReqData = [];
+      }
       _bodyReqData.push({});
+      _theSchema[theSchemaField] = _bodyReqData;
       if (onSchemaStateChange) {
         onSchemaStateChange(_theSchema);
       }
     } else {
-      if (type !== 'tab') {
+      if (type !== 'tab' && field) {
         _this.moveFocus('.pm-table', e, next, field, index);
       }
     }
@@ -354,7 +384,7 @@ export class _PM0 extends Component {
     return <table className={`pm-table ${classname}`}>
             <tbody>
               <tr>
-                <th style={{width:'25px'}}>&nbsp;</th>
+                <th className={'inputCell'} style={{width:'25px'}}>&nbsp;</th>
                 <th style={{width: '135px'}}>KEY</th>
                 <th style={{width: '185px'}}>VALUE</th>
                 <th style={{width: '45px'}}>DATATYPE</th>
@@ -371,7 +401,7 @@ export class _PM0 extends Component {
 
   getFormDataEditerTableTd() {
     if (!this.state.theSchema.bodyReqData || this.state.theSchema.bodyReqData.length === 0) {
-      return <tr><td style={{textAlign:'right'}}>&nbsp;</td><td className={'empty-td'} colSpan="8">暂无数据</td></tr>;
+      return this.getEmptyCheckBoxRow('bodyReqData', 8);
     }
     return this.state.theSchema.bodyReqData.map((item, i) => {
       return <tr key={i}>
@@ -591,7 +621,7 @@ export class _PM0 extends Component {
               <table className={'pm-table headers-form-table'}>
                 <tbody>
                   <tr>
-                    <th style={{width:'25px'}}>&nbsp;</th>
+                    <th className={'inputCell'} style={{width:'25px'}}>&nbsp;</th>
                     <th style={{width: '135px'}}>KEY</th>
                     <th style={{width: '185px'}}>VALUE</th>
                     <th>E.G.</th>
@@ -616,14 +646,23 @@ export class _PM0 extends Component {
     return item.disable;
   }
 
+  getEmptyCheckBoxRow(schemaField, colspan) {
+    return <tr><td className={'inputCell'} style={{textAlign:'right'}}>
+        <CheckBox0 size={'small'} checked={false} onChange={ (e) => { 
+          console.log(e.target.checked) ;
+          this.onTableTrAppend(e, 0, null, schemaField)
+        }} />
+      </td><td className={'empty-td'} colSpan={colspan}>暂无数据</td></tr>;
+  }
+
   getHeadersEditerTable() {
     if (!this.state.theSchema.headers || this.state.theSchema.headers.length === 0) {
-      return <tr><td style={{textAlign:'right'}}>&nbsp;</td><td className={'empty-td'} colSpan="5">暂无数据</td></tr>;
+      return this.getEmptyCheckBoxRow('headers', 4);
     }
     return this.state.theSchema.headers.map((item, i) => {
       return <tr key={i}>
-                <td style={{textAlign:'right'}}>
-                  <CheckBox0 size={'small'} checked={!this.isDisable(item)} onChange={ (e) => this.handTrDisable(e, i, 'headers', item)}>checkbox0</CheckBox0>
+                <td className={'inputCell'} style={{textAlign:'right'}}>
+                  <CheckBox0 size={'small'} checked={!this.isDisable(item)} onChange={ (e) => this.handTrDisable(e, i, 'headers', item)} />
                 </td>
                 <td className={'inputCell'}>
                   <div><input autoComplete="off" disabled={this.isDisable(item)} type="text" 
@@ -984,6 +1023,7 @@ let mixin = css`&{
     display: table-cell !important;
     margin-right: 5px;
     float: right;
+    margin-left: 10px;
   }
 }`;
 

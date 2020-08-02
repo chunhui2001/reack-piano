@@ -115,11 +115,11 @@ class App extends Component {
     let _theSchema = PMSchema(
         "http://172.28.128.1:19103/user/create",
         "get", 
-        //'application/json;utf-8',
         'x-www-form-urlencoded',
         bodyData,
         headers,
-        queryParams
+        queryParams,
+        '/apidoc/9omLVPwNRmhJ9P7o5zoQ'
       );
     this.setState({
       ...this.state,
@@ -133,7 +133,6 @@ class App extends Component {
       ...this.state,
       pmSchema: schema
     });
-    console.log(schema, 'schema changed');
     this.refs.pm0.refresh();
   }
 

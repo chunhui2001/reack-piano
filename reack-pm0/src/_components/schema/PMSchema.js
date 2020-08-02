@@ -1,11 +1,12 @@
 
-function PMSchemaObject (_url, selectRequestMethod, bodyRadioSelected, bodyReqData, headers, queryParams) {
+function PMSchemaObject (_url, selectRequestMethod, bodyRadioSelected, bodyReqData, headers, queryParams, apiDoc) {
     this.selectRequestMethod = selectRequestMethod;
     this.bodyRadioSelected = bodyRadioSelected;
     this.bodyReqData = bodyReqData;
     this.headers = headers;
     this.inputGroupText = this.parseUri(_url).uri;
     this.queryParams = queryParams;
+    this.apiDoc = apiDoc;
     this.putQueryString(_url, queryParams);
 }
 
@@ -85,8 +86,8 @@ PMSchemaObject.prototype.getQueryNewItems = function() {
   return result;
 }
 
-const PMSchema = (url, selectRequestMethod, bodyRadioSelected, bodyReqData, headers, queryParams) => {
-    return new PMSchemaObject(url, selectRequestMethod, bodyRadioSelected, bodyReqData, headers, queryParams);
+const PMSchema = (url, selectRequestMethod, bodyRadioSelected, bodyReqData, headers, queryParams, apiDoc) => {
+    return new PMSchemaObject(url, selectRequestMethod, bodyRadioSelected, bodyReqData, headers, queryParams, apiDoc);
 }
 
 export default PMSchema;
