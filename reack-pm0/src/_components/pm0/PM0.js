@@ -112,6 +112,15 @@ export class _PM0 extends Component {
                   disabled={theSchema && (!theSchema.inputGroupText || !theSchema.inputGroupText.trim()) } type="button" value="Save" />;
   }
 
+  onSelectRequestMethodChanged = (e) => {
+    const { onSchemaStateChange } = this.props;
+    let _schema = this.state.theSchema;
+    _schema.selectRequestMethod = e.target.value;
+    if (onSchemaStateChange) {
+      onSchemaStateChange(_schema);
+    }
+  }
+
   // 渲染组件
   render() {
     const { 
@@ -123,7 +132,7 @@ export class _PM0 extends Component {
           	<div className={'pm-body container'}>
               <div className={'content'}>
                 <div className={'div1'}>
-                  <select name='selectRequestMethod' value={theSchema.selectRequestMethod || 'get'} onChange={(e) => {this.handleInputTextChange(e)}} >
+                  <select name='selectRequestMethod' value={theSchema.selectRequestMethod || 'get'} onChange={(e) => {this.onSelectRequestMethodChanged(e)}} >
                     <option value="get">GET</option>
                     <option value="post">POST</option>
                     <option value="put">PUT</option>
@@ -206,10 +215,10 @@ export class _PM0 extends Component {
     return queryItems.map((item, i) => {
       return <tr key={i}>
         <td className={'inputCell'} style={{textAlign:'right'}}>
-            <CheckBox0 size={'small'} checked={!item.disable} onChange={ (e) => this.handTrDisable(e, i, 'queryParams', item) }/>
+            <CheckBox0 size={'small'} checked={!this.isDisable(item)} onChange={ (e) => this.handTrDisable(e, i, 'queryParams', item) }/>
         </td>
         <td className={'inputCell'}>
-          <div><input type="text" disabled={item.disable} autoComplete="off"
+          <div><input type="text" disabled={this.isDisable(item)} autoComplete="off"
                   value={ this.getInputStringValue('key', i, item) } 
                   onFocus={ (e) => this.onTdInputAddFocus(e, i, 'queryParams') }
                   onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'queryParams') }
@@ -217,7 +226,7 @@ export class _PM0 extends Component {
                   onChange={ (e) => this.onInputChangeStaging(e, i) }  name='key' /></div>
         </td>
         <td className={'inputCell'}>
-          <div><input type="text" disabled={item.disable} autoComplete="off"
+          <div><input type="text" disabled={this.isDisable(item)} autoComplete="off"
                   value={ this.getInputStringValue('val', i, item) } 
                   onFocus={ (e) => this.onTdInputAddFocus(e, i, 'queryParams') }
                   onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'queryParams') }
@@ -225,7 +234,7 @@ export class _PM0 extends Component {
                   onChange={ (e) => this.onInputChangeStaging(e, i) }  name='val' /></div>
         </td>
         <td className={'inputCell'}>
-          <div><input type="text" disabled={item.disable} autoComplete="off"
+          <div><input type="text" disabled={this.isDisable(item)} autoComplete="off"
                   value={ this.getInputStringValue('dtype', i, item) } 
                   onFocus={ (e) => this.onTdInputAddFocus(e, i, 'queryParams') }
                   onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'queryParams') }
@@ -233,7 +242,7 @@ export class _PM0 extends Component {
                   onChange={ (e) => this.onInputChangeStaging(e, i) }  name='dtype' /></div>
         </td>
         <td className={'inputCell'}>
-          <div><input type="text" disabled={item.disable} autoComplete="off"
+          <div><input type="text" disabled={this.isDisable(item)} autoComplete="off"
                   value={ this.getInputStringValue('required', i, item) } 
                   onFocus={ (e) => this.onTdInputAddFocus(e, i, 'queryParams') }
                   onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'queryParams') }
@@ -241,7 +250,7 @@ export class _PM0 extends Component {
                   onChange={ (e) => this.onInputChangeStaging(e, i) }  name='required' /></div>
         </td>
         <td className={'inputCell'}>
-          <div><input type="text" disabled={item.disable} autoComplete="off"
+          <div><input type="text" disabled={this.isDisable(item)} autoComplete="off"
                   value={ this.getInputStringValue('defval', i, item) } 
                   onFocus={ (e) => this.onTdInputAddFocus(e, i, 'queryParams') }
                   onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'queryParams') }
@@ -249,7 +258,7 @@ export class _PM0 extends Component {
                   onChange={ (e) => this.onInputChangeStaging(e, i) }  name='defval' /></div>
         </td>
         <td className={'inputCell'}>
-          <div><input type="text" disabled={item.disable} autoComplete="off"
+          <div><input type="text" disabled={this.isDisable(item)} autoComplete="off"
                   value={ this.getInputStringValue('valid', i, item) } 
                   onFocus={ (e) => this.onTdInputAddFocus(e, i, 'queryParams') }
                   onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'queryParams') }
@@ -257,7 +266,7 @@ export class _PM0 extends Component {
                   onChange={ (e) => this.onInputChangeStaging(e, i) }  name='valid' /></div>
         </td>
         <td className={'inputCell'}>
-          <div><input type="text" disabled={item.disable} autoComplete="off"
+          <div><input type="text" disabled={this.isDisable(item)} autoComplete="off"
                   value={ this.getInputStringValue('eg', i, item) } 
                   onFocus={ (e) => this.onTdInputAddFocus(e, i, 'queryParams') }
                   onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'queryParams') }
@@ -265,7 +274,7 @@ export class _PM0 extends Component {
                   onChange={ (e) => this.onInputChangeStaging(e, i) }  name='eg' /></div>
         </td>
         <td className={'inputCell'}>
-          <div><input type="text" disabled={item.disable} autoComplete="off"
+          <div><input type="text" disabled={this.isDisable(item)} autoComplete="off"
                   value={ this.getInputStringValue('desc', i, item) } 
                   onFocus={ (e) => this.onTdInputAddFocus(e, i, 'queryParams') }
                   onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'queryParams') }
@@ -367,11 +376,11 @@ export class _PM0 extends Component {
     return this.state.theSchema.bodyReqData.map((item, i) => {
       return <tr key={i}>
                 <td className={'inputCell'} style={{textAlign:'right'}}>
-                  <CheckBox0 size={'small'} value={"3"}  checked={!item.disable}
+                  <CheckBox0 size={'small'} value={"3"}  checked={!this.isDisable(item)}
                      onChange={ (e) => this.handTrDisable(e, i, 'bodyReqData', item) } />
                 </td>
                 <td className={'inputCell'}>
-                  <div><input autoComplete="off" disabled={item.disable} type="text" 
+                  <div><input autoComplete="off" disabled={this.isDisable(item)} type="text" 
                           value={ this.getInputStringValue('key', i, item) } 
                           onFocus={ (e) => this.onTdInputAddFocus(e, i, 'bodyReqData') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'bodyReqData') }
@@ -379,7 +388,7 @@ export class _PM0 extends Component {
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="key" /></div>
                 </td>
                 <td className={'inputCell'}>
-                  <div><input autoComplete="off" disabled={item.disable} type="text" 
+                  <div><input autoComplete="off" disabled={this.isDisable(item)} type="text" 
                           value={ this.getInputStringValue('val', i, item) } 
                           onFocus={ (e) => this.onTdInputAddFocus(e, i, 'bodyReqData') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'bodyReqData') }
@@ -387,7 +396,7 @@ export class _PM0 extends Component {
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="val" /></div>
                 </td>
                 <td className={'inputCell'}>
-                  <div><input autoComplete="off" disabled={item.disable} type="text" 
+                  <div><input autoComplete="off" disabled={this.isDisable(item)} type="text" 
                           value={ this.getInputStringValue('dtype', i, item) } 
                           onFocus={ (e) => this.onTdInputAddFocus(e, i, 'bodyReqData') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'bodyReqData') }
@@ -395,7 +404,7 @@ export class _PM0 extends Component {
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="dtype" /></div>
                 </td>
                 <td className={'inputCell'}>
-                  <div><input autoComplete="off" disabled={item.disable} type="text" 
+                  <div><input autoComplete="off" disabled={this.isDisable(item)} type="text" 
                           value={ this.getInputStringValue('required', i, item) } 
                           onFocus={ (e) => this.onTdInputAddFocus(e, i, 'bodyReqData') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'bodyReqData') }
@@ -403,7 +412,7 @@ export class _PM0 extends Component {
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="required" /></div>
                 </td>
                 <td className={'inputCell'}>
-                  <div><input autoComplete="off" disabled={item.disable} type="text" 
+                  <div><input autoComplete="off" disabled={this.isDisable(item)} type="text" 
                           value={ this.getInputStringValue('defval', i, item) } 
                           onFocus={ (e) => this.onTdInputAddFocus(e, i, 'bodyReqData') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'bodyReqData') }
@@ -411,7 +420,7 @@ export class _PM0 extends Component {
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="defval" /></div>
                 </td>
                 <td className={'inputCell'}>
-                  <div><input autoComplete="off" disabled={item.disable} type="text" 
+                  <div><input autoComplete="off" disabled={this.isDisable(item)} type="text" 
                           value={ this.getInputStringValue('valid', i, item) } 
                           onFocus={ (e) => this.onTdInputAddFocus(e, i, 'bodyReqData') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'bodyReqData') }
@@ -419,7 +428,7 @@ export class _PM0 extends Component {
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="valid" /></div>
                 </td>
                 <td className={'inputCell'}>
-                  <div><input autoComplete="off" disabled={item.disable} type="text" 
+                  <div><input autoComplete="off" disabled={this.isDisable(item)} type="text" 
                           value={ this.getInputStringValue('eg', i, item) } 
                           onFocus={ (e) => this.onTdInputAddFocus(e, i, 'bodyReqData') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'bodyReqData') }
@@ -427,7 +436,7 @@ export class _PM0 extends Component {
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="eg" /></div>
                 </td>
                 <td className={'inputCell'}>
-                  <div><input autoComplete="off" disabled={item.disable} type="text" 
+                  <div><input autoComplete="off" disabled={this.isDisable(item)} type="text" 
                           value={ this.getInputStringValue('desc', i, item) } 
                           onFocus={ (e) => this.onTdInputAddFocus(e, i, 'bodyReqData') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'bodyReqData') }
@@ -594,6 +603,19 @@ export class _PM0 extends Component {
             </div>;
   }
 
+  isDisable(item) {
+    if (!item) {
+      return false;
+    }
+    if (item.disable === 'false') {
+      return false;
+    }
+    if (item.disable === 'true') {
+      return true;
+    }
+    return item.disable;
+  }
+
   getHeadersEditerTable() {
     if (!this.state.theSchema.headers || this.state.theSchema.headers.length === 0) {
       return <tr><td style={{textAlign:'right'}}>&nbsp;</td><td className={'empty-td'} colSpan="5">暂无数据</td></tr>;
@@ -601,10 +623,10 @@ export class _PM0 extends Component {
     return this.state.theSchema.headers.map((item, i) => {
       return <tr key={i}>
                 <td style={{textAlign:'right'}}>
-                  <CheckBox0 size={'small'} checked={!item.disable} onChange={ (e) => this.handTrDisable(e, i, 'headers', item)}>checkbox0</CheckBox0>
+                  <CheckBox0 size={'small'} checked={!this.isDisable(item)} onChange={ (e) => this.handTrDisable(e, i, 'headers', item)}>checkbox0</CheckBox0>
                 </td>
                 <td className={'inputCell'}>
-                  <div><input autoComplete="off" disabled={item.disable} type="text" 
+                  <div><input autoComplete="off" disabled={this.isDisable(item)} type="text" 
                           value={ this.getInputStringValue('key', i, item) } 
                           onFocus={ (e) => this.onTdInputAddFocus(e, i, 'headers') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'headers') }
@@ -612,7 +634,7 @@ export class _PM0 extends Component {
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="key" /></div>
                 </td>
                 <td className={'inputCell'}>
-                  <div><input autoComplete="off" disabled={item.disable} type="text" 
+                  <div><input autoComplete="off" disabled={this.isDisable(item)} type="text" 
                           value={ this.getInputStringValue('val', i, item) } 
                           onFocus={ (e) => this.onTdInputAddFocus(e, i, 'headers') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'headers') }
@@ -620,7 +642,7 @@ export class _PM0 extends Component {
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="val" /></div>
                 </td>
                 <td className={'inputCell'}>
-                  <div><input autoComplete="off" disabled={item.disable} type="text" 
+                  <div><input autoComplete="off" disabled={this.isDisable(item)} type="text" 
                           value={ this.getInputStringValue('eg', i, item) } 
                           onFocus={ (e) => this.onTdInputAddFocus(e, i, 'headers') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'headers') }
@@ -628,7 +650,7 @@ export class _PM0 extends Component {
                           onChange={ (e) => this.onInputChangeStaging(e, i) } name="eg" /></div>
                 </td>
                 <td className={'inputCell'}>
-                  <div><input autoComplete="off" disabled={item.disable} type="text" 
+                  <div><input autoComplete="off" disabled={this.isDisable(item)} type="text" 
                           value={ this.getInputStringValue('desc', i, item) } 
                           onFocus={ (e) => this.onTdInputAddFocus(e, i, 'headers') }
                           onBlur={ (e) => this.onEditerTableDataItemChange(e, i, 'headers') }

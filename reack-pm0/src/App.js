@@ -96,7 +96,7 @@ class App extends Component {
     this.state = {
       items: [],
       pmSchema: PMSchema(
-        "https://www.baidu.com",
+        "https://www.baidu.com/index/blogs",
         "get", 
         //'application/json;utf-8',
         'application/json',
@@ -113,7 +113,7 @@ class App extends Component {
 
   onTestClick() {
     let _theSchema = PMSchema(
-        "https://www.163.com",
+        "http://172.28.128.1:19103/user/create",
         "get", 
         //'application/json;utf-8',
         'x-www-form-urlencoded',
@@ -133,6 +133,7 @@ class App extends Component {
       ...this.state,
       pmSchema: schema
     });
+    console.log(schema, 'schema changed');
     this.refs.pm0.refresh();
   }
 

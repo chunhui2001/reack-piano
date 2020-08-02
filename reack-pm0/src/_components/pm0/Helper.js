@@ -70,7 +70,7 @@ Helper.prototype.jsonData = function (pmSchema) {
     }
     let  json = {};
     for (let l of pmSchema.bodyReqData) {
-    	if (l.disable) {
+    	if (l.disable && (l.disable === 'true' || l.disable === true)) {
     		continue;
     	}
     	if (!l.key || !l.key.trim() || l.key.trim() === '--') {

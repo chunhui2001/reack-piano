@@ -11,11 +11,9 @@ function PMSchemaObject (_url, selectRequestMethod, bodyRadioSelected, bodyReqDa
 
 PMSchemaObject.prototype.putQueryString = function(_url, queryParams) {
   let queryItems = queryParams;
-  if (!queryItems) {
-    return ;
-  }
-  let _queryString = queryItems.filter(f => (f.disable == null || !f.disable) && f.key).map(m => m.key + '=' + (m.val ? m.val : '')).join('&');
-  this.inputGroupText = this.parseUri(_url).uri + (_queryString ? '?' : '') + _queryString;
+  let _queryString = !queryItems ? '' : queryItems.filter(f => (f.disable == null || !f.disable) && f.key).map(m => m.key + '=' + (m.val ? m.val : '')).join('&');
+  let _urlObject = this.parseUri(_url);
+  this.inputGroupText = _urlObject.uri + _urlObject.pathname + (_queryString ? '?' : '') + _queryString;
 }
 
 // 解析url
