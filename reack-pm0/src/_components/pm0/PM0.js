@@ -333,7 +333,9 @@ export class _PM0 extends Component {
       // 左方向键
       this.moveFocus('.pm-table', e, 'left', field, index);
     } else {
-      this.doTableTrAppendMoveFocus(e, field, theSchemaField, 'next', true, 'down', index);
+      if (field === 'add') {
+        this.doTableTrAppendMoveFocus(e, field, theSchemaField, 'next', true, 'down', index);
+      }
     }
   }
 
@@ -353,7 +355,7 @@ export class _PM0 extends Component {
         onSchemaStateChange(_theSchema);
       }
     } else {
-      if (type !== 'tab' && field) {
+      if (type !== 'tab' && field != 'add') {
         _this.moveFocus('.pm-table', e, next, field, index);
       }
     }
@@ -650,7 +652,7 @@ export class _PM0 extends Component {
     return <tr><td className={'inputCell'} style={{textAlign:'right'}}>
         <CheckBox0 size={'small'} checked={false} onChange={ (e) => { 
           console.log(e.target.checked) ;
-          this.onTableTrAppend(e, 0, null, schemaField)
+          this.onTableTrAppend(e, 0, 'add', schemaField)
         }} />
       </td><td className={'empty-td'} colSpan={colspan}>暂无数据</td></tr>;
   }
