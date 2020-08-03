@@ -1,0 +1,76 @@
+
+
+.crontab-input {
+  .explanation {
+    text-align: center;
+    margin: 16px 0 8px;
+    font-size: 40px;
+    color: rgb(24, 144, 255);
+    span {
+      background: transparent;
+      color: inherit;
+      &.active{
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .next {
+    a {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    font-size: .9em;
+    opacity: .6;
+    margin-bottom: 6px;
+  }
+
+  .cron-input {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 60px;
+    text-align: center;
+    border-radius: 10px;
+    border: 1px solid rgb(24, 144, 255);
+    outline: none;
+    &.error {
+      border: 1px solid red;
+    }
+  }
+
+  .parts {
+    margin-top: 3px;
+    .part {
+      display: inline-block;
+      width: 100px;
+      text-align: center;
+      &.selected {
+        font-weight: bold;
+        color: rgb(24, 144, 255);
+      }
+    }
+  }
+
+  .allowed-values {
+    margin-top: 12px;
+    .value {
+      display: flex;
+      width: 400px;
+      margin: auto;
+      .value, .key {
+        border-bottom: 1px dashed #AAA;
+        padding: 4px;
+      }
+      .key {
+        flex: 0;
+        flex-basis: 100px;
+        text-align: right;
+        font-weight: bold;
+        padding-right: 20px;
+      }
+      .value {
+        flex: 1;
+      }
+    }
+  }
+  text-align: center;
+}
