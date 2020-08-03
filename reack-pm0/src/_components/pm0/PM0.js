@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled, { css } from "styled-components";
 import { Fake } from 'reack-fake';
+import { CornExp } from 'reack-corn0';
 
 import PMSchema from "../schema/PMSchema";
 import Helper from "./Helper";
@@ -129,6 +130,7 @@ export class _PM0 extends Component {
     return (
         <div className={`${this.props.className} PM0`}>
           <div className={'panel-left'}>
+            <CornExp>CornExp</CornExp>
           	<div className={'pm-body container'}>
               <div className={'content'}>
                 <div className={'div1'}>

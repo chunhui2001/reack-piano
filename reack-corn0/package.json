@@ -1,6 +1,6 @@
 {
-  "name": "reack-pm0",
-  "version": "0.1.15",
+  "name": "reack-corn0",
+  "version": "0.0.2",
   "private": false,
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
@@ -48,13 +48,8 @@
     "postcss-loader": "3.0.0",
     "postcss-preset-env": "6.5.0",
     "postcss-safe-parser": "4.0.1",
-    "query-string": "^6.13.1",
     "rc-bmap": "^0.2.4",
-    "reack-checkbox0": "0.0.3",
-    "reack-corn0": "0.0.2",
-    "reack-fake": "0.0.4",
-    "reack-lang": "^0.1.11",
-    "react": "^16.13.1",
+    "react": "^16.12.0",
     "react-addons-css-transition-group": "^15.6.2",
     "react-app-polyfill": "^0.2.2",
     "react-dev-utils": "^8.0.0",
@@ -88,7 +83,7 @@
       "react-app"
     ]
   },
-  "main": "dist/reack_pm0.js",
+  "main": "dist/reack_corn0.js",
   "__main": "index.js",
   "author": "Chunhui.zhang <chunhui2001@gmail.com>",
   "license": "MIT",
