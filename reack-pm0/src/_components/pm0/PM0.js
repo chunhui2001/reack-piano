@@ -130,7 +130,6 @@ export class _PM0 extends Component {
     return (
         <div className={`${this.props.className} PM0`}>
           <div className={'panel-left'}>
-            <CornExp>CornExp</CornExp>
           	<div className={'pm-body container'}>
               <div className={'content'}>
                 <div className={'div1'}>
@@ -357,7 +356,7 @@ export class _PM0 extends Component {
         onSchemaStateChange(_theSchema);
       }
     } else {
-      if (type !== 'tab' && field != 'add') {
+      if (type !== 'tab' && field !== 'add') {
         _this.moveFocus('.pm-table', e, next, field, index);
       }
     }
