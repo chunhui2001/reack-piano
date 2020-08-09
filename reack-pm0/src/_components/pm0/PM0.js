@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import styled, { css } from "styled-components";
 import { Fake } from 'reack-fake';
-import { CornExp } from 'reack-corn0';
 
 import PMSchema from "../schema/PMSchema";
 import Helper from "./Helper";
@@ -603,13 +602,21 @@ export class _PM0 extends Component {
       return <div>
               { this.getFormDataEditerTable('from-www-form-urlencoded') }
              </div>;
-    } else if (this.state.theSchema.bodyRadioSelected.toLowerCase() === 'application/json' || this.state.theSchema.bodyRadioSelected.toLowerCase() === 'application/json;utf-8' ) {
+    } else if (this.state.theSchema.bodyRadioSelected.toLowerCase().indexOf('text/plain') !== -1) {
+      return <div style={{ position:'relative' }}>
+               <div className={'plainTextArea'}>
+                <textarea 
+                  value={this.state.currentInputJsonString || '' }
+                  onChange={(e) => {this.handleInputStringChange(e)}}></textarea>
+               </div>
+             </div>;
+    } else if (this.state.theSchema.bodyRadioSelected.toLowerCase().indexOf('application/json') !== -1) {
       return <div style={{ position:'relative' }}>
                <div className={'jsonTextArea'}>
                 <textarea 
                   onBlur={(e) => this.handleInputJsonStringUpdate(e) }
                   value={this.state.currentInputJsonString || Helper.jsonDataString(this.state.theSchema) || '{}' }
-                  onChange={(e) => {this.handleInputJsonStringChange(e)}}></textarea>
+                  onChange={(e) => {this.handleInputStringChange(e)}}></textarea>
                </div>
                <div className={'beautifulJson'} onClick={ this.beautifulJsonClick.bind(this) }>美化</div>
                <div style={{ textAlign:'center', display:'none' }}>加高</div>
@@ -736,8 +743,7 @@ export class _PM0 extends Component {
     }
   }
 
-  handleInputJsonStringChange(e) {
-    // value={ this.state.currentInputJsonString || Helper.jsonDataString(this.state.theSchema) || '{}' }
+  handleInputStringChange(e) {
     this.setState({
       ...this.state,
       currentInputJsonString: e.target.value
@@ -781,8 +787,10 @@ export class _PM0 extends Component {
                              onChange={ (e) => this.bodyRadioClick(e, 'form-data') } /><label htmlFor="r-form-data">form-data</label></span>
                 <span className={'tab-span'}><input name="g" id="r-form-urlencoded" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'x-www-form-urlencoded' }
                              onChange={ (e) => this.bodyRadioClick(e, 'x-www-form-urlencoded') } /><label htmlFor="r-form-urlencoded">x-www-form-urlencoded</label></span>
-                <span className={'tab-span'}><input name="g" id="r-form-raw" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'application/json' }
-                             onChange={ (e) => this.bodyRadioClick(e, 'application/json') } /><label htmlFor="r-form-raw">application/json</label></span>
+                <span className={'tab-span'}><input name="g" id="r-json" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'application/json' }
+                             onChange={ (e) => this.bodyRadioClick(e, 'application/json') } /><label htmlFor="r-json">application/json</label></span>
+                { /* <span className={'tab-span'}><input name="g" id="r-text-plain" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'text/plain' }
+                             onChange={ (e) => this.bodyRadioClick(e, 'text/plain') } /><label htmlFor="r-text-plain">text/plain</label></span> */ }
                 <span className={'tab-span'}><input name="g" id="r-form-other" type="radio" checked={ this.getBodyRadioSelectedChecked() }
                              onChange={ (e) => this.bodyRadioClick(e, 'other') } /><label htmlFor="r-form-other">other</label></span>
                 { this.getBodyRadioOtherSelectedInput() }
@@ -937,7 +945,7 @@ let mixin = css`&{
   .tab-panel.tab-bodys .tab-span {
     display:inline-block;
     float:left;
-    margin-right:1em;
+    margin-right:.625em;
   }
   .container {
      height: auto;
@@ -993,15 +1001,19 @@ let mixin = css`&{
     font-style: italic;
     color: gray;
   }
-  .jsonTextArea {
+  .jsonTextArea, .plainTextArea {
     padding: 1em;
+  }
+  .plainTextArea, .plainTextArea textarea {
+    background-color: black;
+  }
+  .jsonTextArea, .jsonTextArea textarea {
     background-color: darkblue;
   }
-  .jsonTextArea textarea {
+  .jsonTextArea textarea, .plainTextArea textarea {
     border: none;
     border-radius: 0;
     width: 100%;
-    background-color: darkblue;
     min-height:230px;
     font-size: 1.45em;
     color: green;
