@@ -313,6 +313,7 @@ export class _PM0 extends Component {
   // 处理添加pm表格参数
   onTableTrAppend(e, index, field, theSchemaField) {
     if (window.event.keyCode === 9 && e.target.name === 'desc') {
+      debugger;
       // tab 键
       if (this.state.theSchema[theSchemaField].length === index+1) {
         if (window.event.shiftKey) {
