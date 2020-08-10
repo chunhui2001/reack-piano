@@ -98,9 +98,10 @@ class App extends Component {
       pmSchema: PMSchema(
         "https://www.baidu.com/index/blogs",
         "get", 
-        //'application/json;utf-8',
-        'application/json',
+        'application/json;utf-8',
+        //'application/json',
         //'form-data',
+        //'text/plain',
       )
     };
   }

@@ -9,6 +9,8 @@ import { CheckBox0 } from 'reack-checkbox0';
 
 const $ = Fake('$');
 
+const CONTENT_TYPE= ['none','x-www-form-urlencoded','form-data','application/json'];
+
 export class _PM0 extends Component {
 
   responseComponent = null;
@@ -27,6 +29,7 @@ export class _PM0 extends Component {
     let theSchema = schema ? schema : {};
     this.setState({
       ...this.state,
+      bodyRadioOtherValue: CONTENT_TYPE.indexOf(theSchema.bodyRadioSelected) === -1 ? theSchema.bodyRadioSelected : null,
       tabName: activeTab || this.state.tabName || 'params',
       theSchema
     }, () => this.handPmTabClick(this.state.tabName));
@@ -571,9 +574,23 @@ export class _PM0 extends Component {
   }
 
   bodyRadioClick(e, type) {
-    const { onSchemaStateChange } = this.props;
     if (type === 'otherInput') {
       type = e.target.value;
+      if (type.indexOf('application/json') !== -1) {
+        this.setState({
+          ...this.state,
+          bodyRadioOtherValue: null
+        }, () => this.bodyRadioClickCallback(type));
+        return;
+      }
+    }
+    this.bodyRadioClickCallback(type);
+  }
+
+  bodyRadioClickCallback(type) {
+    const { onSchemaStateChange } = this.props;
+    if (type === 'other' && this.state.bodyRadioOtherValue) {
+      type = this.state.bodyRadioOtherValue;
     }
     let _theSchema = this.state.theSchema;
     _theSchema.bodyRadioSelected = type;
@@ -582,7 +599,7 @@ export class _PM0 extends Component {
     }
   }
 
-  bodyRadioOtherChange = (e, type) => {
+  bodyRadioOtherChange = (e) => {
     this.setState({
       ...this.state,
       bodyRadioOtherValue: e.target.value
@@ -606,6 +623,7 @@ export class _PM0 extends Component {
       return <div style={{ position:'relative' }}>
                <div className={'plainTextArea'}>
                 <textarea 
+                  placeholder={'请输入原始内容 ...'}
                   value={this.state.currentInputJsonString || '' }
                   onChange={(e) => {this.handleInputStringChange(e)}}></textarea>
                </div>
@@ -766,14 +784,37 @@ export class _PM0 extends Component {
     return true;
   }
 
-  getBodyRadioOtherSelectedInput() {
+  theBodyRadioOtherInputValue = () => {
+    if (this.state.bodyRadioOtherValue === null || typeof this.state.bodyRadioOtherValue === 'undefined') {
+      if (this.state.theSchema.bodyRadioSelected) {
+        if (this.state.theSchema.bodyRadioSelected === 'other') {
+          return '';
+        }
+        return this.state.theSchema.bodyRadioSelected;
+      } else {
+        return '';
+      }
+    }
+    if (this.state.bodyRadioOtherValue === '') {
+      return '';
+    }
+    if (this.state.bodyRadioOtherValue) {
+      if (this.state.bodyRadioOtherValue === 'other') {
+        return '';
+      }
+      return this.state.bodyRadioOtherValue;
+    }
+    return '';
+  }
+
+  getBodyRadioOtherInput() {
     if (this.getBodyRadioSelectedChecked()) {
       return <input style={{ borderRadius: 0, padding: '.225em .625em', borderWidth: '1px', borderColor: 'black', fontSize: '.8em', color: 'blue', backgroundColor: 'bisque', borderStyle: 'dashed' }} 
-                    onChange={ (e) => this.bodyRadioOtherChange(e, 'otherInput') }
+                    onChange={ (e) => this.bodyRadioOtherChange(e) }
                     onBlur={ (e) =>  this.bodyRadioClick(e, 'otherInput') }
                     onFocus={ (e) => e.target.select() }
                     placeholder={'请输入...'}
-                    type="text" value={ this.state.bodyRadioOtherValue || this.state.theSchema.bodyRadioSelected || '' } />;
+                    type="text" value={ this.theBodyRadioOtherInputValue() } />;
     }
     return null;
   }
@@ -789,11 +830,9 @@ export class _PM0 extends Component {
                              onChange={ (e) => this.bodyRadioClick(e, 'x-www-form-urlencoded') } /><label htmlFor="r-form-urlencoded">x-www-form-urlencoded</label></span>
                 <span className={'tab-span'}><input name="g" id="r-json" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'application/json' }
                              onChange={ (e) => this.bodyRadioClick(e, 'application/json') } /><label htmlFor="r-json">application/json</label></span>
-                { /* <span className={'tab-span'}><input name="g" id="r-text-plain" type="radio" checked={ this.state.theSchema.bodyRadioSelected === 'text/plain' }
-                             onChange={ (e) => this.bodyRadioClick(e, 'text/plain') } /><label htmlFor="r-text-plain">text/plain</label></span> */ }
                 <span className={'tab-span'}><input name="g" id="r-form-other" type="radio" checked={ this.getBodyRadioSelectedChecked() }
                              onChange={ (e) => this.bodyRadioClick(e, 'other') } /><label htmlFor="r-form-other">other</label></span>
-                { this.getBodyRadioOtherSelectedInput() }
+                { this.getBodyRadioOtherInput() }
                 <div className={'clear'}></div>
               </div>
               { this.getBodyRadioSection() }
