@@ -986,6 +986,9 @@ let mixin = css`&{
   .pm-table.body-text-table th {
     font-weight: normal;
   }
+  .pm-table.body-text-table tbody tr {
+    vertical-align: top;
+  }
   .form-data-table .inputCell > div, .form-data-table .empty-td {
     background-color:thistle;
   }
