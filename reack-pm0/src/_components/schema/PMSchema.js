@@ -86,6 +86,24 @@ PMSchemaObject.prototype.getQueryNewItems = function() {
   return result;
 }
 
+PMSchemaObject.prototype.getBodyReqData = function() {
+  if (!this.bodyReqData || this.bodyReqData === 0) {
+      return null;
+    }
+    return this.bodyReqData.filter(f => f.key !== 'text/plain');
+}
+
+PMSchemaObject.prototype.getTextPlainBody = function() {
+  if (!this.bodyReqData || this.bodyReqData === 0) {
+      return null;
+    }
+    let result = this.bodyReqData.filter(f => f.key === 'text/plain');
+    if (result.length > 0) {
+      return "// {#" + result[0].desc + "}\r\n" + result[0].val ;
+    }
+    return '';
+}
+
 const PMSchema = (url, selectRequestMethod, bodyRadioSelected, bodyReqData, headers, queryParams, apiDoc) => {
     return new PMSchemaObject(url, selectRequestMethod, bodyRadioSelected, bodyReqData, headers, queryParams, apiDoc);
 }

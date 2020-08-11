@@ -43,6 +43,16 @@ const bodyData = [
     defval: '无',
     eg: null,
     valid: 'binary',
+  },{
+    key: "text/plain",
+    val: "这是 post body 内容",
+    desc: "待解析的定时任务表达式: */0 * * * * ?",
+    disable: false,
+    dtype: 'string',
+    required: 'N',
+    defval: 'N/a',
+    eg: null,
+    valid: null,
   }
 ];
 
@@ -98,10 +108,10 @@ class App extends Component {
       pmSchema: PMSchema(
         "https://www.baidu.com/index/blogs",
         "get", 
-        'application/json;utf-8',
+        //'application/json;utf-8',
         //'application/json',
         //'form-data',
-        //'text/plain',
+        'text/plain',
       )
     };
   }
@@ -151,7 +161,7 @@ class App extends Component {
       <div className='pm-app'>
           <input type="button" onClick={this.onTestClick.bind(this)} value="Test" />
           <PM0 ref="pm0" 
-               activeTab={ 'params' } schema={ this.state.pmSchema } 
+               activeTab={ 'body' } schema={ this.state.pmSchema } 
                onSchemaStateChange={ (changedSchema) => this.onSchemaChange(changedSchema) } 
                onButtonClickHand={this.onButtonClickHand.bind(this)} />
       </div>

@@ -406,10 +406,11 @@ export class _PM0 extends Component {
   }
 
   getFormDataEditerTableTd() {
-    if (!this.state.theSchema.bodyReqData || this.state.theSchema.bodyReqData.length === 0) {
+    let _bodyReqData = this.state.theSchema.getBodyReqData();
+    if (!_bodyReqData) {
       return this.getEmptyCheckBoxRow('bodyReqData', 8);
     }
-    return this.state.theSchema.bodyReqData.map((item, i) => {
+    return _bodyReqData.map((item, i) => {
       return <tr key={i}>
                 <td className={'inputCell'} style={{textAlign:'right'}}>
                   <CheckBox0 size={'small'} value={"3"}  checked={!this.isDisable(item)}
@@ -624,7 +625,7 @@ export class _PM0 extends Component {
                <div className={'plainTextArea'}>
                 <textarea 
                   placeholder={'请输入原始内容 ...'}
-                  value={this.state.currentInputJsonString || '' }
+                  value={this.state.currentInputJsonString || this.state.theSchema.getTextPlainBody() || '' }
                   onChange={(e) => {this.handleInputStringChange(e)}}></textarea>
                </div>
              </div>;
