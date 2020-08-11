@@ -2,6 +2,19 @@ import React, { Component } from 'react';
 import PM0 from './_components/pm0/PM0';
 import PMSchema from './_components/schema/PMSchema';
 
+const textBody = [
+  {
+    text: '这是 post body 内容',
+    desc: "待解析的定时任务表达式: */0 * * * * ?",
+    disable: false,
+    dtype: 'string',
+    required: 'Y',
+    defval: '无',
+    eg: null,
+    valid: '0-25',
+  }
+];
+
 const bodyData = [
   {
     key: "id",
@@ -43,16 +56,6 @@ const bodyData = [
     defval: '无',
     eg: null,
     valid: 'binary',
-  },{
-    key: "text/plain",
-    val: "这是 post body 内容",
-    desc: "待解析的定时任务表达式: */0 * * * * ?",
-    disable: false,
-    dtype: 'string',
-    required: 'N',
-    defval: 'N/a',
-    eg: null,
-    valid: null,
   }
 ];
 
@@ -130,6 +133,7 @@ class App extends Component {
         bodyData,
         headers,
         queryParams,
+        textBody,
         '/apidoc/9omLVPwNRmhJ9P7o5zoQ'
       );
     this.setState({

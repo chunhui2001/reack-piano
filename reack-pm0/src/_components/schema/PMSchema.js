@@ -1,11 +1,12 @@
 
-function PMSchemaObject (_url, selectRequestMethod, bodyRadioSelected, bodyReqData, headers, queryParams, apiDoc) {
+function PMSchemaObject (_url, selectRequestMethod, bodyRadioSelected, bodyReqData, headers, queryParams, textBody, apiDoc) {
     this.selectRequestMethod = selectRequestMethod;
     this.bodyRadioSelected = bodyRadioSelected;
     this.bodyReqData = bodyReqData;
     this.headers = headers;
     this.inputGroupText = this.parseUri(_url).uri;
     this.queryParams = queryParams;
+    this.textBody = textBody;
     this.apiDoc = apiDoc;
     this.putQueryString(_url, queryParams);
 }
@@ -29,7 +30,7 @@ PMSchemaObject.prototype.parseUri = function (url) {
     return {
         href: url,
         uri: match[1] + '//' + match[2],
-        protocol: match[1],  // http:
+        protocol: match[1], // http:
         host: match[2], // example.com:3000
         hostname: match[3], // example.com
         port: match[4], // 3000
@@ -87,25 +88,18 @@ PMSchemaObject.prototype.getQueryNewItems = function() {
 }
 
 PMSchemaObject.prototype.getBodyReqData = function() {
-  if (!this.bodyReqData || this.bodyReqData === 0) {
-      return null;
-    }
-    return this.bodyReqData.filter(f => f.key !== 'text/plain');
+    return this.bodyReqData;
 }
 
 PMSchemaObject.prototype.getTextPlainBody = function() {
-  if (!this.bodyReqData || this.bodyReqData === 0) {
+  if (!this.textBody || this.textBody === 0) {
       return null;
     }
-    let result = this.bodyReqData.filter(f => f.key === 'text/plain');
-    if (result.length > 0) {
-      return "// {#" + result[0].desc + "}\r\n" + result[0].val ;
-    }
-    return '';
+    return this.textBody[0].text;
 }
 
-const PMSchema = (url, selectRequestMethod, bodyRadioSelected, bodyReqData, headers, queryParams, apiDoc) => {
-    return new PMSchemaObject(url, selectRequestMethod, bodyRadioSelected, bodyReqData, headers, queryParams, apiDoc);
+const PMSchema = (url, selectRequestMethod, bodyRadioSelected, bodyReqData, headers, queryParams, textBody, apiDoc) => {
+    return new PMSchemaObject(url, selectRequestMethod, bodyRadioSelected, bodyReqData, headers, queryParams, textBody, apiDoc);
 }
 
 export default PMSchema;

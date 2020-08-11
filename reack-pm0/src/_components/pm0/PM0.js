@@ -622,6 +622,32 @@ export class _PM0 extends Component {
              </div>;
     } else if (this.state.theSchema.bodyRadioSelected.toLowerCase().indexOf('text/plain') !== -1) {
       return <div style={{ position:'relative' }}>
+                <table className={'pm-table body-text-table'}>
+                  <thead>
+                    <tr>
+                      <th className={'inputCell'} style={{width: '25px', textAlign: 'right'}}>&nbsp;</th>
+                      <th style={{width: '185px'}}>BODY PLAIN TEXT</th>
+                      <th style={{width: '45px'}}>DATATYPE</th>
+                      <th style={{width: '45px'}}>REQ</th>
+                      <th style={{width: '85px'}}>DEFAULTS</th>
+                      <th>VALIDATER</th>
+                      <th>E.G.</th>
+                      <th>DESCRIPTION</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className={'inputCell'} style={{width: '25px', textAlign: 'right'}}>&nbsp;</td>
+                      <td style={{width: '185px'}}>{ (this.state.theSchema.textBody && this.state.theSchema.textBody[0].text) || '--' }</td>
+                      <td style={{width: '45px'}}>{ (this.state.theSchema.textBody && this.state.theSchema.textBody[0].dtype) || '--' }</td>
+                      <td style={{width: '45px'}}>{ (this.state.theSchema.textBody && this.state.theSchema.textBody[0].required) || '--' }</td>
+                      <td style={{width: '85px'}}>{ (this.state.theSchema.textBody && this.state.theSchema.textBody[0].defval) || '--' }</td>
+                      <td>{ (this.state.theSchema.textBody && this.state.theSchema.textBody[0].valid) || '--' }</td>
+                      <td>{ (this.state.theSchema.textBody && this.state.theSchema.textBody[0].eg) || '--' }</td>
+                      <td>{ (this.state.theSchema.textBody && this.state.theSchema.textBody[0].desc) || '--' }</td>
+                    </tr>
+                  </tbody>
+                </table>
                <div className={'plainTextArea'}>
                 <textarea 
                   placeholder={'请输入原始内容 ...'}
@@ -948,6 +974,17 @@ let mixin = css`&{
   }
   .from-www-form-urlencoded td, .from-www-form-urlencoded th {
 
+  }
+  .pm-table.body-text-table {
+    color:darkgoldenrod;
+  }
+  .pm-table.body-text-table td {
+    padding: .625em;
+    color: darksalmon;
+    font-weight: bold;
+  }
+  .pm-table.body-text-table th {
+    font-weight: normal;
   }
   .form-data-table .inputCell > div, .form-data-table .empty-td {
     background-color:thistle;
