@@ -144,6 +144,7 @@ class App extends Component {
   }
 
   onSchemaChange(schema) {
+    console.log(schema, 'schema changed');
     this.setState({
       ...this.state,
       pmSchema: schema

@@ -575,25 +575,28 @@ export class _PM0 extends Component {
   }
 
   bodyRadioClick(e, type) {
+    const { onSchemaStateChange } = this.props;
+    let _theSchema = this.state.theSchema;
     if (type === 'otherInput') {
       type = e.target.value;
-      if (type.indexOf('application/json') !== -1) {
-        this.setState({
-          ...this.state,
-          bodyRadioOtherValue: null
-        }, () => this.bodyRadioClickCallback(type));
-        return;
+    }
+    let _headers = _theSchema.headers;
+    if (!_headers || _headers.length === 0) {
+      let _contentTypeItem = { key : 'Content-Type' };
+      if (!_headers) {
+        _headers = [];
+      }
+      _headers.push(_contentTypeItem);
+    } 
+    for (let i =0; i<_headers.length; i++) {
+      let item = _headers[i];
+      if (item.key === 'Content-Type') {
+        item.val = type;
+        _headers[i] = item;
+        break;
       }
     }
-    this.bodyRadioClickCallback(type);
-  }
-
-  bodyRadioClickCallback(type) {
-    const { onSchemaStateChange } = this.props;
-    if (type === 'other' && this.state.bodyRadioOtherValue) {
-      type = this.state.bodyRadioOtherValue;
-    }
-    let _theSchema = this.state.theSchema;
+    _theSchema.headers = _headers;
     _theSchema.bodyRadioSelected = type;
     if (onSchemaStateChange) {
       onSchemaStateChange(_theSchema);
@@ -626,7 +629,6 @@ export class _PM0 extends Component {
                   <thead>
                     <tr>
                       <th className={'inputCell'} style={{width: '25px', textAlign: 'right'}}>&nbsp;</th>
-                      <th style={{width: '185px'}}>BODY PLAIN TEXT</th>
                       <th style={{width: '45px'}}>DATATYPE</th>
                       <th style={{width: '45px'}}>REQ</th>
                       <th style={{width: '85px'}}>DEFAULTS</th>
@@ -638,7 +640,6 @@ export class _PM0 extends Component {
                   <tbody>
                     <tr>
                       <td className={'inputCell'} style={{width: '25px', textAlign: 'right'}}>&nbsp;</td>
-                      <td style={{width: '185px'}}>{ (this.state.theSchema.textBody && this.state.theSchema.textBody[0].text) || '--' }</td>
                       <td style={{width: '45px'}}>{ (this.state.theSchema.textBody && this.state.theSchema.textBody[0].dtype) || '--' }</td>
                       <td style={{width: '45px'}}>{ (this.state.theSchema.textBody && this.state.theSchema.textBody[0].required) || '--' }</td>
                       <td style={{width: '85px'}}>{ (this.state.theSchema.textBody && this.state.theSchema.textBody[0].defval) || '--' }</td>
@@ -651,9 +652,10 @@ export class _PM0 extends Component {
                <div className={'plainTextArea'}>
                 <textarea 
                   placeholder={'请输入原始内容 ...'}
-                  value={this.state.currentInputJsonString || this.state.theSchema.getTextPlainBody() || '' }
-                  onChange={(e) => {this.handleInputStringChange(e)}}></textarea>
-               </div>
+                  onBlur={(e) => this.handleInputTextBodyUpdate(e) }
+                  value={this.state.currentInputTextBodyString || this.state.theSchema.getTextPlainBody() || '' }
+                  onChange={(e) => {this.handleInputTextBodyChange(e)}}></textarea>
+                </div>
              </div>;
     } else if (this.state.theSchema.bodyRadioSelected.toLowerCase().indexOf('application/json') !== -1) {
       return <div style={{ position:'relative' }}>
@@ -766,6 +768,22 @@ export class _PM0 extends Component {
     });
   }
 
+  handleInputTextBodyUpdate(e) {
+    const { onSchemaStateChange } = this.props;
+    let currentTextBodyString = e.target.value;
+    let _theSchema = this.state.theSchema;
+    let _textBody = _theSchema.textBody;
+    if (!_textBody) {
+      _textBody = [];
+      _textBody.push({});
+    }
+    _textBody[0].text = currentTextBodyString;
+    _theSchema.textBody = _textBody;
+    if (onSchemaStateChange) {
+      onSchemaStateChange(_theSchema);
+    }
+  }
+
   handleInputJsonStringUpdate(e) {
     const { onSchemaStateChange } = this.props;
     let currentJsonString = e.target.value;
@@ -792,6 +810,13 @@ export class _PM0 extends Component {
     this.setState({
       ...this.state,
       currentInputJsonString: e.target.value
+    });
+  }
+
+  handleInputTextBodyChange(e) {
+    this.setState({
+      ...this.state,
+      currentInputTextBodyString: e.target.value
     });
   }
 
