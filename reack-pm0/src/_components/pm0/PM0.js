@@ -240,7 +240,7 @@ export class _PM0 extends Component {
       return this.getEmptyCheckBoxRow('queryParams', 8);
     }
     return queryItems.map((item, i) => {
-      return <tr key={i}>
+      return <tr key={i} className={ this.isDisable(item) ? 'disabled' : ''}>
         <td className={'inputCell'} style={{textAlign:'right'}}>
             <CheckBox0 size={'small'} checked={!this.isDisable(item)} onChange={ (e) => this.handTrDisable(e, i, 'queryParams', item) }/>
         </td>
@@ -411,7 +411,7 @@ export class _PM0 extends Component {
       return this.getEmptyCheckBoxRow('bodyReqData', 8);
     }
     return _bodyReqData.map((item, i) => {
-      return <tr key={i}>
+      return <tr key={i} className={ this.isDisable(item) ? 'disabled' : '' }>
                 <td className={'inputCell'} style={{textAlign:'right'}}>
                   <CheckBox0 size={'small'} value={"3"}  checked={!this.isDisable(item)}
                      onChange={ (e) => this.handTrDisable(e, i, 'bodyReqData', item) } />
@@ -718,7 +718,7 @@ export class _PM0 extends Component {
       return this.getEmptyCheckBoxRow('headers', 4);
     }
     return this.state.theSchema.headers.map((item, i) => {
-      return <tr key={i}>
+      return <tr key={i} className={ this.isDisable(item) ? 'disabled' : ''}>
                 <td className={'inputCell'} style={{textAlign:'right'}}>
                   <CheckBox0 size={'small'} checked={!this.isDisable(item)} onChange={ (e) => this.handTrDisable(e, i, 'headers', item)} />
                 </td>
@@ -986,6 +986,9 @@ let mixin = css`&{
      padding: .25em .425em;
      color: gray;
      font-style: italic;
+  }
+  .pm-table tr.disabled, .pm-table tr.disabled .inputCell, .pm-table tr.disabled .inputCell div , .pm-table tr.disabled .inputCell div input{
+    cursor: pointer;
   }
   .pm-table th, .pm-table td {
     text-align: left;
