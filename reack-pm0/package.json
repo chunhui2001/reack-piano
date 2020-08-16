@@ -1,6 +1,6 @@
 {
   "name": "reack-pm0",
-  "version": "0.1.30",
+  "version": "0.1.34",
   "private": false,
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",

@@ -111,10 +111,10 @@ class App extends Component {
       pmSchema: PMSchema(
         "https://www.baidu.com/index/blogs",
         "get", 
-        //'application/json;utf-8',
-        //'application/json',
+        //'application/json;charset=utf-8',
+        'none',
         //'form-data',
-        'text/plain',
+        //'text/plain',
       )
     };
   }
@@ -129,7 +129,7 @@ class App extends Component {
     let _theSchema = PMSchema(
         "http://172.28.128.1:19103/user/create",
         "get", 
-        'x-www-form-urlencoded',
+        'application/json;charset=utf-8',
         bodyData,
         headers,
         queryParams,

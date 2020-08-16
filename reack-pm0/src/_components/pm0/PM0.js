@@ -161,7 +161,7 @@ export class _PM0 extends Component {
             	<div className={'pm-tab'}>
             		<span className={this.state.tabName === 'params' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'params')}>Params</span>
             		{ /* <span className={this.state.tabName === 'auth' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'auth')}>Authorization</span> */ }
-            		<span className={this.state.tabName === 'headers' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'headers')}>Headers(1)</span>
+            		<span className={this.state.tabName === 'headers' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'headers')}>Headers</span>
             		<span className={this.state.tabName === 'body' ? 'active' : ''} onClick={this.handPmTabClick.bind(this, 'body')}>Body</span>
                 { theSchema.apiDoc && <span style={{float: 'right', textDecoration: 'underline', color: 'blue'}}>
                   <a href={ theSchema.apiDoc } style={{color: 'blue', fontWeight: 'bold'}}>ApiDoc</a>
@@ -315,7 +315,6 @@ export class _PM0 extends Component {
   // 处理添加pm表格参数
   onTableTrAppend(e, index, field, theSchemaField) {
     if (window.event.keyCode === 9 && e.target.name === 'desc') {
-      debugger;
       // tab 键
       if (this.state.theSchema[theSchemaField].length === index+1) {
         if (window.event.shiftKey) {
@@ -502,10 +501,6 @@ export class _PM0 extends Component {
     }
     $(targetElement).select();
     $(targetElement).parent().addClass('focus');
-    if (targetElement === null) {
-
-    debugger; 
-    }
     this.setState({
       ...this.state,
       oldVal: targetElement.value
@@ -550,7 +545,7 @@ export class _PM0 extends Component {
 
   getInputStringValue(field, index, item) {
     if (!this.state.inputStringValue || !this.state.inputStringValue[index] || !this.state.inputStringValue[index][field]) {
-      if (item[field]) {
+      if (item && item[field]) {
         return item[field];
       } 
       return '--';
@@ -580,6 +575,12 @@ export class _PM0 extends Component {
     if (type === 'otherInput') {
       type = e.target.value;
     }
+    if (type === 'other') {
+      type = this.theBodyRadioOtherInputValue();
+      if (type === 'none' || type === 'application/json') {
+        type = '';
+      }
+    }
     let _headers = _theSchema.headers;
     if (!_headers || _headers.length === 0) {
       let _contentTypeItem = { key : 'Content-Type' };
@@ -590,8 +591,13 @@ export class _PM0 extends Component {
     } 
     for (let i =0; i<_headers.length; i++) {
       let item = _headers[i];
-      if (item.key === 'Content-Type') {
-        item.val = type;
+      if (item && item.key === 'Content-Type') {
+        if (!type || !type.trim()) {
+          _headers.splice(i, 1);
+          break;
+        } else {
+          item.val = type;
+        }
         _headers[i] = item;
         break;
       }
@@ -604,15 +610,16 @@ export class _PM0 extends Component {
   }
 
   bodyRadioOtherChange = (e) => {
+    let _val = e.target.value;
     this.setState({
       ...this.state,
-      bodyRadioOtherValue: e.target.value
+      bodyRadioOtherValue: _val
     });
   }
 
   getBodyRadioSection() {
     if (!this.state.theSchema.bodyRadioSelected || this.state.theSchema.bodyRadioSelected === 'none') {
-      return <div style={{padding:'4em'}}>
+      return <div style={{padding:'4em 0'}}>
               <h2 style={{ textAlign:'center' }}>This request does not have body</h2>
              </div>;
     } else if (this.state.theSchema.bodyRadioSelected === 'form-data') {
@@ -670,7 +677,7 @@ export class _PM0 extends Component {
              </div>;
     } 
     // others
-    return <div style={{ position:'relative' }}><h1>暂不支持</h1></div>;
+    return <div style={{ position:'relative', padding: '4em 0'}}><h2 style={{textAlign:'center'}}>暂不支持 {this.state.theSchema.bodyRadioSelected}</h2></div>;
   }
 
   headersTabSection() {
@@ -814,9 +821,13 @@ export class _PM0 extends Component {
   }
 
   handleInputTextBodyChange(e) {
+    let _val = e.target.value;
+    if (!_val) {
+      _val = ' ';
+    }
     this.setState({
       ...this.state,
-      currentInputTextBodyString: e.target.value
+      currentInputTextBodyString: _val
     });
   }
 
