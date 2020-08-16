@@ -406,7 +406,7 @@ export class _PM0 extends Component {
 
   getFormDataEditerTableTd() {
     let _bodyReqData = this.state.theSchema.getBodyReqData();
-    if (!_bodyReqData) {
+    if (!_bodyReqData || _bodyReqData.length === 0) {
       return this.getEmptyCheckBoxRow('bodyReqData', 8);
     }
     return _bodyReqData.map((item, i) => {
@@ -579,6 +579,10 @@ export class _PM0 extends Component {
       type = this.theBodyRadioOtherInputValue();
       if (type === 'none' || type === 'application/json') {
         type = '';
+      } else if (type.indexOf('text') !== -1 || type.indexOf('json') !== -1) {
+        // nothing  to do here
+      } else {
+        type = '';
       }
     }
     let _headers = _theSchema.headers;
@@ -647,12 +651,12 @@ export class _PM0 extends Component {
                   <tbody>
                     <tr>
                       <td className={'inputCell'} style={{width: '25px', textAlign: 'right'}}>&nbsp;</td>
-                      <td style={{width: '45px'}}>{ (this.state.theSchema.textBody && this.state.theSchema.textBody[0].dtype) || '--' }</td>
-                      <td style={{width: '45px'}}>{ (this.state.theSchema.textBody && this.state.theSchema.textBody[0].required) || '--' }</td>
-                      <td style={{width: '85px'}}>{ (this.state.theSchema.textBody && this.state.theSchema.textBody[0].defval) || '--' }</td>
-                      <td>{ (this.state.theSchema.textBody && this.state.theSchema.textBody[0].valid) || '--' }</td>
-                      <td>{ (this.state.theSchema.textBody && this.state.theSchema.textBody[0].eg) || '--' }</td>
-                      <td>{ (this.state.theSchema.textBody && this.state.theSchema.textBody[0].desc) || '--' }</td>
+                      <td style={{width: '45px'}}>{ (this.state.theSchema.textBody && this.state.theSchema.textBody.length > 0 && this.state.theSchema.textBody[0].dtype) || '--' }</td>
+                      <td style={{width: '45px'}}>{ (this.state.theSchema.textBody && this.state.theSchema.textBody.length > 0 && this.state.theSchema.textBody[0].required) || '--' }</td>
+                      <td style={{width: '85px'}}>{ (this.state.theSchema.textBody && this.state.theSchema.textBody.length > 0 && this.state.theSchema.textBody[0].defval) || '--' }</td>
+                      <td>{ (this.state.theSchema.textBody && this.state.theSchema.textBody.length > 0 && this.state.theSchema.textBody[0].valid) || '--' }</td>
+                      <td>{ (this.state.theSchema.textBody && this.state.theSchema.textBody.length > 0 && this.state.theSchema.textBody[0].eg) || '--' }</td>
+                      <td>{ (this.state.theSchema.textBody && this.state.theSchema.textBody.length > 0 && this.state.theSchema.textBody[0].desc) || '--' }</td>
                     </tr>
                   </tbody>
                 </table>

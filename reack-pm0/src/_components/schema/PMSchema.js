@@ -74,7 +74,7 @@ PMSchemaObject.prototype.getQueryNewItems = function() {
       if (!a.split('=')[0]) {
         continue;
       }
-      result.push({key:[a.split('=')[0]], val:a.split('=')[1]});
+      result.push({key:a.split('=')[0], val:a.split('=')[1]});
     }
   }
   if (_q) {
@@ -92,7 +92,7 @@ PMSchemaObject.prototype.getBodyReqData = function() {
 }
 
 PMSchemaObject.prototype.getTextPlainBody = function() {
-  if (!this.textBody || this.textBody === 0) {
+  if (!this.textBody || this.textBody === 0 || !this.textBody[0]) {
       return null;
     }
     return this.textBody[0].text;
