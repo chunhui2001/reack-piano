@@ -784,7 +784,7 @@ export class _PM0 extends Component {
     let currentTextBodyString = e.target.value;
     let _theSchema = this.state.theSchema;
     let _textBody = _theSchema.textBody;
-    if (!_textBody) {
+    if (!_textBody || _textBody.length === 0 ) {
       _textBody = [];
       _textBody.push({});
     }
